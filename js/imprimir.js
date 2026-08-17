@@ -4,7 +4,7 @@ import {
   obtenerEstudiantes, obtenerHorario, obtenerTutor, obtenerAsistencia,
   diaDeFecha
 } from "./data.js";
-import { collection, getDocs, query, where }
+import { collection, getDocs }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { db } from "./firebase-config.js";
 
@@ -29,13 +29,11 @@ function contar(marcas, codigo) {
 }
 
 async function diasAsistidosAcumulados(estudianteIds) {
-  // Días con al menos una marca P o A por estudiante, hasta la fecha del reporte.
+  // Días con al menos una marca P o A por estudiante, hasta la fecha del
+  // reporte. Se busca en TODA la colección para que el historial siga al
+  // estudiante aunque haya sido movido de grado.
   const acum = Object.fromEntries(estudianteIds.map(id => [id, 0]));
-  const q = query(
-    collection(db, "asistencias"),
-    where("grado", "==", grado)
-  );
-  const snap = await getDocs(q);
+  const snap = await getDocs(collection(db, "asistencias"));
   for (const docu of snap.docs) {
     const data = docu.data();
     if (data.fecha > fecha) continue;

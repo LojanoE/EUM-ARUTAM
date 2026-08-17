@@ -4,6 +4,25 @@ Historial de versiones de la app de Registro de Asistencia — UEM "Arutam".
 Versionado semántico: MAYOR.MENOR.PARCHE. La versión vigente está en
 `js/version.js` y cada versión tiene su tag de git (`vX.Y.Z`).
 
+## [1.1.0] — 2026-08-17
+
+### Agregado
+- Plataforma con menú lateral: módulos Dashboard, Asistencia, Estudiantes y
+  Horarios en una sola página (cada módulo es un archivo `js/mod-*.js`).
+- Dashboard: tarjetas por grado (nº de estudiantes y asistencia de hoy) y
+  ranking de los estudiantes con más inasistencias.
+- Estudiantes: búsqueda y filtro por grado, tabla con resumen de asistencia,
+  ficha individual con totales y lista cronológica de faltas/atrasos.
+- Gestión (rol admin): agregar estudiantes, editar nombre, mover de grado
+  (el historial de asistencia se conserva) y editar/agregar/quitar bloques de
+  horario.
+- Permisos por rol: solo `admin` edita estudiantes y horarios; el resto
+  consulta y registra asistencia.
+
+### Corregido
+- El contador de "días asistidos" del reporte impreso ahora busca en toda la
+  colección de asistencias: no se pierde al mover un estudiante de grado.
+
 ## [1.0.1] — 2026-08-17
 
 ### Corregido

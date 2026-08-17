@@ -12,14 +12,37 @@ sección vespertina de la Unidad Educativa del Milenio "Arutam"
 
 ```
 index.html            Login
-app.html              Registro de asistencia (grado + fecha, marcas por hora)
+app.html              Plataforma (shell con menú lateral y 4 módulos)
 imprimir.html         Reporte diario imprimible (formato de la hoja IMPRIMIR)
-js/                   firebase-config, auth, data, app, imprimir (módulos ES)
+js/                   firebase-config, auth, data, version, app (shell)
+js/mod-dashboard.js   Resumen por grado + ranking de inasistencias
+js/mod-asistencia.js  Registro diario (marcas por hora, guardar, imprimir)
+js/mod-estudiantes.js Búsqueda, ficha con historial, agregar/editar/mover
+js/mod-horarios.js    Horario semanal por grado (ver/editar bloques)
 css/                  styles.css (app) y print.css (reporte)
 seed/                 Datos iniciales (JSON) + seed.html para cargarlos
 scripts/extraer_excel.py  Genera seed/*.json desde los Excel de DOC/
 firebase.json, firestore.rules  Configuración de reglas de Firestore
 ```
+
+### Módulos y permisos
+
+- **Dashboard**: tarjetas por grado, estado de la asistencia de hoy y ranking
+  de estudiantes con más inasistencias.
+- **Asistencia**: registro diario por grado y fecha, con marcas por hora
+  (P/I/J/A/N), igual que la hoja IMPRIMIR del Excel.
+- **Estudiantes**: consulta con filtros, ficha con historial completo; el rol
+  `admin` además puede agregar, editar nombre y mover de grado (el historial
+  se conserva). No se eliminan estudiantes.
+- **Horarios**: vista semanal por grado; el rol `admin` puede editar, agregar
+  o quitar bloques.
+
+Los roles se definen en el campo `rol` de la colección `usuarios`
+(`admin` edita; cualquier otro rol solo consulta y registra asistencia).
+
+Para agregar un módulo nuevo: crear `js/mod-nombre.js` que exporte
+`initNombre(contenedor, ctx)`, agregar su entrada en `MODULOS` de `js/app.js`
+y un botón `data-modulo="nombre"` en el menú de `app.html`.
 
 Códigos de asistencia: `P` Presente, `I` Injustificado, `J` Justificado,
 `A` Atraso, `N` No hay clases.

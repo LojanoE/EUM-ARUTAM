@@ -220,3 +220,195 @@ button.secundario {
 }
 
 .version-barra { font-size: 0.75rem; opacity: 0.75; }
+
+/* ---------- Layout plataforma (sidebar + contenido) ---------- */
+.layout { display: flex; min-height: 100vh; }
+
+.sidebar {
+  width: 230px;
+  background: var(--azul);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  flex-shrink: 0;
+}
+
+.sidebar-titulo {
+  padding: 1.1rem 1.2rem 0.8rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.sidebar-titulo small {
+  display: block;
+  font-weight: 400;
+  font-size: 0.75rem;
+  opacity: 0.8;
+  margin-top: 0.2rem;
+}
+
+.sidebar nav { display: flex; flex-direction: column; padding: 0.6rem 0; flex: 1; }
+
+.nav-item {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.85);
+  text-align: left;
+  padding: 0.7rem 1.2rem;
+  font-size: 0.92rem;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+}
+
+.nav-item:hover { background: rgba(255, 255, 255, 0.08); color: #fff; }
+
+.nav-item.activo {
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  border-left-color: #fff;
+  font-weight: 600;
+}
+
+.sidebar-pie {
+  padding: 0.9rem 1.2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.sidebar-pie .version { margin: 0; color: rgba(255, 255, 255, 0.6); }
+
+.sidebar-pie button {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 0.4rem;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.sidebar-pie button:hover { background: rgba(255, 255, 255, 0.28); }
+
+.contenido-app { flex: 1; padding: 1.4rem; min-width: 0; }
+
+.titulo-modulo { margin: 0 0 1rem; font-size: 1.25rem; color: var(--azul); }
+
+/* ---------- Dashboard ---------- */
+.tarjetas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+}
+
+.tarjeta {
+  background: #fff;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.tarjeta h3 { margin: 0 0 0.4rem; font-size: 0.95rem; color: var(--azul); }
+
+.tarjeta .numero { font-size: 1.6rem; font-weight: 700; }
+
+.tarjeta .detalle { font-size: 0.8rem; color: #5a6675; margin-top: 0.2rem; }
+
+.tarjeta .estado-ok { color: var(--verde); font-weight: 600; }
+.tarjeta .estado-pendiente { color: var(--rojo); font-weight: 600; }
+
+/* ---------- Tablas de gestión (estudiantes / horarios / ranking) ---------- */
+.tabla-gestion { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+
+.tabla-gestion th, .tabla-gestion td {
+  border: 1px solid var(--borde);
+  padding: 0.35rem 0.5rem;
+  text-align: left;
+}
+
+.tabla-gestion th { background: #e8edf5; }
+.tabla-gestion td.centro { text-align: center; }
+
+.tabla-gestion tbody tr.clickeable { cursor: pointer; }
+.tabla-gestion tbody tr.clickeable:hover { background: #f0f4fa; }
+
+.tabla-gestion input[type="text"], .tabla-gestion select {
+  width: 100%;
+  padding: 0.25rem 0.35rem;
+  border: 1px solid var(--borde);
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+.btn-mini {
+  padding: 0.2rem 0.55rem;
+  font-size: 0.78rem;
+  border-radius: 4px;
+  border: 1px solid var(--azul);
+  background: #fff;
+  color: var(--azul);
+  cursor: pointer;
+}
+
+.btn-mini:hover { background: var(--azul); color: #fff; }
+
+.btn-mini.peligro { border-color: var(--rojo); color: var(--rojo); }
+.btn-mini.peligro:hover { background: var(--rojo); color: #fff; }
+
+/* ---------- Ficha de estudiante ---------- */
+.ficha {
+  background: #fff;
+  border: 1px solid var(--azul);
+  border-radius: 8px;
+  padding: 1rem 1.2rem;
+  margin-top: 1rem;
+}
+
+.ficha h3 { margin: 0 0 0.6rem; color: var(--azul); }
+
+.ficha .totales {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.8rem;
+  font-size: 0.9rem;
+}
+
+.ficha .totales strong { display: block; font-size: 1.15rem; }
+
+.insignia {
+  display: inline-block;
+  padding: 0.05rem 0.45rem;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.insignia.I { background: #fdecea; color: var(--rojo); }
+.insignia.J { background: #e8eefb; color: var(--azul); }
+.insignia.A { background: #fff6e0; color: #8a6d00; }
+
+/* ---------- Horarios ---------- */
+.dia-bloque { margin-bottom: 1.2rem; }
+.dia-bloque h3 {
+  margin: 0 0 0.4rem;
+  font-size: 0.95rem;
+  color: var(--azul);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 820px) {
+  .layout { flex-direction: column; }
+  .sidebar { width: 100%; height: auto; position: static; }
+  .sidebar nav { flex-direction: row; flex-wrap: wrap; }
+  .nav-item { border-left: none; border-bottom: 3px solid transparent; }
+  .nav-item.activo { border-bottom-color: #fff; }
+  .sidebar-pie { flex-direction: row; align-items: center; gap: 0.8rem; }
+}
