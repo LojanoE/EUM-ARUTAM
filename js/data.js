@@ -1,6 +1,6 @@
 // Capa de acceso a datos Firestore.
 import {
-  collection, doc, getDoc, getDocs, query, setDoc, where, orderBy, serverTimestamp
+  collection, doc, getDoc, getDocs, query, setDoc, where, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { db } from "./firebase-config.js";
 
@@ -27,13 +27,16 @@ export async function obtenerTutor(grado) {
 }
 
 export async function obtenerEstudiantes(grado) {
+  // Sin orderBy en la query: where + orderBy exigiría un índice compuesto.
+  // Se ordena en el cliente (localeCompare ordena bien tildes y Ñ).
   const q = query(
     collection(db, "estudiantes"),
-    where("grado", "==", grado),
-    orderBy("nombre")
+    where("grado", "==", grado)
   );
   const snap = await getDocs(q);
-  return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  return snap.docs
+    .map(d => ({ id: d.id, ...d.data() }))
+    .sort((a, b) => a.nombre.localeCompare(b.nombre, "es"));
 }
 
 export async function obtenerHorario(grado, dia) {

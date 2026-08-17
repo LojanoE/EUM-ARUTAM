@@ -1,9 +1,12 @@
 // Lógica de la pantalla principal: registro de asistencia por grado y fecha.
 import { exigirSesion, cerrarSesion } from "./auth.js";
+import { APP_VERSION } from "./version.js";
 import {
   obtenerGrados, obtenerEstudiantes, obtenerHorario, obtenerAsistencia,
   guardarAsistencia, diaDeFecha, CODIGOS
 } from "./data.js";
+
+document.getElementById("lbl-version").textContent = "v" + APP_VERSION;
 
 const sesion = exigirSesion();
 if (sesion) {

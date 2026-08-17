@@ -48,6 +48,20 @@ Códigos de asistencia: `P` Presente, `I` Injustificado, `J` Justificado,
 2. En GitHub: Settings → Pages → Source: rama principal, carpeta `/ (root)`.
 3. La app quedará en `https://<usuario>.github.io/EUM-ARUTAM/`.
 
+## Versionado
+
+Se usa versionado semántico (`MAYOR.MENOR.PARCHE`):
+
+- La versión vigente está en `js/version.js` y se muestra en la app
+  (`vX.Y.Z` en el login y en la barra superior).
+- Cada cambio debe actualizar `js/version.js` y agregar su entrada en
+  `CHANGELOG.md`.
+- Después del commit, crear el tag correspondiente:
+  ```
+  git tag -a vX.Y.Z -m "Descripción breve"
+  git push --tags
+  ```
+
 ## Seguridad (limitación conocida)
 
 El login es un control básico de interfaz: las contraseñas se guardan en texto

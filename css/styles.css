@@ -211,3 +211,12 @@ button.secundario {
 }
 
 .mensaje-ok { color: var(--verde); font-weight: 600; }
+
+/* Versión de la app */
+.version {
+  margin: 1rem 0 0;
+  font-size: 0.75rem;
+  color: #98a2b0;
+}
+
+.version-barra { font-size: 0.75rem; opacity: 0.75; }

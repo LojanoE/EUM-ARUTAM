@@ -18,10 +18,14 @@
       <p id="error" class="error" hidden></p>
       <button type="submit" id="btn-login">Ingresar</button>
     </form>
+    <p class="version" id="lbl-version"></p>
   </main>
 
   <script type="module">
     import { login, sesionActual } from "./js/auth.js";
+    import { APP_VERSION } from "./js/version.js";
+
+    document.getElementById("lbl-version").textContent = "v" + APP_VERSION;
 
     // Si ya hay sesión activa, ir directo a la app.
     if (sesionActual()) location.href = "app.html";
