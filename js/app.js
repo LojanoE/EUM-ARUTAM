@@ -6,6 +6,7 @@ import { initAsistencia } from "./mod-asistencia.js";
 import { initEstudiantes } from "./mod-estudiantes.js";
 import { initHorarios } from "./mod-horarios.js";
 import { initGrados } from "./mod-grados.js";
+import { initUsuarios } from "./mod-usuarios.js";
 
 const sesion = exigirSesion();
 if (!sesion) throw new Error("Sin sesión");
@@ -19,6 +20,7 @@ const MODULOS = {
   estudiantes: { titulo: "Estudiantes", init: initEstudiantes },
   horarios:    { titulo: "Horarios",    init: initHorarios },
   grados:      { titulo: "Grados",      init: initGrados, soloAdmin: true },
+  usuarios:    { titulo: "Usuarios",    init: initUsuarios, soloAdmin: true },
 };
 
 // Oculta las entradas de menú exclusivas de administradores.

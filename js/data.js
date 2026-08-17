@@ -315,3 +315,82 @@ export function resumenEstudiante(entrada) {
     P: entrada.marcas.P
   };
 }
+
+/* ---------- Reporte por rango de fechas ---------- */
+
+// Asistencias de un grado. La query usa solo igualdad (sin rango en fecha)
+// para no exigir índice compuesto; el rango se filtra en el cliente.
+export async function obtenerAsistenciasDeGrado(grado) {
+  const q = query(collection(db, "asistencias"), where("grado", "==", grado));
+  const snap = await getDocs(q);
+  return snap.docs.map(d => d.data());
+}
+
+// Resumen por estudiante dentro de [desde, hasta] (fechas "YYYY-MM-DD").
+// Devuelve { estudianteId: {P,I,J,A,N, diasRegistrados, diasAsistidos, porcentaje} }
+export function resumenEnRango(asistencias, desde, hasta) {
+  const enRango = asistencias.filter(a => a.fecha >= desde && a.fecha <= hasta);
+  return indicePorEstudiante(enRango);
+}
+
+// indicePorEstudiante + resumenEstudiante ya cubren los conteos del rango.
+
+/* ---------- Alertas de inasistencia ---------- */
+
+// Días injustificados "puros" seguidos (racha final): días con al menos una
+// marca I y ninguna P/A. Devuelve la longitud de la racha más reciente.
+export function rachaInjustificadas(entrada) {
+  if (!entrada) return 0;
+  const fechas = Object.keys(entrada.dias).sort();
+  let racha = 0;
+  for (let i = fechas.length - 1; i >= 0; i--) {
+    const cods = entrada.dias[fechas[i]];
+    const injustificado = cods.some(c => c === "I") &&
+      !cods.some(c => c === "P" || c === "A");
+    if (!injustificado) break;
+    racha++;
+  }
+  return racha;
+}
+
+/* ---------- Gestión de usuarios (admin) ---------- */
+
+export async function obtenerUsuarios() {
+  const snap = await getDocs(collection(db, "usuarios"));
+  return snap.docs
+    .map(d => ({ id: d.id, ...d.data() }))
+    .sort((a, b) => a.usuario.localeCompare(b.usuario, "es"));
+}
+
+export async function agregarUsuario(usuario, password, nombre, rol) {
+  const ref = doc(db, "usuarios", usuario);
+  if ((await getDoc(ref)).exists()) {
+    throw new Error(`El usuario "${usuario}" ya existe.`);
+  }
+  await setDoc(ref, { usuario, password, nombre, rol });
+}
+
+export async function actualizarUsuario(usuario, datos) {
+  await updateDoc(doc(db, "usuarios", usuario), datos);
+}
+
+export async function eliminarUsuario(usuario) {
+  await deleteDoc(doc(db, "usuarios", usuario));
+}
+
+/* ---------- Configuración de documentos impresos ---------- */
+
+const CONFIG_DOC = "institucion";
+export const CONFIG_DEFECTO = {
+  subinspector: "SHARUP GAONA BRINNY KIMBERLY",
+  cargoSubinspector: "SUB-INSPECTOR V (e)"
+};
+
+export async function obtenerConfig() {
+  const snap = await getDoc(doc(db, "config", CONFIG_DOC));
+  return snap.exists() ? { ...CONFIG_DEFECTO, ...snap.data() } : { ...CONFIG_DEFECTO };
+}
+
+export async function guardarConfig(datos) {
+  await setDoc(doc(db, "config", CONFIG_DOC), datos, { merge: true });
+}

@@ -4,6 +4,25 @@ Historial de versiones de la app de Registro de Asistencia — UEM "Arutam".
 Versionado semántico: MAYOR.MENOR.PARCHE. La versión vigente está en
 `js/version.js` y cada versión tiene su tag de git (`vX.Y.Z`).
 
+## [1.3.0] — 2026-08-17
+
+### Agregado
+- **Reporte por rango de fechas** (`reporte.html`): consolidado de asistencia
+  por estudiante (P/I/J/A, días asistidos, % asistencia) entre dos fechas,
+  imprimible y exportable a CSV. Se abre desde el módulo Asistencia.
+- **Alertas de inasistencia** en el Dashboard: estudiantes con 3+ días
+  injustificados seguidos o menos del 80% de asistencia.
+- **Módulo Usuarios** (solo admin): crear, editar (nombre, rol, contraseña)
+  y eliminar cuentas. No permite eliminar la cuenta en uso ni dejar el
+  sistema sin administradores.
+- **Firma configurable en documentos**: el nombre y cargo del subinspector
+  se editan desde el módulo Usuarios (colección `config`) y salen en el
+  reporte diario y en el reporte por rango.
+
+### Cambiado
+- Los reportes impresos ahora salen en **una página A4 vertical** (antes
+  horizontal), con tipografía y márgenes compactos.
+
 ## [1.2.0] — 2026-08-17
 
 ### Agregado

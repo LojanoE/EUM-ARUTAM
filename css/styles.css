@@ -339,6 +339,9 @@ button.secundario {
 .tabla-gestion tbody tr.clickeable { cursor: pointer; }
 .tabla-gestion tbody tr.clickeable:hover { background: #f0f4fa; }
 
+.tabla-gestion tbody tr.fila-alerta { background: #fdecea; }
+.tabla-gestion tbody tr.fila-alerta td { border-color: #e0a39c; }
+
 .tabla-gestion input[type="text"], .tabla-gestion select {
   width: 100%;
   padding: 0.25rem 0.35rem;

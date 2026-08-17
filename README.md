@@ -12,14 +12,17 @@ sección vespertina de la Unidad Educativa del Milenio "Arutam"
 
 ```
 index.html            Login
-app.html              Plataforma (shell con menú lateral y 4 módulos)
+app.html              Plataforma (shell con menú lateral y módulos)
 imprimir.html         Reporte diario imprimible (formato de la hoja IMPRIMIR)
+reporte.html          Reporte consolidado por rango de fechas (imprimible/CSV)
 js/                   firebase-config, auth, data, version, app (shell)
-js/mod-dashboard.js   Resumen por grado + ranking de inasistencias
-js/mod-asistencia.js  Registro diario (marcas por hora, guardar, imprimir)
+js/mod-dashboard.js   Resumen por grado, alertas y ranking de inasistencias
+js/mod-asistencia.js  Registro diario (marcas por hora) + reporte por rango
 js/mod-estudiantes.js Búsqueda, ficha con historial, agregar/editar/mover
 js/mod-horarios.js    Horario semanal por grado (ver/editar bloques)
-css/                  styles.css (app) y print.css (reporte)
+js/mod-grados.js      CRUD de grados; renombrar actualiza todo en cascada
+js/mod-usuarios.js    CRUD de usuarios + firma del subinspector en documentos
+css/                  styles.css (app) y print.css (reportes, A4 vertical)
 seed/                 Datos iniciales (JSON) + seed.html para cargarlos
 scripts/extraer_excel.py  Genera seed/*.json desde los Excel de DOC/
 firebase.json, firestore.rules  Configuración de reglas de Firestore
@@ -27,15 +30,22 @@ firebase.json, firestore.rules  Configuración de reglas de Firestore
 
 ### Módulos y permisos
 
-- **Dashboard**: tarjetas por grado, estado de la asistencia de hoy y ranking
+- **Dashboard**: tarjetas por grado, estado de la asistencia de hoy, alertas
+  de inasistencia (3+ injustificadas seguidas o <80% de asistencia) y ranking
   de estudiantes con más inasistencias.
 - **Asistencia**: registro diario por grado y fecha, con marcas por hora
-  (P/I/J/A/N), igual que la hoja IMPRIMIR del Excel.
+  (P/I/J/A/N), igual que la hoja IMPRIMIR del Excel. Incluye el reporte
+  consolidado por rango de fechas (imprimible y CSV).
 - **Estudiantes**: consulta con filtros, ficha con historial completo; el rol
   `admin` además puede agregar, editar nombre y mover de grado (el historial
   se conserva). No se eliminan estudiantes.
 - **Horarios**: vista semanal por grado; el rol `admin` puede editar, agregar
   o quitar bloques.
+- **Grados** (solo `admin`): agregar, editar tutor/sección, renombrar (con
+  actualización en cascada de estudiantes, horarios y asistencias) y eliminar
+  grados sin estudiantes.
+- **Usuarios** (solo `admin`): gestión de cuentas y de la firma (nombre y
+  cargo del subinspector) que aparece en los documentos impresos.
 
 Los roles se definen en el campo `rol` de la colección `usuarios`
 (`admin` edita; cualquier otro rol solo consulta y registra asistencia).

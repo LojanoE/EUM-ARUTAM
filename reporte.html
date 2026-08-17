@@ -2,12 +2,13 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Reporte de Asistencia — UEM "Arutam"</title>
+  <title>Reporte de Asistencia por Rango — UEM "Arutam"</title>
   <link rel="stylesheet" href="css/print.css">
 </head>
 <body>
   <div class="no-imprimir barra-herramientas">
     <button id="btn-imprimir">Imprimir</button>
+    <button id="btn-csv">Descargar CSV</button>
     <button onclick="window.close()">Cerrar</button>
     <span id="estado">Cargando datos...</span>
   </div>
@@ -22,9 +23,9 @@
       </div>
       <table class="enc-datos">
         <tr><td class="etq">GRADO</td><td id="d-grado"></td></tr>
-        <tr><td class="etq">FECHA</td><td id="d-fecha"></td></tr>
+        <tr><td class="etq">DESDE</td><td id="d-desde"></td></tr>
+        <tr><td class="etq">HASTA</td><td id="d-hasta"></td></tr>
         <tr><td class="etq">DOCUMENTO</td><td id="d-documento"></td></tr>
-        <tr><td class="etq">DÍA</td><td id="d-dia"></td></tr>
       </table>
     </div>
 
@@ -34,22 +35,21 @@
       <span><strong>TUTOR:</strong> <span id="i-tutor"></span></span>
     </p>
 
-    <!-- Horario del día -->
-    <table class="tabla tabla-horario-dia">
+    <!-- Consolidado por estudiante en el rango -->
+    <table class="tabla tabla-nomina">
       <thead>
         <tr>
-          <th>N</th><th>ASIGNATURA</th><th>TIEMPO</th>
-          <th>Nº DE ESTUDIANTES</th><th>NOMBRE DEL DOCENTE</th>
-          <th>FIRMA DEL DOCENTE</th><th>TEMA</th>
+          <th rowspan="2">Nº</th><th rowspan="2">NÓMINA DE ESTUDIANTES</th>
+          <th colspan="4">MARCAS EN EL PERÍODO</th>
+          <th rowspan="2">DÍAS REGISTRADOS</th>
+          <th rowspan="2">DÍAS ASISTIDOS</th>
+          <th rowspan="2">% ASISTENCIA</th>
+        </tr>
+        <tr>
+          <th>PRESENTE</th><th>JUSTIFICADO</th><th>INJUSTIFICADO</th><th>ATRASO</th>
         </tr>
       </thead>
-      <tbody id="tbody-horario"></tbody>
-    </table>
-
-    <!-- Nómina con marcas por hora -->
-    <table class="tabla tabla-nomina" id="tabla-nomina">
-      <thead id="thead-nomina"></thead>
-      <tbody id="tbody-nomina"></tbody>
+      <tbody id="tbody-consolidado"></tbody>
     </table>
 
     <p class="observaciones">
@@ -66,6 +66,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/imprimir.js"></script>
+  <script type="module" src="js/reporte.js"></script>
 </body>
 </html>

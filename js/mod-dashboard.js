@@ -2,8 +2,13 @@
 import {
   obtenerGrados, obtenerTodosLosEstudiantes, obtenerAsistencia,
   obtenerTodasLasAsistencias, indicePorEstudiante, resumenEstudiante,
-  fechaHoy, diaDeFecha, esc
+  rachaInjustificadas, fechaHoy, diaDeFecha, esc
 } from "./data.js";
+
+// Umbrales de alerta (régimen estudiantil): días injustificados seguidos
+// y porcentaje mínimo de asistencia.
+const UMBRAL_RACHA = 3;
+const UMBRAL_PCT = 80;
 
 export async function initDashboard(contenedor) {
   const hoy = fechaHoy();
@@ -72,6 +77,48 @@ export async function initDashboard(contenedor) {
         <div class="detalle">${asistencias.length} días con registro</div>
       </div>
     </div>`;
+
+  // Alertas: injustificadas seguidas o porcentaje de asistencia bajo.
+  const alertas = estudiantes
+    .map(e => {
+      const entrada = indice[e.id];
+      return { est: e, r: resumenEstudiante(entrada), racha: rachaInjustificadas(entrada) };
+    })
+    .filter(x => x.racha >= UMBRAL_RACHA ||
+                 (x.r.porcentaje !== null && x.r.porcentaje < UMBRAL_PCT))
+    .sort((a, b) => b.racha - a.racha || (a.r.porcentaje ?? 100) - (b.r.porcentaje ?? 100));
+
+  html += `
+    <div class="panel">
+      <h2 style="font-size:1rem; margin-top:0;">Alertas de inasistencia</h2>`;
+  if (alertas.length === 0) {
+    html += `<p class="info">Sin alertas: ningún estudiante acumula ${UMBRAL_RACHA}+ ` +
+            `injustificadas seguidas ni menos del ${UMBRAL_PCT}% de asistencia.</p>`;
+  } else {
+    html += `
+      <table class="tabla-gestion">
+        <thead>
+          <tr>
+            <th>Estudiante</th><th>Grado</th>
+            <th>Injustificadas seguidas</th><th>% asistencia</th><th>Motivo</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${alertas.map(x => `
+            <tr class="fila-alerta">
+              <td>${esc(x.est.nombre)}</td>
+              <td>${esc(x.est.grado)}</td>
+              <td class="centro">${x.racha}</td>
+              <td class="centro">${x.r.porcentaje === null ? "—" : x.r.porcentaje + "%"}</td>
+              <td>${[
+                x.racha >= UMBRAL_RACHA ? `${x.racha} injustificadas seguidas` : "",
+                x.r.porcentaje !== null && x.r.porcentaje < UMBRAL_PCT ? `asistencia ${x.r.porcentaje}%` : ""
+              ].filter(Boolean).join(" · ")}</td>
+            </tr>`).join("")}
+        </tbody>
+      </table>`;
+  }
+  html += `</div>`;
 
   // Ranking de inasistencias (I + A por marcas de hora), top 15.
   const ranking = estudiantes

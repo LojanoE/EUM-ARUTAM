@@ -2,7 +2,7 @@
 import { exigirSesion } from "./auth.js";
 import {
   obtenerEstudiantes, obtenerHorario, obtenerTutor, obtenerAsistencia,
-  diaDeFecha, esc
+  obtenerConfig, diaDeFecha, esc
 } from "./data.js";
 import { collection, getDocs }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -56,13 +56,18 @@ async function iniciar() {
     return;
   }
 
-  const [estudiantes, horario, tutor, asistencia] = await Promise.all([
+  const [estudiantes, horario, tutor, asistencia, config] = await Promise.all([
     obtenerEstudiantes(grado),
     obtenerHorario(grado, dia),
     obtenerTutor(grado),
     obtenerAsistencia(grado, fecha),
+    obtenerConfig(),
   ]);
   const registros = asistencia?.registros || {};
+
+  // Firma configurable (módulo Usuarios)
+  document.getElementById("f-nombre").textContent = config.subinspector;
+  document.getElementById("f-cargo").textContent = config.cargoSubinspector;
 
   // Encabezado
   document.getElementById("d-grado").textContent = grado;

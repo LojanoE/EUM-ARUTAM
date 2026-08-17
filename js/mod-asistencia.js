@@ -22,6 +22,23 @@ export async function initAsistencia(contenedor, ctx) {
       <p id="aviso-dia" class="aviso" hidden></p>
     </div>
 
+    <div class="panel selectores">
+      <div>
+        <label for="r-desde">Reporte: desde</label>
+        <input type="date" id="r-desde">
+      </div>
+      <div>
+        <label for="r-hasta">hasta</label>
+        <input type="date" id="r-hasta">
+      </div>
+      <div>
+        <button class="secundario" id="btn-reporte">Generar reporte por rango</button>
+      </div>
+      <p class="info" style="width:100%; margin:0;">
+        Consolidado del grado seleccionado entre dos fechas, listo para imprimir o exportar a CSV.
+      </p>
+    </div>
+
     <div class="panel" id="panel-horario" hidden>
       <h2 style="font-size:1rem; margin-top:0;">Horario del día — <span id="lbl-dia"></span></h2>
       <table class="tabla-horario">
@@ -215,6 +232,28 @@ export async function initAsistencia(contenedor, ctx) {
     const grado = selGrado.value;
     const fecha = inpFecha.value;
     const url = `imprimir.html?grado=${encodeURIComponent(grado)}&fecha=${encodeURIComponent(fecha)}`;
+    window.open(url, "_blank");
+  });
+
+  // Rango por defecto: mes en curso.
+  const hoy = fechaHoy();
+  contenedor.querySelector("#r-desde").value = hoy.slice(0, 8) + "01";
+  contenedor.querySelector("#r-hasta").value = hoy;
+
+  contenedor.querySelector("#btn-reporte").addEventListener("click", () => {
+    const grado = selGrado.value;
+    const desde = contenedor.querySelector("#r-desde").value;
+    const hasta = contenedor.querySelector("#r-hasta").value;
+    if (!grado || !desde || !hasta) {
+      alert("Seleccione el grado y ambas fechas del rango.");
+      return;
+    }
+    if (desde > hasta) {
+      alert("La fecha 'desde' no puede ser posterior a 'hasta'.");
+      return;
+    }
+    const url = `reporte.html?grado=${encodeURIComponent(grado)}` +
+      `&desde=${encodeURIComponent(desde)}&hasta=${encodeURIComponent(hasta)}`;
     window.open(url, "_blank");
   });
 
