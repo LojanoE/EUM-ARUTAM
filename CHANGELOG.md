@@ -4,6 +4,17 @@ Historial de versiones de la app de Registro de Asistencia — UEM "Arutam".
 Versionado semántico: MAYOR.MENOR.PARCHE. La versión vigente está en
 `js/version.js` y cada versión tiene su tag de git (`vX.Y.Z`).
 
+## [1.2.0] — 2026-08-17
+
+### Agregado
+- Nuevo módulo **Grados** (solo administradores): agregar grados, editar
+  sección y tutor, renombrar y eliminar.
+- Renombrar un grado actualiza en cascada sus estudiantes, sus bloques de
+  horario y todo su historial de asistencia (incluidas las claves de las
+  marcas), por lotes para no exceder el límite de Firestore.
+- Eliminar un grado solo es posible cuando no tiene estudiantes; borra su
+  horario y sus registros de asistencia previa confirmación.
+
 ## [1.1.1] — 2026-08-17
 
 ### Corregido

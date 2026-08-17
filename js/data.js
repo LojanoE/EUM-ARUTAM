@@ -1,7 +1,7 @@
 // Capa de acceso a datos Firestore.
 import {
   collection, doc, getDoc, getDocs, query, setDoc, where, serverTimestamp,
-  addDoc, updateDoc, deleteDoc
+  addDoc, updateDoc, deleteDoc, writeBatch
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { db } from "./firebase-config.js";
 
@@ -127,6 +127,128 @@ export async function actualizarBloqueHorario(id, datos) {
 
 export async function eliminarBloqueHorario(id) {
   await deleteDoc(doc(db, "horarios", id));
+}
+
+/* ---------- Gestión de grados (admin) ---------- */
+
+export async function obtenerTutores() {
+  const snap = await getDocs(collection(db, "tutores"));
+  return snap.docs
+    .map(d => ({ grado: d.id, ...d.data() }))
+    .sort((a, b) => a.grado.localeCompare(b.grado, "es"));
+}
+
+// Cuenta estudiantes, bloques de horario y días de asistencia de un grado.
+export async function contarPorGrado(grado) {
+  const [est, hor, asi] = await Promise.all([
+    getDocs(query(collection(db, "estudiantes"), where("grado", "==", grado))),
+    getDocs(query(collection(db, "horarios"), where("grado", "==", grado))),
+    getDocs(query(collection(db, "asistencias"), where("grado", "==", grado))),
+  ]);
+  return { estudiantes: est.size, bloques: hor.size, diasAsistencia: asi.size };
+}
+
+export async function agregarGrado(grado, seccion, tutor) {
+  const ref = doc(db, "tutores", grado);
+  const snap = await getDoc(ref);
+  if (snap.exists()) throw new Error(`El grado "${grado}" ya existe.`);
+  await setDoc(ref, { grado, seccion, tutor });
+}
+
+export async function actualizarGrado(grado, datos) {
+  await updateDoc(doc(db, "tutores", grado), datos);
+}
+
+// Ejecuta operaciones de escritura en lotes (Firestore admite máx. 500).
+async function ejecutarEnLotes(operaciones) {
+  let batch = writeBatch(db);
+  let enBatch = 0;
+  for (const op of operaciones) {
+    op(batch);
+    enBatch++;
+    if (enBatch === 490) {
+      await batch.commit();
+      batch = writeBatch(db);
+      enBatch = 0;
+    }
+  }
+  if (enBatch > 0) await batch.commit();
+}
+
+// Renombra un grado actualizando en cascada estudiantes, horarios y el
+// historial de asistencia (incluidas las claves de `registros`).
+export async function renombrarGrado(viejo, nuevo, datosTutor) {
+  const refNuevo = doc(db, "tutores", nuevo);
+  if ((await getDoc(refNuevo)).exists()) {
+    throw new Error(`Ya existe el grado "${nuevo}".`);
+  }
+  const [estSnap, horSnap, asiSnap] = await Promise.all([
+    getDocs(query(collection(db, "estudiantes"), where("grado", "==", viejo))),
+    getDocs(query(collection(db, "horarios"), where("grado", "==", viejo))),
+    getDocs(query(collection(db, "asistencias"), where("grado", "==", viejo))),
+  ]);
+
+  const ops = [];
+  ops.push(b => b.set(refNuevo, { grado: nuevo, ...datosTutor }));
+  ops.push(b => b.delete(doc(db, "tutores", viejo)));
+
+  // Los ids semilla llevan el grado como prefijo (`<grado>__...`); esos
+  // documentos se recrean con el nuevo id. Los agregados luego por la app
+  // tienen id automático: basta actualizar el campo.
+  const prefijo = viejo + "__";
+  const trasladar = (snap, coleccion) => {
+    for (const d of snap.docs) {
+      const datos = { ...d.data(), grado: nuevo };
+      if (d.id.startsWith(prefijo)) {
+        const nuevoId = nuevo + "__" + d.id.slice(prefijo.length);
+        ops.push(b => b.set(doc(db, coleccion, nuevoId), datos));
+        ops.push(b => b.delete(doc(db, coleccion, d.id)));
+      } else {
+        ops.push(b => b.update(d.ref, { grado: nuevo }));
+      }
+    }
+  };
+  trasladar(estSnap, "estudiantes");
+  trasladar(horSnap, "horarios");
+
+  for (const d of asiSnap.docs) {
+    const data = d.data();
+    const registros = {};
+    for (const [k, v] of Object.entries(data.registros || {})) {
+      registros[k.startsWith(prefijo) ? nuevo + "__" + k.slice(prefijo.length) : k] = v;
+    }
+    ops.push(b => b.set(doc(db, "asistencias", `${nuevo}_${data.fecha}`),
+      { ...data, grado: nuevo, registros }));
+    ops.push(b => b.delete(doc(db, "asistencias", d.id)));
+  }
+
+  await ejecutarEnLotes(ops);
+  return {
+    estudiantes: estSnap.size,
+    bloques: horSnap.size,
+    diasAsistencia: asiSnap.size
+  };
+}
+
+// Elimina un grado sin estudiantes, junto con su horario y sus registros
+// de asistencia. Si tiene estudiantes, hay que moverlos primero.
+export async function eliminarGrado(grado) {
+  const conteos = await contarPorGrado(grado);
+  if (conteos.estudiantes > 0) {
+    throw new Error(
+      `El grado tiene ${conteos.estudiantes} estudiante(s). ` +
+      `Muévalos a otro grado antes de eliminarlo.`);
+  }
+  const [horSnap, asiSnap] = await Promise.all([
+    getDocs(query(collection(db, "horarios"), where("grado", "==", grado))),
+    getDocs(query(collection(db, "asistencias"), where("grado", "==", grado))),
+  ]);
+  const ops = [];
+  ops.push(b => b.delete(doc(db, "tutores", grado)));
+  for (const d of horSnap.docs) ops.push(b => b.delete(d.ref));
+  for (const d of asiSnap.docs) ops.push(b => b.delete(d.ref));
+  await ejecutarEnLotes(ops);
+  return conteos;
 }
 
 /* ---------- Historial de asistencia (dashboard y ficha de estudiante) ---------- */

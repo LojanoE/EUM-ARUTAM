@@ -5,6 +5,7 @@ import { initDashboard } from "./mod-dashboard.js";
 import { initAsistencia } from "./mod-asistencia.js";
 import { initEstudiantes } from "./mod-estudiantes.js";
 import { initHorarios } from "./mod-horarios.js";
+import { initGrados } from "./mod-grados.js";
 
 const sesion = exigirSesion();
 if (!sesion) throw new Error("Sin sesión");
@@ -17,7 +18,15 @@ const MODULOS = {
   asistencia:  { titulo: "Asistencia",  init: initAsistencia },
   estudiantes: { titulo: "Estudiantes", init: initEstudiantes },
   horarios:    { titulo: "Horarios",    init: initHorarios },
+  grados:      { titulo: "Grados",      init: initGrados, soloAdmin: true },
 };
+
+// Oculta las entradas de menú exclusivas de administradores.
+if (!ctx.esAdmin) {
+  document.querySelectorAll(".nav-item").forEach(b => {
+    if (MODULOS[b.dataset.modulo]?.soloAdmin) b.hidden = true;
+  });
+}
 
 document.getElementById("nombre-usuario").textContent =
   `${sesion.nombre} (${sesion.rol})`;
@@ -29,6 +38,7 @@ document.getElementById("btn-salir").addEventListener("click", () => {
 });
 
 async function mostrarModulo(nombre) {
+  if (MODULOS[nombre].soloAdmin && !ctx.esAdmin) return;
   document.querySelectorAll(".nav-item").forEach(b =>
     b.classList.toggle("activo", b.dataset.modulo === nombre));
   for (const key of Object.keys(MODULOS)) {
