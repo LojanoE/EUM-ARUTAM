@@ -2,7 +2,7 @@
 import {
   obtenerGrados, obtenerTodosLosEstudiantes, obtenerTodasLasAsistencias,
   indicePorEstudiante, resumenEstudiante, agregarEstudiante,
-  actualizarEstudiante, diaDeFecha, CODIGOS_DESC
+  actualizarEstudiante, diaDeFecha, CODIGOS_DESC, esc
 } from "./data.js";
 
 export async function initEstudiantes(contenedor, ctx) {
@@ -20,7 +20,7 @@ export async function initEstudiantes(contenedor, ctx) {
         <label for="f-grado">Grado</label>
         <select id="f-grado">
           <option value="">Todos</option>
-          ${grados.map(g => `<option value="${g}">${g}</option>`).join("")}
+          ${grados.map(g => `<option value="${esc(g)}">${esc(g)}</option>`).join("")}
         </select>
       </div>
       <div style="flex:1; min-width:200px;">
@@ -41,7 +41,7 @@ export async function initEstudiantes(contenedor, ctx) {
         <div>
           <label for="n-grado">Grado</label>
           <select id="n-grado">
-            ${grados.map(g => `<option value="${g}">${g}</option>`).join("")}
+            ${grados.map(g => `<option value="${esc(g)}">${esc(g)}</option>`).join("")}
           </select>
         </div>
         <div><button class="primario" id="n-agregar">Agregar</button></div>
@@ -86,9 +86,9 @@ export async function initEstudiantes(contenedor, ctx) {
     tbody.innerHTML = lista.map(est => {
       const r = resumenEstudiante(indice[est.id]);
       return `
-        <tr class="clickeable" data-id="${est.id}">
-          <td>${est.nombre}</td>
-          <td>${est.grado}</td>
+        <tr class="clickeable" data-id="${esc(est.id)}">
+          <td>${esc(est.nombre)}</td>
+          <td>${esc(est.grado)}</td>
           <td class="centro">${r.diasAsistidos}</td>
           <td class="centro">${r.I}</td>
           <td class="centro">${r.J}</td>
@@ -96,7 +96,7 @@ export async function initEstudiantes(contenedor, ctx) {
           <td class="centro">${r.porcentaje === null ? "—" : r.porcentaje + "%"}</td>
           ${ctx.esAdmin ? `
           <td class="centro">
-            <button class="btn-mini" data-editar="${est.id}">Editar / Mover</button>
+            <button class="btn-mini" data-editar="${esc(est.id)}">Editar / Mover</button>
           </td>` : ""}
         </tr>`;
     }).join("");
@@ -108,8 +108,8 @@ export async function initEstudiantes(contenedor, ctx) {
     const faltas = entrada ? entrada.faltas : [];
     fichaContenedor.innerHTML = `
       <div class="ficha">
-        <h3>${est.nombre}</h3>
-        <p class="info">Grado actual: <strong>${est.grado}</strong></p>
+        <h3>${esc(est.nombre)}</h3>
+        <p class="info">Grado actual: <strong>${esc(est.grado)}</strong></p>
         <div class="totales">
           <span>Días registrados<strong>${r.diasRegistrados}</strong></span>
           <span>Días asistidos<strong>${r.diasAsistidos}</strong></span>
@@ -132,7 +132,7 @@ export async function initEstudiantes(contenedor, ctx) {
                 <td>${diaDeFecha(f.fecha) || ""}</td>
                 <td class="centro">${f.hora}ª</td>
                 <td class="centro"><span class="insignia ${f.codigo}">${f.codigo} — ${CODIGOS_DESC[f.codigo]}</span></td>
-                <td>${f.grado}</td>
+                <td>${esc(f.grado)}</td>
               </tr>`).join("")}
           </tbody>
         </table>`}
@@ -148,10 +148,10 @@ export async function initEstudiantes(contenedor, ctx) {
   function pintarEdicion(fila, est) {
     fila.classList.remove("clickeable");
     fila.innerHTML = `
-      <td><input type="text" id="e-nombre" value="${est.nombre}"></td>
+      <td><input type="text" id="e-nombre" value="${esc(est.nombre)}"></td>
       <td>
         <select id="e-grado">
-          ${grados.map(g => `<option value="${g}" ${g === est.grado ? "selected" : ""}>${g}</option>`).join("")}
+          ${grados.map(g => `<option value="${esc(g)}" ${g === est.grado ? "selected" : ""}>${esc(g)}</option>`).join("")}
         </select>
       </td>
       <td colspan="5" class="centro info">Guardar aplica el cambio de nombre y/o de grado</td>
@@ -184,12 +184,14 @@ export async function initEstudiantes(contenedor, ctx) {
     const btnEditar = e.target.closest("[data-editar]");
     if (btnEditar) {
       const est = estudiantes.find(x => x.id === btnEditar.dataset.editar);
+      if (!est) return;
       pintarEdicion(btnEditar.closest("tr"), est);
       return;
     }
     const fila = e.target.closest("tr.clickeable");
     if (fila) {
       const est = estudiantes.find(x => x.id === fila.dataset.id);
+      if (!est) return;
       pintarFicha(est);
     }
   });

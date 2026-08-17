@@ -2,7 +2,7 @@
 import {
   obtenerGrados, obtenerHorariosDeGrado, obtenerAsistencia,
   agregarBloqueHorario, actualizarBloqueHorario, eliminarBloqueHorario,
-  DIAS_SEMANA, fechaHoy, diaDeFecha
+  DIAS_SEMANA, fechaHoy, diaDeFecha, esc
 } from "./data.js";
 
 export async function initHorarios(contenedor, ctx) {
@@ -14,7 +14,7 @@ export async function initHorarios(contenedor, ctx) {
       <div>
         <label for="h-grado">Grado</label>
         <select id="h-grado">
-          ${grados.map(g => `<option value="${g}">${g}</option>`).join("")}
+          ${grados.map(g => `<option value="${esc(g)}">${esc(g)}</option>`).join("")}
         </select>
       </div>
       <p id="h-aviso" class="aviso" hidden></p>
@@ -58,15 +58,15 @@ export async function initHorarios(contenedor, ctx) {
               ${delDia.length === 0
                 ? `<tr><td colspan="${ctx.esAdmin ? 5 : 4}" class="info">Sin bloques registrados.</td></tr>`
                 : delDia.map(b => `
-                  <tr data-id="${b.id}">
+                  <tr data-id="${esc(b.id)}">
                     <td class="centro">${b.orden}</td>
-                    <td class="celda-asignatura">${b.asignatura}</td>
-                    <td class="celda-tiempo">${b.tiempo}</td>
-                    <td class="celda-docente">${b.docente}</td>
+                    <td class="celda-asignatura">${esc(b.asignatura)}</td>
+                    <td class="celda-tiempo">${esc(b.tiempo)}</td>
+                    <td class="celda-docente">${esc(b.docente)}</td>
                     ${ctx.esAdmin ? `
                     <td class="centro">
-                      <button class="btn-mini" data-editar-bloque="${b.id}">Editar</button>
-                      <button class="btn-mini peligro" data-quitar-bloque="${b.id}">Quitar</button>
+                      <button class="btn-mini" data-editar-bloque="${esc(b.id)}">Editar</button>
+                      <button class="btn-mini peligro" data-quitar-bloque="${esc(b.id)}">Quitar</button>
                     </td>` : ""}
                   </tr>`).join("")}
             </tbody>
@@ -74,19 +74,19 @@ export async function initHorarios(contenedor, ctx) {
           ${ctx.esAdmin ? `
           <div class="selectores" style="margin-top:0.6rem;">
             <div style="flex:1; min-width:150px;">
-              <input type="text" placeholder="Asignatura" data-nuevo-asignatura="${dia}"
+              <input type="text" placeholder="Asignatura" data-nuevo-asignatura="${esc(dia)}"
                      style="width:100%; padding:0.35rem; border:1px solid var(--borde); border-radius:4px;">
             </div>
             <div>
-              <input type="text" placeholder="00H00 - 00H45" data-nuevo-tiempo="${dia}"
+              <input type="text" placeholder="00H00 - 00H45" data-nuevo-tiempo="${esc(dia)}"
                      style="width:9.5rem; padding:0.35rem; border:1px solid var(--borde); border-radius:4px;">
             </div>
             <div style="flex:1; min-width:150px;">
-              <input type="text" placeholder="Docente" data-nuevo-docente="${dia}"
+              <input type="text" placeholder="Docente" data-nuevo-docente="${esc(dia)}"
                      style="width:100%; padding:0.35rem; border:1px solid var(--borde); border-radius:4px;">
             </div>
             <div>
-              <button class="btn-mini" data-agregar-dia="${dia}">+ Agregar bloque</button>
+              <button class="btn-mini" data-agregar-dia="${esc(dia)}">+ Agregar bloque</button>
             </div>
           </div>` : ""}
         </div>`;
@@ -106,11 +106,11 @@ export async function initHorarios(contenedor, ctx) {
       const docente = fila.querySelector(".celda-docente").textContent;
       fila.innerHTML = `
         <td class="centro">${fila.cells[0].textContent}</td>
-        <td><input type="text" id="b-asignatura" value="${asignatura}"></td>
-        <td><input type="text" id="b-tiempo" value="${tiempo}"></td>
-        <td><input type="text" id="b-docente" value="${docente}"></td>
+        <td><input type="text" id="b-asignatura" value="${esc(asignatura)}"></td>
+        <td><input type="text" id="b-tiempo" value="${esc(tiempo)}"></td>
+        <td><input type="text" id="b-docente" value="${esc(docente)}"></td>
         <td class="centro">
-          <button class="btn-mini" data-guardar-bloque="${id}">Guardar</button>
+          <button class="btn-mini" data-guardar-bloque="${esc(id)}">Guardar</button>
           <button class="btn-mini peligro" data-cancelar>Cancelar</button>
         </td>`;
       return;

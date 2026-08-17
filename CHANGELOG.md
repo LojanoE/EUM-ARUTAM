@@ -4,6 +4,16 @@ Historial de versiones de la app de Registro de Asistencia — UEM "Arutam".
 Versionado semántico: MAYOR.MENOR.PARCHE. La versión vigente está en
 `js/version.js` y cada versión tiene su tag de git (`vX.Y.Z`).
 
+## [1.1.1] — 2026-08-17
+
+### Corregido
+- Los nombres de grado llevan comillas (`8vo EGB "A"`) y se insertaban sin
+  escapar en el HTML: truncaban los `value` de los selectores (los módulos
+  Horarios y Asistencia salían vacíos) y los atributos `data-id` (el botón
+  "Editar / Mover" de Estudiantes lanzaba `Cannot read properties of
+  undefined`). Se agregó el helper `esc()` en `js/data.js` y se escapan todas
+  las interpolaciones de datos en los módulos.
+
 ## [1.1.0] — 2026-08-17
 
 ### Agregado

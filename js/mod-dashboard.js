@@ -2,7 +2,7 @@
 import {
   obtenerGrados, obtenerTodosLosEstudiantes, obtenerAsistencia,
   obtenerTodasLasAsistencias, indicePorEstudiante, resumenEstudiante,
-  fechaHoy, diaDeFecha
+  fechaHoy, diaDeFecha, esc
 } from "./data.js";
 
 export async function initDashboard(contenedor) {
@@ -58,7 +58,7 @@ export async function initDashboard(contenedor) {
     }
     html += `
       <div class="tarjeta">
-        <h3>${g}</h3>
+        <h3>${esc(g)}</h3>
         <div class="numero">${lista.length}</div>
         <div class="detalle">estudiantes</div>
         <div class="detalle">${estado}</div>
@@ -100,8 +100,8 @@ export async function initDashboard(contenedor) {
           ${ranking.map((x, i) => `
             <tr>
               <td class="centro">${i + 1}</td>
-              <td>${x.est.nombre}</td>
-              <td>${x.est.grado}</td>
+              <td>${esc(x.est.nombre)}</td>
+              <td>${esc(x.est.grado)}</td>
               <td class="centro">${x.r.I}</td>
               <td class="centro">${x.r.A}</td>
               <td class="centro">${x.r.J}</td>

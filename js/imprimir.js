@@ -2,7 +2,7 @@
 import { exigirSesion } from "./auth.js";
 import {
   obtenerEstudiantes, obtenerHorario, obtenerTutor, obtenerAsistencia,
-  diaDeFecha
+  diaDeFecha, esc
 } from "./data.js";
 import { collection, getDocs }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -78,10 +78,10 @@ async function iniciar() {
   document.getElementById("tbody-horario").innerHTML = horario.map((h, i) => `
     <tr>
       <td class="centro">${i + 1}</td>
-      <td>${h.asignatura}</td>
-      <td class="centro">${h.tiempo}</td>
+      <td>${esc(h.asignatura)}</td>
+      <td class="centro">${esc(h.tiempo)}</td>
       <td></td>
-      <td>${h.docente}</td>
+      <td>${esc(h.docente)}</td>
       <td></td>
       <td></td>
     </tr>`).join("");
@@ -110,7 +110,7 @@ async function iniciar() {
     const hayMarcas = Object.keys(marcas).length > 0;
     return `<tr>
       <td class="centro">${idx + 1}</td>
-      <td class="nombre">${est.nombre}</td>
+      <td class="nombre">${esc(est.nombre)}</td>
       ${celdas}
       <td class="centro">${hayMarcas ? contar(marcas, "J") : ""}</td>
       <td class="centro">${hayMarcas ? contar(marcas, "I") : ""}</td>

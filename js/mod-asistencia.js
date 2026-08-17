@@ -1,7 +1,7 @@
 // Módulo: registro de asistencia diaria (nómina con marcas por hora).
 import {
   obtenerGrados, obtenerEstudiantes, obtenerHorario, obtenerAsistencia,
-  guardarAsistencia, diaDeFecha, fechaHoy, CODIGOS
+  guardarAsistencia, diaDeFecha, fechaHoy, CODIGOS, esc
 } from "./data.js";
 
 export async function initAsistencia(contenedor, ctx) {
@@ -72,7 +72,7 @@ export async function initAsistencia(contenedor, ctx) {
   inpFecha.value = fechaHoy();
   const grados = await obtenerGrados();
   selGrado.innerHTML = grados
-    .map(g => `<option value="${g}">${g}</option>`)
+    .map(g => `<option value="${esc(g)}">${esc(g)}</option>`)
     .join("");
 
   async function cargar() {
@@ -115,9 +115,9 @@ export async function initAsistencia(contenedor, ctx) {
     tbodyHorario.innerHTML = horarioDia.map((h, i) => `
       <tr>
         <td class="centro">${i + 1}</td>
-        <td>${h.asignatura}</td>
-        <td>${h.tiempo}</td>
-        <td>${h.docente}</td>
+        <td>${esc(h.asignatura)}</td>
+        <td>${esc(h.tiempo)}</td>
+        <td>${esc(h.docente)}</td>
       </tr>`).join("");
   }
 
@@ -143,14 +143,14 @@ export async function initAsistencia(contenedor, ctx) {
       for (let h = 1; h <= numHoras; h++) {
         const valor = marcas[h] || "";
         celdas += `<td class="centro">
-          <select class="marca ${valor || "vacia"}" data-est="${est.id}" data-hora="${h}">
+          <select class="marca ${valor || "vacia"}" data-est="${esc(est.id)}" data-hora="${h}">
             ${opcionesMarca(valor)}
           </select>
         </td>`;
       }
       return `<tr>
         <td class="centro">${idx + 1}</td>
-        <td class="nombre">${est.nombre}</td>
+        <td class="nombre">${esc(est.nombre)}</td>
         ${celdas}
       </tr>`;
     }).join("");

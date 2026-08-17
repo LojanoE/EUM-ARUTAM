@@ -1,3 +1,3 @@
 // Única fuente de la versión de la aplicación.
 // Actualizar junto con CHANGELOG.md en cada cambio (ver "Versionado" en README).
-export const APP_VERSION = "1.1.0";
+export const APP_VERSION = "1.1.1";

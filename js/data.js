@@ -5,6 +5,13 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { db } from "./firebase-config.js";
 
+// Escapa texto para interpolarlo en HTML (atributos o contenido).
+// Necesario porque los grados llevan comillas: 8vo EGB "A".
+export function esc(s) {
+  return String(s ?? "").replace(/[&<>"']/g, c =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+
 export const DIAS_SEMANA = ["LUNES", "MARTES", "MIÉRCOLES", "JUEVES", "VIERNES"];
 export const CODIGOS = ["P", "I", "J", "A", "N"];
 export const CODIGOS_DESC = {
