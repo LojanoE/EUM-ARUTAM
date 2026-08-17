@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Carga inicial de datos — UEM "Arutam"</title>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+  <main class="contenido">
+    <div class="panel">
+      <h1>Carga inicial de datos (un solo uso)</h1>
+      <p class="info">
+        Sube a Firestore los datos extraídos de los Excel: estudiantes, horarios,
+        tutores y usuarios. Ejecutar una sola vez; si se repite, sobrescribe los
+        mismos documentos (no duplica).
+      </p>
+      <p class="aviso">
+        Elimine o renombre esta página (seed/seed.html) después de la carga.
+      </p>
+      <button class="primario" id="btn-cargar">Cargar datos en Firestore</button>
+      <pre id="log" style="white-space:pre-wrap; margin-top:1rem;"></pre>
+    </div>
+  </main>
+
+  <script type="module">
+    import { doc, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { db } from "../js/firebase-config.js";
+
+    const log = (msg) => {
+      document.getElementById("log").textContent += msg + "\n";
+    };
+
+    async function leerJSON(nombre) {
+      const resp = await fetch(nombre);
+      if (!resp.ok) throw new Error(`No se pudo leer ${nombre}`);
+      return resp.json();
+    }
+
+    // Firestore admite máx. 500 operaciones por batch.
+    async function subirEnLotes(operaciones) {
+      let batch = writeBatch(db);
+      let enBatch = 0;
+      let total = 0;
+      for (const op of operaciones) {
+        op(batch);
+        enBatch++;
+        if (enBatch === 490) {
+          await batch.commit();
+          total += enBatch;
+          batch = writeBatch(db);
+          enBatch = 0;
+        }
+      }
+      if (enBatch > 0) {
+        await batch.commit();
+        total += enBatch;
+      }
+      return total;
+    }
+
+    document.getElementById("btn-cargar").addEventListener("click", async (e) => {
+      e.target.disabled = true;
+      try {
+        const [estudiantes, horarios, tutores, usuarios] = await Promise.all([
+          leerJSON("estudiantes.json"),
+          leerJSON("horarios.json"),
+          leerJSON("tutores.json"),
+          leerJSON("usuarios.json"),
+        ]);
+
+        let n = await subirEnLotes(estudiantes.map(est => (batch) =>
+          batch.set(doc(db, "estudiantes", `${est.grado}__${est.numId}`), est)
+        ));
+        log(`Estudiantes cargados: ${n}`);
+
+        n = await subirEnLotes(horarios.map(h => (batch) =>
+          batch.set(doc(db, "horarios", `${h.grado}__${h.dia}__${h.orden}`), h)
+        ));
+        log(`Bloques de horario cargados: ${n}`);
+
+        n = await subirEnLotes(tutores.map(t => (batch) =>
+          batch.set(doc(db, "tutores", t.grado), t)
+        ));
+        log(`Tutores cargados: ${n}`);
+
+        n = await subirEnLotes(usuarios.map(u => (batch) =>
+          batch.set(doc(db, "usuarios", u.usuario), u)
+        ));
+        log(`Usuarios cargados: ${n}`);
+
+        log("Carga completa. Ya puede eliminar esta página.");
+      } catch (err) {
+        console.error(err);
+        log("ERROR: " + err.message);
+        e.target.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

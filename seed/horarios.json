@@ -1,0 +1,1562 @@
+[
+  {
+    "grado": "8vo EGB \"A\"",
+    "dia": "LUNES",
+    "asignatura": "INGLÉS",
+    "tiempo": "13H00 - 13H45",
+    "docente": "Mgtr. Alexandra Fernandez",
+    "orden": 1
+  },
+  {
+    "grado": "8vo EGB \"A\"",
+    "dia": "LUNES",
+    "asignatura": "ORIENTACIÓN VOCACIONAL",
+    "tiempo": "13H45 - 14H30",
+    "docente": "Lic. Luis Mijas",
+    "orden": 2
+  },
+  {
+    "grado": "8vo EGB \"A\"",
+    "dia": "LUNES",
+    "asignatura": "TUTORIA",
+    "tiempo": "14H30 - 15H15",
+    "docente": "Lic. Luis Mijas",
+    "orden": 3
+  },
+  {
+    "grado": "8vo EGB \"A\"",
+    "dia": "LUNES",
+    "asignatura": "ANIMACION A LA LECTURA",
+    "tiempo": "15H15 - 16H00",
+    "docente": "Lic. Elva Jiménez",
+    "orden": 4
+  },
+  {
+    "grado": "8vo EGB \"A\"",
+    "dia": "LUNES",
+    "asignatura": "CIENCIAS NATURALES",
+    "tiempo": "16H30 - 17H15",
+    "docente": "Lic. Carlos Vega",
+    "orden": 5
+  },
+  {
+    "grado": "8vo EGB \"A\"",
+    "dia": "LUNES",
+    "asignatura": "CIENCIAS NATURALES",
+    "tiempo": "17H15 - 18H00",
+    "docente": "Lic. Carlos Vega",
+    "orden": 6
+  },
+  {
+    "grado": "9no EGB \"A\"",
+    "dia": "LUNES",
+    "asignatura": "CIENCIAS NATURALES",
+    "tiempo": "13H00 - 13H45",
+    "docente": "Lic. Carlos Vega",
+    "orden": 1
+  },
+  {
+    "grado": "9no EGB \"A\"",
+    "dia": "LUNES",
+    "asignatura": "CIENCIAS NATURALES",
+    "tiempo": "13H45 - 14H30",
+    "docente": "Lic. Carlos Vega",
+    "orden": 2
+  },
+  {
+    "grado": "9no EGB \"A\"",
+    "dia": "LUNES",
+    "asignatura": "ESTUDIOS SOCIALES",
+    "tiempo": "14H30 - 15H15",
+    "docente": "Lic. Narcisa Sozoranga",
+    "orden": 3
+  },
+  {
+    "grado": "9no EGB \"A\"",
+    "dia": "LUNES",
+    "asignatura": "ESTUDIOS SOCIALES",
+    "tiempo": "15H15 - 16H00",
+    "docente": "Lic. Narcisa Sozoranga",
+    "orden": 4
+  },
+  {
+    "grado": "9no EGB \"A\"",
+    "dia": "LUNES",
+    "asignatura": "ORIENTACIÓN VOCACIONAL",
+    "tiempo": "16H30 - 17H15",
+    "docente": "Lic. Gloria Vaca",
+    "orden": 5
+  },
+  {
+    "grado": "9no EGB \"A\"",
+    "dia": "LUNES",
+    "asignatura": "TUTOTIA",
+    "tiempo": "17H15 - 18H00",
+    "docente": "Lic. Gloria Vaca",
+    "orden": 6
+  },
+  {
+    "grado": "10mo EGB \"A\"",
+    "dia": "LUNES",
+    "asignatura": "LENGUA Y LITERATURA",
+    "tiempo": "13H00 - 13H45",
+    "docente": "Lic. Sofía Ramos",
+    "orden": 1
+  },
+  {
+    "grado": "10mo EGB \"A\"",
+    "dia": "LUNES",
+    "asignatura": "LENGUA Y LITERATURA",
+    "tiempo": "13H45 - 14H30",
+    "docente": "Lic. Sofía Ramos",
+    "orden": 2
+  },
+  {
+    "grado": "10mo EGB \"A\"",
+    "dia": "LUNES",
+    "asignatura": "ESTUDIOS SOCIALES",
+    "tiempo": "14H30 - 15H15",
+    "docente": "Lic. Johnny Japón",
+    "orden": 3
+  },
+  {
+    "grado": "10mo EGB \"A\"",
+    "dia": "LUNES",
+    "asignatura": "ESTUDIOS SOCIALES",
+    "tiempo": "15H15 - 16H00",
+    "docente": "Lic. Johnny Japón",
+    "orden": 4
+  },
+  {
+    "grado": "10mo EGB \"A\"",
+    "dia": "LUNES",
+    "asignatura": "ORIENTACIÓN VOCACIONAL",
+    "tiempo": "16H30 - 17H15",
+    "docente": "Lic. Edwin Uchuari",
+    "orden": 5
+  },
+  {
+    "grado": "10mo EGB \"A\"",
+    "dia": "LUNES",
+    "asignatura": "TUTORIA",
+    "tiempo": "17H15 - 18H00",
+    "docente": "Lic. Edwin Uchuari",
+    "orden": 6
+  },
+  {
+    "grado": "8vo EGB \"A\"",
+    "dia": "MARTES",
+    "asignatura": "MATEMÀTICA",
+    "tiempo": "13H00 - 13H45",
+    "docente": "Lic. Gloria Vaca",
+    "orden": 1
+  },
+  {
+    "grado": "8vo EGB \"A\"",
+    "dia": "MARTES",
+    "asignatura": "MATEMÀTICA",
+    "tiempo": "13H45 - 14H30",
+    "docente": "Lic. Gloria Vaca",
+    "orden": 2
+  },
+  {
+    "grado": "8vo EGB \"A\"",
+    "dia": "MARTES",
+    "asignatura": "LENGUA Y LITERATURA",
+    "tiempo": "14H30 - 15H15",
+    "docente": "Lic. Narcisa Sozoranga",
+    "orden": 3
+  },
+  {
+    "grado": "8vo EGB \"A\"",
+    "dia": "MARTES",
+    "asignatura": "LENGUA Y LITERATURA",
+    "tiempo": "15H15 - 16H00",
+    "docente": "Lic. Narcisa Sozoranga",
+    "orden": 4
+  },
+  {
+    "grado": "8vo EGB \"A\"",
+    "dia": "MARTES",
+    "asignatura": "CIENCIAS NATURALES",
+    "tiempo": "16H30 - 17H15",
+    "docente": "Lic. Carlos Vega",
+    "orden": 5
+  },
+  {
+    "grado": "8vo EGB \"A\"",
+    "dia": "MARTES",
+    "asignatura": "CIENCIAS NATURALES",
+    "tiempo": "17H15 - 18H00",
+    "docente": "Lic. Carlos Vega",
+    "orden": 6
+  },
+  {
+    "grado": "9no EGB \"A\"",
+    "dia": "MARTES",
+    "asignatura": "EDUCACIÒN FÌSICA",
+    "tiempo": "13H00 - 13H45",
+    "docente": "Lic. Luis mijas",
+    "orden": 1
+  },
+  {
+    "grado": "9no EGB \"A\"",
+    "dia": "MARTES",
+    "asignatura": "EDUCACIÒN FÌSICA",
+    "tiempo": "13H45 - 14H30",
+    "docente": "Lic. Luis mijas",
+    "orden": 2
+  },
+  {
+    "grado": "9no EGB \"A\"",
+    "dia": "MARTES",
+    "asignatura": "CIENCIAS NATURALES",
+    "tiempo": "14H30 - 15H15",
+    "docente": "Lic. Carlos Vega",
+    "orden": 3
+  },
+  {
+    "grado": "9no EGB \"A\"",
+    "dia": "MARTES",
+    "asignatura": "CIENCIAS NATURALES",
+    "tiempo": "15H15 - 16H00",
+    "docente": "Lic. Carlos Vega",
+    "orden": 4
+  },
+  {
+    "grado": "9no EGB \"A\"",
+    "dia": "MARTES",
+    "asignatura": "MATEMÀTICA",
+    "tiempo": "16H30 - 17H15",
+    "docente": "Lic. Gloria Vaca",
+    "orden": 5
+  },
+  {
+    "grado": "9no EGB \"A\"",
+    "dia": "MARTES",
+    "asignatura": "MATEMÀTICA",
+    "tiempo": "17H15 - 18H00",
+    "docente": "Lic. Gloria Vaca",
+    "orden": 6
+  },
+  {
+    "grado": "10mo EGB \"A\"",
+    "dia": "MARTES",
+    "asignatura": "CIENCIAS NATURALES",
+    "tiempo": "13H00 - 13H45",
+    "docente": "Lic. Carlos Vega",
+    "orden": 1
+  },
+  {
+    "grado": "10mo EGB \"A\"",
+    "dia": "MARTES",
+    "asignatura": "CIENCIAS NATURALES",
+    "tiempo": "13H45 - 14H30",
+    "docente": "Lic. Carlos Vega",
+    "orden": 2
+  },
+  {
+    "grado": "10mo EGB \"A\"",
+    "dia": "MARTES",
+    "asignatura": "ESTUDIOS SOCIALES",
+    "tiempo": "14H30 - 15H15",
+    "docente": "Lic. Johnny Japón",
+    "orden": 3
+  },
+  {
+    "grado": "10mo EGB \"A\"",
+    "dia": "MARTES",
+    "asignatura": "ESTUDIOS SOCIALES",
+    "tiempo": "15H15 - 16H00",
+    "docente": "Lic. Johnny Japón",
+    "orden": 4
+  },
+  {
+    "grado": "10mo EGB \"A\"",
+    "dia": "MARTES",
+    "asignatura": "MATEMATICA",
+    "tiempo": "16H30 - 17H15",
+    "docente": "Lic. Edwin Uchuari",
+    "orden": 5
+  },
+  {
+    "grado": "10mo EGB \"A\"",
+    "dia": "MARTES",
+    "asignatura": "MATEMATICA",
+    "tiempo": "17H15 - 18H00",
+    "docente": "Lic. Edwin Uchuari",
+    "orden": 6
+  },
+  {
+    "grado": "8vo EGB \"A\"",
+    "dia": "MIÉRCOLES",
+    "asignatura": "INGLÉS",
+    "tiempo": "13H00 - 13H45",
+    "docente": "Mgtr. Alexandra Fernandez",
+    "orden": 1
+  },
+  {
+    "grado": "8vo EGB \"A\"",
+    "dia": "MIÉRCOLES",
+    "asignatura": "INGLÉS",
+    "tiempo": "13H45 - 14H30",
+    "docente": "Mgtr. Alexandra Fernandez",
+    "orden": 2
+  },
+  {
+    "grado": "8vo EGB \"A\"",
+    "dia": "MIÉRCOLES",
+    "asignatura": "ECA",
+    "tiempo": "14H30 - 15H15",
+    "docente": "Lic. Johnny Japón",
+    "orden": 3
+  },
+  {
+    "grado": "8vo EGB \"A\"",
+    "dia": "MIÉRCOLES",
+    "asignatura": "ECA",
+    "tiempo": "15H15 - 16H00",
+    "docente": "Lic. Johnny Japón",
+    "orden": 4
+  },
+  {
+    "grado": "8vo EGB \"A\"",
+    "dia": "MIÉRCOLES",
+    "asignatura": "ESTUDIOS SOCIALES",
+    "tiempo": "16H30 - 17H15",
+    "docente": "Lic. Johnny Japón",
+    "orden": 5
+  },
+  {
+    "grado": "8vo EGB \"A\"",
+    "dia": "MIÉRCOLES",
+    "asignatura": "ESTUDIOS SOCIALES",
+    "tiempo": "17H15 - 18H00",
+    "docente": "Lic. Johnny Japón",
+    "orden": 6
+  },
+  {
+    "grado": "9no EGB \"A\"",
+    "dia": "MIÉRCOLES",
+    "asignatura": "LENGUA Y LITERATURA",
+    "tiempo": "13H00 - 13H45",
+    "docente": "Lic. Mariela Maza",
+    "orden": 1
+  },
+  {
+    "grado": "9no EGB \"A\"",
+    "dia": "MIÉRCOLES",
+    "asignatura": "LENGUA Y LITERATURA",
+    "tiempo": "13H45 - 14H30",
+    "docente": "Lic. Mariela Maza",
+    "orden": 2
+  },
+  {
+    "grado": "9no EGB \"A\"",
+    "dia": "MIÉRCOLES",
+    "asignatura": "ESTUDIOS SOCIALES",
+    "tiempo": "14H30 - 15H15",
+    "docente": "Lic. Narcisa Sozoranga",
+    "orden": 3
+  },
+  {
+    "grado": "9no EGB \"A\"",
+    "dia": "MIÉRCOLES",
+    "asignatura": "ESTUDIOS SOCIALES",
+    "tiempo": "15H15 - 16H00",
+    "docente": "Lic. Narcisa Sozoranga",
+    "orden": 4
+  },
+  {
+    "grado": "9no EGB \"A\"",
+    "dia": "MIÉRCOLES",
+    "asignatura": "ANIMACIÓN A LA LECTURA",
+    "tiempo": "16H30 - 17H15",
+    "docente": "Lic. Elva Jiménez",
+    "orden": 5
+  },
+  {
+    "grado": "9no EGB \"A\"",
+    "dia": "MIÉRCOLES",
+    "asignatura": "INGLÉS",
+    "tiempo": "17H15 - 18H00",
+    "docente": "Mgtr. Alexandra Fernandez",
+    "orden": 6
+  },
+  {
+    "grado": "10mo EGB \"A\"",
+    "dia": "MIÉRCOLES",
+    "asignatura": "MATEMÁTICA",
+    "tiempo": "13H00 - 13H45",
+    "docente": "Lic. Edwin Uchuari",
+    "orden": 1
+  },
+  {
+    "grado": "10mo EGB \"A\"",
+    "dia": "MIÉRCOLES",
+    "asignatura": "MATEMÁTICA",
+    "tiempo": "13H45 - 14H30",
+    "docente": "Lic. Edwin Uchuari",
+    "orden": 2
+  },
+  {
+    "grado": "10mo EGB \"A\"",
+    "dia": "MIÉRCOLES",
+    "asignatura": "EDUCACION FISICA",
+    "tiempo": "14H30 - 15H15",
+    "docente": "Lic. Luis Mijas",
+    "orden": 3
+  },
+  {
+    "grado": "10mo EGB \"A\"",
+    "dia": "MIÉRCOLES",
+    "asignatura": "EDUCACION FISICA",
+    "tiempo": "15H15 - 16H00",
+    "docente": "Lic. Luis Mijas",
+    "orden": 4
+  },
+  {
+    "grado": "10mo EGB \"A\"",
+    "dia": "MIÉRCOLES",
+    "asignatura": "CIENCIAS NATURALES",
+    "tiempo": "16H30 - 17H15",
+    "docente": "Lic. Carlos Vega",
+    "orden": 5
+  },
+  {
+    "grado": "10mo EGB \"A\"",
+    "dia": "MIÉRCOLES",
+    "asignatura": "CIENCIAS NATURALES",
+    "tiempo": "17H15 - 18H00",
+    "docente": "Lic. Carlos Vega",
+    "orden": 6
+  },
+  {
+    "grado": "8vo EGB \"A\"",
+    "dia": "JUEVES",
+    "asignatura": "MATEMATICA",
+    "tiempo": "13H00 - 13H45",
+    "docente": "Lic. Gloria Vaca",
+    "orden": 1
+  },
+  {
+    "grado": "8vo EGB \"A\"",
+    "dia": "JUEVES",
+    "asignatura": "MATEMATICA",
+    "tiempo": "13H45 - 14H30",
+    "docente": "Lic. Gloria Vaca",
+    "orden": 2
+  },
+  {
+    "grado": "8vo EGB \"A\"",
+    "dia": "JUEVES",
+    "asignatura": "LENGUA Y LITERATURA",
+    "tiempo": "14H30 - 15H15",
+    "docente": "Lic. Narcisa Sozoranga",
+    "orden": 3
+  },
+  {
+    "grado": "8vo EGB \"A\"",
+    "dia": "JUEVES",
+    "asignatura": "LENGUA Y LITERATURA",
+    "tiempo": "15H15 - 16H00",
+    "docente": "Lic. Narcisa Sozoranga",
+    "orden": 4
+  },
+  {
+    "grado": "8vo EGB \"A\"",
+    "dia": "JUEVES",
+    "asignatura": "ESTUDIOS SOCIALES",
+    "tiempo": "16H30 - 17H15",
+    "docente": "Lic. Johnny Japón",
+    "orden": 5
+  },
+  {
+    "grado": "8vo EGB \"A\"",
+    "dia": "JUEVES",
+    "asignatura": "ESTUDIOS SOCIALES",
+    "tiempo": "17H15 - 18H00",
+    "docente": "Lic. Johnny Japón",
+    "orden": 6
+  },
+  {
+    "grado": "9no EGB \"A\"",
+    "dia": "JUEVES",
+    "asignatura": "LENGUA Y LITERATURA",
+    "tiempo": "13H00 - 13H45",
+    "docente": "Lic. Mariela Maza",
+    "orden": 1
+  },
+  {
+    "grado": "9no EGB \"A\"",
+    "dia": "JUEVES",
+    "asignatura": "LENGUA Y LITERATURA",
+    "tiempo": "13H45 - 14H30",
+    "docente": "Lic. Mariela Maza",
+    "orden": 2
+  },
+  {
+    "grado": "9no EGB \"A\"",
+    "dia": "JUEVES",
+    "asignatura": "ECA",
+    "tiempo": "14H30 - 15H15",
+    "docente": "Lic. Johnny Japón",
+    "orden": 3
+  },
+  {
+    "grado": "9no EGB \"A\"",
+    "dia": "JUEVES",
+    "asignatura": "ECA",
+    "tiempo": "15H15 - 16H00",
+    "docente": "Lic. Johnny Japón",
+    "orden": 4
+  },
+  {
+    "grado": "9no EGB \"A\"",
+    "dia": "JUEVES",
+    "asignatura": "MATEMATICA",
+    "tiempo": "16H30 - 17H15",
+    "docente": "Lic. Gloria Vaca",
+    "orden": 5
+  },
+  {
+    "grado": "9no EGB \"A\"",
+    "dia": "JUEVES",
+    "asignatura": "MATEMATICA",
+    "tiempo": "17H15 - 18H00",
+    "docente": "Lic. Gloria Vaca",
+    "orden": 6
+  },
+  {
+    "grado": "10mo EGB \"A\"",
+    "dia": "JUEVES",
+    "asignatura": "LENGUA Y LITERATURA",
+    "tiempo": "13H00 - 13H45",
+    "docente": "Lic. Sofía Ramos",
+    "orden": 1
+  },
+  {
+    "grado": "10mo EGB \"A\"",
+    "dia": "JUEVES",
+    "asignatura": "LENGUA Y LITERATURA",
+    "tiempo": "13H45 - 14H30",
+    "docente": "Lic. Sofía Ramos",
+    "orden": 2
+  },
+  {
+    "grado": "10mo EGB \"A\"",
+    "dia": "JUEVES",
+    "asignatura": "ANIMACIÓN A LA LECTURA",
+    "tiempo": "14H30 - 15H15",
+    "docente": "Lic. Elva Jimènez",
+    "orden": 3
+  },
+  {
+    "grado": "10mo EGB \"A\"",
+    "dia": "JUEVES",
+    "asignatura": "INGLÉS",
+    "tiempo": "15H15 - 16H00",
+    "docente": "Mgtr. Alexandra Fernandez",
+    "orden": 4
+  },
+  {
+    "grado": "10mo EGB \"A\"",
+    "dia": "JUEVES",
+    "asignatura": "MATEMATICA",
+    "tiempo": "16H30 - 17H15",
+    "docente": "Lic. Edwin Uchuari",
+    "orden": 5
+  },
+  {
+    "grado": "10mo EGB \"A\"",
+    "dia": "JUEVES",
+    "asignatura": "MATEMATICA",
+    "tiempo": "17H15 - 18H00",
+    "docente": "Lic. Edwin Uchuari",
+    "orden": 6
+  },
+  {
+    "grado": "8vo EGB \"A\"",
+    "dia": "VIERNES",
+    "asignatura": "EDUCACIÒN FÌSICA",
+    "tiempo": "13H00 - 13H45",
+    "docente": "Lic. Luis Mijas",
+    "orden": 1
+  },
+  {
+    "grado": "8vo EGB \"A\"",
+    "dia": "VIERNES",
+    "asignatura": "EDUCACIÒN FÌSICA",
+    "tiempo": "13H45 - 14H30",
+    "docente": "Lic. Luis Mijas",
+    "orden": 2
+  },
+  {
+    "grado": "8vo EGB \"A\"",
+    "dia": "VIERNES",
+    "asignatura": "LENGUA Y LITERATURA",
+    "tiempo": "14H30 - 15H15",
+    "docente": "Lic. Narcisa Sozoranga",
+    "orden": 3
+  },
+  {
+    "grado": "8vo EGB \"A\"",
+    "dia": "VIERNES",
+    "asignatura": "LENGUA Y LITERATURA",
+    "tiempo": "15H15 - 16H00",
+    "docente": "Lic. Narcisa Sozoranga",
+    "orden": 4
+  },
+  {
+    "grado": "8vo EGB \"A\"",
+    "dia": "VIERNES",
+    "asignatura": "MATEMATICA",
+    "tiempo": "16H30 - 17H15",
+    "docente": "Lic. Gloria Vaca",
+    "orden": 5
+  },
+  {
+    "grado": "8vo EGB \"A\"",
+    "dia": "VIERNES",
+    "asignatura": "MATEMATICA",
+    "tiempo": "17H15 - 18H00",
+    "docente": "Lic. Gloria Vaca",
+    "orden": 6
+  },
+  {
+    "grado": "9no EGB \"A\"",
+    "dia": "VIERNES",
+    "asignatura": "LENGUA Y LITERATURA",
+    "tiempo": "13H00 - 13H45",
+    "docente": "Lic. Mariela Maza",
+    "orden": 1
+  },
+  {
+    "grado": "9no EGB \"A\"",
+    "dia": "VIERNES",
+    "asignatura": "LENGUA Y LITERATURA",
+    "tiempo": "13H45 - 14H30",
+    "docente": "Lic. Mariela Maza",
+    "orden": 2
+  },
+  {
+    "grado": "9no EGB \"A\"",
+    "dia": "VIERNES",
+    "asignatura": "MATEMATICA",
+    "tiempo": "14H30 - 15H15",
+    "docente": "Lic. Gloria Vaca",
+    "orden": 3
+  },
+  {
+    "grado": "9no EGB \"A\"",
+    "dia": "VIERNES",
+    "asignatura": "MATEMATICA",
+    "tiempo": "15H15 - 16H00",
+    "docente": "Lic. Gloria Vaca",
+    "orden": 4
+  },
+  {
+    "grado": "9no EGB \"A\"",
+    "dia": "VIERNES",
+    "asignatura": "INGLÉS",
+    "tiempo": "16H30 - 17H15",
+    "docente": "Mgtr. Alexandra Fernandez",
+    "orden": 5
+  },
+  {
+    "grado": "9no EGB \"A\"",
+    "dia": "VIERNES",
+    "asignatura": "INGLÉS",
+    "tiempo": "17H15 - 18H00",
+    "docente": "Mgtr. Alexandra Fernandez",
+    "orden": 6
+  },
+  {
+    "grado": "10mo EGB \"A\"",
+    "dia": "VIERNES",
+    "asignatura": "INGLÉS",
+    "tiempo": "13H00 - 13H45",
+    "docente": "Mgtr. Alexandra Fernandez",
+    "orden": 1
+  },
+  {
+    "grado": "10mo EGB \"A\"",
+    "dia": "VIERNES",
+    "asignatura": "INGLÉS",
+    "tiempo": "13H45 - 14H30",
+    "docente": "Mgtr. Alexandra Fernandez",
+    "orden": 2
+  },
+  {
+    "grado": "10mo EGB \"A\"",
+    "dia": "VIERNES",
+    "asignatura": "ECA",
+    "tiempo": "14H30 - 15H15",
+    "docente": "Lic. Johnny Japón",
+    "orden": 3
+  },
+  {
+    "grado": "10mo EGB \"A\"",
+    "dia": "VIERNES",
+    "asignatura": "ECA",
+    "tiempo": "15H15 - 16H00",
+    "docente": "Lic. Johnny Japón",
+    "orden": 4
+  },
+  {
+    "grado": "10mo EGB \"A\"",
+    "dia": "VIERNES",
+    "asignatura": "LENGUA Y LITERATURA",
+    "tiempo": "16H30 - 17H15",
+    "docente": "Lic. Sofía Ramos",
+    "orden": 5
+  },
+  {
+    "grado": "10mo EGB \"A\"",
+    "dia": "VIERNES",
+    "asignatura": "LENGUA Y LITERATURA",
+    "tiempo": "17H15 - 18H00",
+    "docente": "Lic. Sofía Ramos",
+    "orden": 6
+  },
+  {
+    "grado": "1ro BGU \"A\"",
+    "dia": "LUNES",
+    "asignatura": "MATEMÁTICA",
+    "tiempo": "13H00 - 13H45",
+    "docente": "Lic. Edwin Uchuari",
+    "orden": 1
+  },
+  {
+    "grado": "1ro BGU \"A\"",
+    "dia": "LUNES",
+    "asignatura": "BIOLOGÍA",
+    "tiempo": "13H45 - 14H30",
+    "docente": "Ing. Sara Sarango",
+    "orden": 2
+  },
+  {
+    "grado": "1ro BGU \"A\"",
+    "dia": "LUNES",
+    "asignatura": "FILOSOFÍA",
+    "tiempo": "14H30 - 15H15",
+    "docente": "Lic. Carlos Vega",
+    "orden": 3
+  },
+  {
+    "grado": "1ro BGU \"A\"",
+    "dia": "LUNES",
+    "asignatura": "FILOSOFÍA",
+    "tiempo": "15H15 - 16H00",
+    "docente": "Lic. Carlos Vega",
+    "orden": 4
+  },
+  {
+    "grado": "1ro BGU \"A\"",
+    "dia": "LUNES",
+    "asignatura": "ECA",
+    "tiempo": "16H30 - 17H15",
+    "docente": "Lic. Johnny Japón",
+    "orden": 5
+  },
+  {
+    "grado": "1ro BGU \"A\"",
+    "dia": "LUNES",
+    "asignatura": "ECA",
+    "tiempo": "17H15 - 18H00",
+    "docente": "Lic. Johnny Japón",
+    "orden": 6
+  },
+  {
+    "grado": "1ro BGU \"A\"",
+    "dia": "LUNES",
+    "asignatura": "TUTORÍA",
+    "tiempo": "18H00 - 18H45",
+    "docente": "Mgtr. Alexandra Fernández",
+    "orden": 7
+  },
+  {
+    "grado": "2do BGU \"A\"",
+    "dia": "LUNES",
+    "asignatura": "BIOLOGÍA",
+    "tiempo": "13H00 - 13H45",
+    "docente": "Ing. Sara Sarango",
+    "orden": 1
+  },
+  {
+    "grado": "2do BGU \"A\"",
+    "dia": "LUNES",
+    "asignatura": "FISICA",
+    "tiempo": "13H45 - 14H30",
+    "docente": "Lic. Edwin Uchuari",
+    "orden": 2
+  },
+  {
+    "grado": "2do BGU \"A\"",
+    "dia": "LUNES",
+    "asignatura": "FISICA",
+    "tiempo": "14H30 - 15H15",
+    "docente": "Lic. Edwin Uchuari",
+    "orden": 3
+  },
+  {
+    "grado": "2do BGU \"A\"",
+    "dia": "LUNES",
+    "asignatura": "INGLÉS",
+    "tiempo": "15H15 - 16H00",
+    "docente": "Mgtr. Alexandra Fernández",
+    "orden": 4
+  },
+  {
+    "grado": "2do BGU \"A\"",
+    "dia": "LUNES",
+    "asignatura": "FILOSOFÍA",
+    "tiempo": "16H30 - 17H15",
+    "docente": "Mgtr. Tamara Quille",
+    "orden": 5
+  },
+  {
+    "grado": "2do BGU \"A\"",
+    "dia": "LUNES",
+    "asignatura": "FILOSOFÍA",
+    "tiempo": "17H15 - 18H00",
+    "docente": "Mgtr. Tamara Quille",
+    "orden": 6
+  },
+  {
+    "grado": "2do BGU \"A\"",
+    "dia": "LUNES",
+    "asignatura": "TUTORÍA",
+    "tiempo": "18H00 - 18H45",
+    "docente": "Ing. Sara Sarango",
+    "orden": 7
+  },
+  {
+    "grado": "3ro BGU \"A\"",
+    "dia": "LUNES",
+    "asignatura": "MATEMÁTICA",
+    "tiempo": "13H00 - 13H45",
+    "docente": "Lic. Gloria Vaca",
+    "orden": 1
+  },
+  {
+    "grado": "3ro BGU \"A\"",
+    "dia": "LUNES",
+    "asignatura": "MATEMÁTICA",
+    "tiempo": "13H45 - 14H30",
+    "docente": "Lic. Gloria Vaca",
+    "orden": 2
+  },
+  {
+    "grado": "3ro BGU \"A\"",
+    "dia": "LUNES",
+    "asignatura": "LENGUA Y LITERATURA",
+    "tiempo": "14H30 - 15H15",
+    "docente": "Lic. Sofía Ramos",
+    "orden": 3
+  },
+  {
+    "grado": "3ro BGU \"A\"",
+    "dia": "LUNES",
+    "asignatura": "LENGUA Y LITERATURA",
+    "tiempo": "15H15 - 16H00",
+    "docente": "Lic. Sofía Ramos",
+    "orden": 4
+  },
+  {
+    "grado": "3ro BGU \"A\"",
+    "dia": "LUNES",
+    "asignatura": "EMPRENDIMIENTO",
+    "tiempo": "16H30 - 17H15",
+    "docente": "Ing. Sara Sarango",
+    "orden": 5
+  },
+  {
+    "grado": "3ro BGU \"A\"",
+    "dia": "LUNES",
+    "asignatura": "EMPRENDIMIENTO",
+    "tiempo": "17H15 - 18H00",
+    "docente": "Ing. Sara Sarango",
+    "orden": 6
+  },
+  {
+    "grado": "3ro BGU \"A\"",
+    "dia": "LUNES",
+    "asignatura": "TUTORÍA",
+    "tiempo": "18H00 - 18H45",
+    "docente": "Lic. Sofía Ramos",
+    "orden": 7
+  },
+  {
+    "grado": "1ro BGU \"A\"",
+    "dia": "MARTES",
+    "asignatura": "HISTORIA",
+    "tiempo": "13H00 - 13H45",
+    "docente": "Lic. Romel Enrriquez",
+    "orden": 1
+  },
+  {
+    "grado": "1ro BGU \"A\"",
+    "dia": "MARTES",
+    "asignatura": "HISTORIA",
+    "tiempo": "13H45 - 14H30",
+    "docente": "Lic. Romel Enrriquez",
+    "orden": 2
+  },
+  {
+    "grado": "1ro BGU \"A\"",
+    "dia": "MARTES",
+    "asignatura": "MATEMÁTICA",
+    "tiempo": "14H30 - 15H15",
+    "docente": "Lic. Edwin Uchuari",
+    "orden": 3
+  },
+  {
+    "grado": "1ro BGU \"A\"",
+    "dia": "MARTES",
+    "asignatura": "MATEMÁTICA",
+    "tiempo": "15H15 - 16H00",
+    "docente": "Lic. Edwin Uchuari",
+    "orden": 4
+  },
+  {
+    "grado": "1ro BGU \"A\"",
+    "dia": "MARTES",
+    "asignatura": "LENGUA Y LITERATURA",
+    "tiempo": "16H30 - 17H15",
+    "docente": "Lic. Sofía Ramos",
+    "orden": 5
+  },
+  {
+    "grado": "1ro BGU \"A\"",
+    "dia": "MARTES",
+    "asignatura": "LENGUA Y LITERATURA",
+    "tiempo": "17H15 - 18H00",
+    "docente": "Lic. Sofía Ramos",
+    "orden": 6
+  },
+  {
+    "grado": "1ro BGU \"A\"",
+    "dia": "MARTES",
+    "asignatura": "INGLÉS",
+    "tiempo": "18H00 - 18H45",
+    "docente": "Mgtr. Alexandra Fernández",
+    "orden": 7
+  },
+  {
+    "grado": "2do BGU \"A\"",
+    "dia": "MARTES",
+    "asignatura": "EDUCACIÓN FÍSICA",
+    "tiempo": "13H00 - 13H45",
+    "docente": "Mgtr. José Valladarez",
+    "orden": 1
+  },
+  {
+    "grado": "2do BGU \"A\"",
+    "dia": "MARTES",
+    "asignatura": "EDUCACIÓN FÍSICA",
+    "tiempo": "13H45 - 14H30",
+    "docente": "Mgtr. José Valladarez",
+    "orden": 2
+  },
+  {
+    "grado": "2do BGU \"A\"",
+    "dia": "MARTES",
+    "asignatura": "LENGUA Y LITERATURA",
+    "tiempo": "14H30 - 15H15",
+    "docente": "Lic. Sofía Ramos",
+    "orden": 3
+  },
+  {
+    "grado": "2do BGU \"A\"",
+    "dia": "MARTES",
+    "asignatura": "LENGUA Y LITERATURA",
+    "tiempo": "15H15 - 16H00",
+    "docente": "Lic. Sofía Ramos",
+    "orden": 4
+  },
+  {
+    "grado": "2do BGU \"A\"",
+    "dia": "MARTES",
+    "asignatura": "HISTORIA",
+    "tiempo": "16H30 - 17H15",
+    "docente": "Mgtr. Darwin Valdivieso",
+    "orden": 5
+  },
+  {
+    "grado": "2do BGU \"A\"",
+    "dia": "MARTES",
+    "asignatura": "HISTORIA",
+    "tiempo": "17H15 - 18H00",
+    "docente": "Mgtr. Darwin Valdivieso",
+    "orden": 6
+  },
+  {
+    "grado": "2do BGU \"A\"",
+    "dia": "MARTES",
+    "asignatura": "FISICA",
+    "tiempo": "18H00 - 18H45",
+    "docente": "Lic. Edwin Uchuari",
+    "orden": 7
+  },
+  {
+    "grado": "3ro BGU \"A\"",
+    "dia": "MARTES",
+    "asignatura": "FISICA",
+    "tiempo": "13H00 - 13H45",
+    "docente": "Lic. Edwin Uchuari",
+    "orden": 1
+  },
+  {
+    "grado": "3ro BGU \"A\"",
+    "dia": "MARTES",
+    "asignatura": "FISICA",
+    "tiempo": "13H45 - 14H30",
+    "docente": "Lic. Edwin Uchuari",
+    "orden": 2
+  },
+  {
+    "grado": "3ro BGU \"A\"",
+    "dia": "MARTES",
+    "asignatura": "QUÍMICA",
+    "tiempo": "14H30 - 15H15",
+    "docente": "Ing. Sara Sarango",
+    "orden": 3
+  },
+  {
+    "grado": "3ro BGU \"A\"",
+    "dia": "MARTES",
+    "asignatura": "QUÍMICA",
+    "tiempo": "15H15 - 16H00",
+    "docente": "Ing. Sara Sarango",
+    "orden": 4
+  },
+  {
+    "grado": "3ro BGU \"A\"",
+    "dia": "MARTES",
+    "asignatura": "INGLÉS",
+    "tiempo": "16H30 - 17H15",
+    "docente": "Mgtr. Alexandra Fernández",
+    "orden": 5
+  },
+  {
+    "grado": "3ro BGU \"A\"",
+    "dia": "MARTES",
+    "asignatura": "HISTORIA",
+    "tiempo": "17H15 - 18H00",
+    "docente": "Mgtr. Tamara Quille",
+    "orden": 6
+  },
+  {
+    "grado": "3ro BGU \"A\"",
+    "dia": "MARTES",
+    "asignatura": "HISTORIA",
+    "tiempo": "18H00 - 18H45",
+    "docente": "Mgtr. Tamara Quille",
+    "orden": 7
+  },
+  {
+    "grado": "1ro BGU \"A\"",
+    "dia": "MIÉRCOLES",
+    "asignatura": "FÍSICA",
+    "tiempo": "13H00 - 13H45",
+    "docente": "Lic. Gloria Vaca",
+    "orden": 1
+  },
+  {
+    "grado": "1ro BGU \"A\"",
+    "dia": "MIÉRCOLES",
+    "asignatura": "FÍSICA",
+    "tiempo": "13H45 - 14H30",
+    "docente": "Lic. Gloria Vaca",
+    "orden": 2
+  },
+  {
+    "grado": "1ro BGU \"A\"",
+    "dia": "MIÉRCOLES",
+    "asignatura": "INGLÉS",
+    "tiempo": "14H30 - 15H15",
+    "docente": "Mgtr. Alexandra Fernández",
+    "orden": 3
+  },
+  {
+    "grado": "1ro BGU \"A\"",
+    "dia": "MIÉRCOLES",
+    "asignatura": "INGLÉS",
+    "tiempo": "15H15 - 16H00",
+    "docente": "Mgtr. Alexandra Fernández",
+    "orden": 4
+  },
+  {
+    "grado": "1ro BGU \"A\"",
+    "dia": "MIÉRCOLES",
+    "asignatura": "LENGUA Y LITERATURA",
+    "tiempo": "16H30 - 17H15",
+    "docente": "Lic. Sofía Ramos",
+    "orden": 5
+  },
+  {
+    "grado": "1ro BGU \"A\"",
+    "dia": "MIÉRCOLES",
+    "asignatura": "ED. CIUDADANIA",
+    "tiempo": "17H15 - 18H00",
+    "docente": "Lic. Gloria Vaca",
+    "orden": 6
+  },
+  {
+    "grado": "1ro BGU \"A\"",
+    "dia": "MIÉRCOLES",
+    "asignatura": "ED. CIUDADANIA",
+    "tiempo": "18H00 - 18H45",
+    "docente": "Lic. Gloria Vaca",
+    "orden": 7
+  },
+  {
+    "grado": "2do BGU \"A\"",
+    "dia": "MIÉRCOLES",
+    "asignatura": "BIOLOGÍA",
+    "tiempo": "13H00 - 13H45",
+    "docente": "Ing. Sara Sarango",
+    "orden": 1
+  },
+  {
+    "grado": "2do BGU \"A\"",
+    "dia": "MIÉRCOLES",
+    "asignatura": "BIOLOGÍA",
+    "tiempo": "13H45 - 14H30",
+    "docente": "Ing. Sara Sarango",
+    "orden": 2
+  },
+  {
+    "grado": "2do BGU \"A\"",
+    "dia": "MIÉRCOLES",
+    "asignatura": "ED. CIUDADANIA",
+    "tiempo": "14H30 - 15H15",
+    "docente": "Lic. Gloria Vaca",
+    "orden": 3
+  },
+  {
+    "grado": "2do BGU \"A\"",
+    "dia": "MIÉRCOLES",
+    "asignatura": "ED. CIUDADANIA",
+    "tiempo": "15H15 - 16H00",
+    "docente": "Lic. Gloria Vaca",
+    "orden": 4
+  },
+  {
+    "grado": "2do BGU \"A\"",
+    "dia": "MIÉRCOLES",
+    "asignatura": "QUÍMICA",
+    "tiempo": "16H30 - 17H15",
+    "docente": "Ing. Sara Sarango",
+    "orden": 5
+  },
+  {
+    "grado": "2do BGU \"A\"",
+    "dia": "MIÉRCOLES",
+    "asignatura": "MATEMÁTICA",
+    "tiempo": "17H15 - 18H00",
+    "docente": "Lic. Edwin Uchuari",
+    "orden": 6
+  },
+  {
+    "grado": "2do BGU \"A\"",
+    "dia": "MIÉRCOLES",
+    "asignatura": "MATEMÁTICA",
+    "tiempo": "18H00 - 18H45",
+    "docente": "Lic. Edwin Uchuari",
+    "orden": 7
+  },
+  {
+    "grado": "3ro BGU \"A\"",
+    "dia": "MIÉRCOLES",
+    "asignatura": "RAZONAMIENTO VERBAL",
+    "tiempo": "13H00 - 13H45",
+    "docente": "Lic. Sofía Ramos",
+    "orden": 1
+  },
+  {
+    "grado": "3ro BGU \"A\"",
+    "dia": "MIÉRCOLES",
+    "asignatura": "RAZONAMIENTO VERBAL",
+    "tiempo": "13H45 - 14H30",
+    "docente": "Lic. Sofía Ramos",
+    "orden": 2
+  },
+  {
+    "grado": "3ro BGU \"A\"",
+    "dia": "MIÉRCOLES",
+    "asignatura": "INVESTIGACION",
+    "tiempo": "14H30 - 15H15",
+    "docente": "Ing. Sara Sarango",
+    "orden": 3
+  },
+  {
+    "grado": "3ro BGU \"A\"",
+    "dia": "MIÉRCOLES",
+    "asignatura": "INVESTIGACION",
+    "tiempo": "15H15 - 16H00",
+    "docente": "Ing. Sara Sarango",
+    "orden": 4
+  },
+  {
+    "grado": "3ro BGU \"A\"",
+    "dia": "MIÉRCOLES",
+    "asignatura": "LAB. QUÍMICA",
+    "tiempo": "16H30 - 17H15",
+    "docente": "Lic. Fernando Enríquez",
+    "orden": 5
+  },
+  {
+    "grado": "3ro BGU \"A\"",
+    "dia": "MIÉRCOLES",
+    "asignatura": "LENGUA Y LITERATURA",
+    "tiempo": "17H15 - 18H00",
+    "docente": "Lic. Sofía Ramos",
+    "orden": 6
+  },
+  {
+    "grado": "3ro BGU \"A\"",
+    "dia": "MIÉRCOLES",
+    "asignatura": "LENGUA Y LITERATURA",
+    "tiempo": "18H00 - 18H45",
+    "docente": "Lic. Sofía Ramos",
+    "orden": 7
+  },
+  {
+    "grado": "1ro BGU \"A\"",
+    "dia": "JUEVES",
+    "asignatura": "EDUCACION FÍSICA",
+    "tiempo": "13H00 - 13H45",
+    "docente": "Mgtr. José Valladarez",
+    "orden": 1
+  },
+  {
+    "grado": "1ro BGU \"A\"",
+    "dia": "JUEVES",
+    "asignatura": "EDUCACION FÍSICA",
+    "tiempo": "13H45 - 14H30",
+    "docente": "Mgtr. José Valladarez",
+    "orden": 2
+  },
+  {
+    "grado": "1ro BGU \"A\"",
+    "dia": "JUEVES",
+    "asignatura": "QUÍMICA",
+    "tiempo": "14H30 - 15H15",
+    "docente": "Ing. Sara Sarango",
+    "orden": 3
+  },
+  {
+    "grado": "1ro BGU \"A\"",
+    "dia": "JUEVES",
+    "asignatura": "QUÍMICA",
+    "tiempo": "15H15 - 16H00",
+    "docente": "Ing. Sara Sarango",
+    "orden": 4
+  },
+  {
+    "grado": "1ro BGU \"A\"",
+    "dia": "JUEVES",
+    "asignatura": "EMPRENDIMIENTO",
+    "tiempo": "16H30 - 17H15",
+    "docente": "Ing. Sara Sarango",
+    "orden": 5
+  },
+  {
+    "grado": "1ro BGU \"A\"",
+    "dia": "JUEVES",
+    "asignatura": "EMPRENDIMIENTO",
+    "tiempo": "17H15 - 18H00",
+    "docente": "Ing. Sara Sarango",
+    "orden": 6
+  },
+  {
+    "grado": "1ro BGU \"A\"",
+    "dia": "JUEVES",
+    "asignatura": "FISICA",
+    "tiempo": "18H00 - 18H45",
+    "docente": "Lic. Gloria Vaca",
+    "orden": 7
+  },
+  {
+    "grado": "2do BGU \"A\"",
+    "dia": "JUEVES",
+    "asignatura": "EMPRENDIMIENTO Y GESTION",
+    "tiempo": "13H00 - 13H45",
+    "docente": "Ing. Sara Sarango",
+    "orden": 1
+  },
+  {
+    "grado": "2do BGU \"A\"",
+    "dia": "JUEVES",
+    "asignatura": "EMPRENDIMIENTO Y GESTION",
+    "tiempo": "13H45 - 14H30",
+    "docente": "Ing. Sara Sarango",
+    "orden": 2
+  },
+  {
+    "grado": "2do BGU \"A\"",
+    "dia": "JUEVES",
+    "asignatura": "LENGUA Y LITERATURA",
+    "tiempo": "14H30 - 15H15",
+    "docente": "Lic. Sofía Ramos",
+    "orden": 3
+  },
+  {
+    "grado": "2do BGU \"A\"",
+    "dia": "JUEVES",
+    "asignatura": "LENGUA Y LITERATURA",
+    "tiempo": "15H15 - 16H00",
+    "docente": "Lic. Sofía Ramos",
+    "orden": 4
+  },
+  {
+    "grado": "2do BGU \"A\"",
+    "dia": "JUEVES",
+    "asignatura": "INGLÉS",
+    "tiempo": "16H30 - 17H15",
+    "docente": "Mgtr. Alexandra Fernández",
+    "orden": 5
+  },
+  {
+    "grado": "2do BGU \"A\"",
+    "dia": "JUEVES",
+    "asignatura": "INGLÉS",
+    "tiempo": "17H15 - 18H00",
+    "docente": "Mgtr. Alexandra Fernández",
+    "orden": 6
+  },
+  {
+    "grado": "2do BGU \"A\"",
+    "dia": "JUEVES",
+    "asignatura": "MATEMÁTICA",
+    "tiempo": "18H00 - 18H45",
+    "docente": "Lic. Edwin Uchuari",
+    "orden": 7
+  },
+  {
+    "grado": "3ro BGU \"A\"",
+    "dia": "JUEVES",
+    "asignatura": "INFORMÁTICA",
+    "tiempo": "13H00 - 13H45",
+    "docente": "Mgtr. Alexandra Fernández",
+    "orden": 1
+  },
+  {
+    "grado": "3ro BGU \"A\"",
+    "dia": "JUEVES",
+    "asignatura": "INFORMÁTICA",
+    "tiempo": "13H45 - 14H30",
+    "docente": "Mgtr. Alexandra Fernández",
+    "orden": 2
+  },
+  {
+    "grado": "3ro BGU \"A\"",
+    "dia": "JUEVES",
+    "asignatura": "MATEMÁTICA",
+    "tiempo": "14H30 - 15H15",
+    "docente": "Lic. Gloria Vaca",
+    "orden": 3
+  },
+  {
+    "grado": "3ro BGU \"A\"",
+    "dia": "JUEVES",
+    "asignatura": "MATEMÁTICA",
+    "tiempo": "15H15 - 16H00",
+    "docente": "Lic. Gloria Vaca",
+    "orden": 4
+  },
+  {
+    "grado": "3ro BGU \"A\"",
+    "dia": "JUEVES",
+    "asignatura": "EDUCACIÓN FÍSICA",
+    "tiempo": "16H30 - 17H15",
+    "docente": "Mgtr. Darwin Valdivieso",
+    "orden": 5
+  },
+  {
+    "grado": "3ro BGU \"A\"",
+    "dia": "JUEVES",
+    "asignatura": "EDUCACIÓN FÍSICA",
+    "tiempo": "17H15 - 18H00",
+    "docente": "Mgtr. Darwin Valdivieso",
+    "orden": 6
+  },
+  {
+    "grado": "3ro BGU \"A\"",
+    "dia": "JUEVES",
+    "asignatura": "LAB. QUÍMICA",
+    "tiempo": "18H00 - 18H45",
+    "docente": "Lic. Fernando Enríquez",
+    "orden": 7
+  },
+  {
+    "grado": "1ro BGU \"A\"",
+    "dia": "VIERNES",
+    "asignatura": "LENGUA Y LITERATURA",
+    "tiempo": "13H00 - 13H45",
+    "docente": "Lic. Sofía Ramos",
+    "orden": 1
+  },
+  {
+    "grado": "1ro BGU \"A\"",
+    "dia": "VIERNES",
+    "asignatura": "LENGUA Y LITERATURA",
+    "tiempo": "13H45 - 14H30",
+    "docente": "Lic. Sofía Ramos",
+    "orden": 2
+  },
+  {
+    "grado": "1ro BGU \"A\"",
+    "dia": "VIERNES",
+    "asignatura": "BIOLOGÍA",
+    "tiempo": "14H30 - 15H15",
+    "docente": "Ing. Sara Sarango",
+    "orden": 3
+  },
+  {
+    "grado": "1ro BGU \"A\"",
+    "dia": "VIERNES",
+    "asignatura": "BIOLOGÍA",
+    "tiempo": "15H15 - 16H00",
+    "docente": "Ing. Sara Sarango",
+    "orden": 4
+  },
+  {
+    "grado": "1ro BGU \"A\"",
+    "dia": "VIERNES",
+    "asignatura": "MATEMÁTICA",
+    "tiempo": "16H30 - 17H15",
+    "docente": "Lic. Edwin Uchuari",
+    "orden": 5
+  },
+  {
+    "grado": "1ro BGU \"A\"",
+    "dia": "VIERNES",
+    "asignatura": "MATEMÁTICA",
+    "tiempo": "17H15 - 18H00",
+    "docente": "Lic. Edwin Uchuari",
+    "orden": 6
+  },
+  {
+    "grado": "1ro BGU \"A\"",
+    "dia": "VIERNES",
+    "asignatura": "QUÍMICA",
+    "tiempo": "18H00 - 18H45",
+    "docente": "Ing. Sara Sarango",
+    "orden": 7
+  },
+  {
+    "grado": "2do BGU \"A\"",
+    "dia": "VIERNES",
+    "asignatura": "QUÍMICA",
+    "tiempo": "13H00 - 13H45",
+    "docente": "Ing. Sara Sarango",
+    "orden": 1
+  },
+  {
+    "grado": "2do BGU \"A\"",
+    "dia": "VIERNES",
+    "asignatura": "QUÍMICA",
+    "tiempo": "13H45 - 14H30",
+    "docente": "Ing. Sara Sarango",
+    "orden": 2
+  },
+  {
+    "grado": "2do BGU \"A\"",
+    "dia": "VIERNES",
+    "asignatura": "MATEMÁTICA",
+    "tiempo": "14H30 - 15H15",
+    "docente": "Lic. Edwin Uchuari",
+    "orden": 3
+  },
+  {
+    "grado": "2do BGU \"A\"",
+    "dia": "VIERNES",
+    "asignatura": "MATEMÁTICA",
+    "tiempo": "15H15 - 16H00",
+    "docente": "Lic. Edwin Uchuari",
+    "orden": 4
+  },
+  {
+    "grado": "2do BGU \"A\"",
+    "dia": "VIERNES",
+    "asignatura": "ECA",
+    "tiempo": "16H30 - 17H15",
+    "docente": "Lic. johnny Japón",
+    "orden": 5
+  },
+  {
+    "grado": "2do BGU \"A\"",
+    "dia": "VIERNES",
+    "asignatura": "ECA",
+    "tiempo": "17H15 - 18H00",
+    "docente": "Lic. johnny Japón",
+    "orden": 6
+  },
+  {
+    "grado": "2do BGU \"A\"",
+    "dia": "VIERNES",
+    "asignatura": "LENGUA Y LITERATURA",
+    "tiempo": "18H00 - 18H45",
+    "docente": "Lic. Sofía Ramos",
+    "orden": 7
+  },
+  {
+    "grado": "3ro BGU \"A\"",
+    "dia": "VIERNES",
+    "asignatura": "RAZONAMIENTO LOGICO",
+    "tiempo": "13H00 - 13H45",
+    "docente": "Lic. Edwin Uchuari",
+    "orden": 1
+  },
+  {
+    "grado": "3ro BGU \"A\"",
+    "dia": "VIERNES",
+    "asignatura": "RAZONAMIENTO LOGICO",
+    "tiempo": "13H45 - 14H30",
+    "docente": "Lic. Edwin Uchuari",
+    "orden": 2
+  },
+  {
+    "grado": "3ro BGU \"A\"",
+    "dia": "VIERNES",
+    "asignatura": "INGLÉS",
+    "tiempo": "14H30 - 15H15",
+    "docente": "Mgtr. Alexandra Fernández",
+    "orden": 3
+  },
+  {
+    "grado": "3ro BGU \"A\"",
+    "dia": "VIERNES",
+    "asignatura": "INGLÉS",
+    "tiempo": "15H15 - 16H00",
+    "docente": "Mgtr. Alexandra Fernández",
+    "orden": 4
+  },
+  {
+    "grado": "3ro BGU \"A\"",
+    "dia": "VIERNES",
+    "asignatura": "BIOLOGÍA",
+    "tiempo": "16H30 - 17H15",
+    "docente": "Ing. Sara Sarango",
+    "orden": 5
+  },
+  {
+    "grado": "3ro BGU \"A\"",
+    "dia": "VIERNES",
+    "asignatura": "BIOLOGÍA",
+    "tiempo": "17H15 - 18H00",
+    "docente": "Ing. Sara Sarango",
+    "orden": 6
+  },
+  {
+    "grado": "3ro BGU \"A\"",
+    "dia": "VIERNES",
+    "asignatura": "HISTORIA",
+    "tiempo": "18H00 - 18H45",
+    "docente": "Mgtr. Tamara Quille",
+    "orden": 7
+  }
+]

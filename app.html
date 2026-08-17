@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro de Asistencia — UEM "Arutam"</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="barra-superior">
+    <h1>UEM "ARUTAM" — Registro de Asistencia</h1>
+    <div class="acciones">
+      <span id="nombre-usuario"></span>
+      <button id="btn-salir">Cerrar sesión</button>
+    </div>
+  </header>
+
+  <main class="contenido">
+    <div class="panel selectores">
+      <div>
+        <label for="sel-grado">Grado</label>
+        <select id="sel-grado"></select>
+      </div>
+      <div>
+        <label for="inp-fecha">Fecha</label>
+        <input type="date" id="inp-fecha">
+      </div>
+      <div>
+        <button class="secundario" id="btn-cargar">Cargar</button>
+      </div>
+      <p id="aviso-dia" class="aviso" hidden></p>
+    </div>
+
+    <div class="panel" id="panel-horario" hidden>
+      <h2 style="font-size:1rem; margin-top:0;">Horario del día — <span id="lbl-dia"></span></h2>
+      <table class="tabla-horario">
+        <thead>
+          <tr><th>N</th><th>Asignatura</th><th>Tiempo</th><th>Docente</th></tr>
+        </thead>
+        <tbody id="tbody-horario"></tbody>
+      </table>
+    </div>
+
+    <div class="panel" id="panel-asistencia" hidden>
+      <h2 style="font-size:1rem; margin-top:0;">
+        Nómina de estudiantes
+        <span class="info" id="lbl-resumen"></span>
+      </h2>
+      <div style="overflow-x:auto;">
+        <table class="tabla-asistencia">
+          <thead id="thead-asistencia"></thead>
+          <tbody id="tbody-asistencia"></tbody>
+        </table>
+      </div>
+      <div class="fila-acciones">
+        <button class="secundario" id="btn-todos-p">Todos presentes</button>
+        <button class="primario" id="btn-guardar">Guardar asistencia</button>
+        <button class="secundario" id="btn-imprimir">Imprimir reporte</button>
+        <span id="mensaje" class="mensaje-ok"></span>
+      </div>
+      <p class="info">
+        Códigos: P = Presente, I = Injustificado, J = Justificado, A = Atraso, N = No hay clases.
+      </p>
+    </div>
+  </main>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

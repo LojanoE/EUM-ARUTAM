@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Reporte de Asistencia — UEM "Arutam"</title>
+  <link rel="stylesheet" href="css/print.css">
+</head>
+<body>
+  <div class="no-imprimir barra-herramientas">
+    <button id="btn-imprimir">Imprimir</button>
+    <button onclick="window.close()">Cerrar</button>
+    <span id="estado">Cargando datos...</span>
+  </div>
+
+  <div id="reporte" hidden>
+    <!-- Encabezado institucional -->
+    <div class="encabezado">
+      <div class="enc-izquierda">
+        <p class="linea-principal">UNIDAD EDUCATIVA DEL MILENIO "ARUTAM"</p>
+        <p>EL PANGUI - ZAMORA CHINCHIPE - ECUADOR</p>
+        <p>INSPECCIÓN PERIODO ACADÉMICO 2025 - 2026</p>
+      </div>
+      <table class="enc-datos">
+        <tr><td class="etq">GRADO</td><td id="d-grado"></td></tr>
+        <tr><td class="etq">FECHA</td><td id="d-fecha"></td></tr>
+        <tr><td class="etq">DOCUMENTO</td><td id="d-documento"></td></tr>
+        <tr><td class="etq">DÍA</td><td id="d-dia"></td></tr>
+      </table>
+    </div>
+
+    <p class="linea-info">
+      <span><strong>GRADO:</strong> <span id="i-grado"></span></span>
+      <span><strong>SECCIÓN:</strong> <span id="i-seccion"></span></span>
+      <span><strong>TUTOR:</strong> <span id="i-tutor"></span></span>
+    </p>
+
+    <!-- Horario del día -->
+    <table class="tabla tabla-horario-dia">
+      <thead>
+        <tr>
+          <th>N</th><th>ASIGNATURA</th><th>TIEMPO</th>
+          <th>Nº DE ESTUDIANTES</th><th>NOMBRE DEL DOCENTE</th>
+          <th>FIRMA DEL DOCENTE</th><th>TEMA</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-horario"></tbody>
+    </table>
+
+    <!-- Nómina con marcas por hora -->
+    <table class="tabla tabla-nomina" id="tabla-nomina">
+      <thead id="thead-nomina"></thead>
+      <tbody id="tbody-nomina"></tbody>
+    </table>
+
+    <p class="observaciones">
+      OBSERVACIONES: <span class="linea-puntos"></span>
+    </p>
+    <p class="observaciones"><span class="linea-puntos"></span></p>
+
+    <!-- Firmas -->
+    <div class="firmas">
+      <div class="firma">
+        <p class="firma-linea"></p>
+        <p>SHARUP GAONA BRINNY KIMBERLY</p>
+        <p>SUB-INSPECTOR V (e)</p>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="js/imprimir.js"></script>
+</body>
+</html>

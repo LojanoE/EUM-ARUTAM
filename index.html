@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro de Asistencia — UEM "Arutam"</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="pagina-login">
+  <main class="tarjeta-login">
+    <h1>UNIDAD EDUCATIVA DEL MILENIO "ARUTAM"</h1>
+    <p class="subtitulo">Registro de Asistencia — Sección Vespertina</p>
+    <form id="form-login">
+      <label for="usuario">Usuario</label>
+      <input type="text" id="usuario" name="usuario" autocomplete="username" required>
+      <label for="password">Contraseña</label>
+      <input type="password" id="password" name="password" autocomplete="current-password" required>
+      <p id="error" class="error" hidden></p>
+      <button type="submit" id="btn-login">Ingresar</button>
+    </form>
+  </main>
+
+  <script type="module">
+    import { login, sesionActual } from "./js/auth.js";
+
+    // Si ya hay sesión activa, ir directo a la app.
+    if (sesionActual()) location.href = "app.html";
+
+    const form = document.getElementById("form-login");
+    const error = document.getElementById("error");
+    const boton = document.getElementById("btn-login");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      error.hidden = true;
+      boton.disabled = true;
+      boton.textContent = "Ingresando...";
+      try {
+        const sesion = await login(form.usuario.value, form.password.value);
+        if (sesion) {
+          location.href = "app.html";
+        } else {
+          error.textContent = "Usuario o contraseña incorrectos.";
+          error.hidden = false;
+        }
+      } catch (err) {
+        console.error(err);
+        error.textContent = "No se pudo conectar con la base de datos.";
+        error.hidden = false;
+      } finally {
+        boton.disabled = false;
+        boton.textContent = "Ingresar";
+      }
+    });
+  </script>
+</body>
+</html>

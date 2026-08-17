@@ -1,0 +1,15 @@
+rules_version = '2';
+
+// MODO PROVISIONAL SIN AUTENTICACIÓN:
+// La app usa un login propio (usuario/contraseña en la colección `usuarios`),
+// sin Firebase Auth, por lo que estas reglas permiten lectura/escritura abierta.
+// Cualquier persona con la configuración del proyecto podría leer o modificar
+// la base de datos. Cuando se migre a Firebase Auth, reemplazar por reglas
+// basadas en request.auth.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}

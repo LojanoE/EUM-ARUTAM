@@ -1,0 +1,32 @@
+[
+  {
+    "grado": "10mo EGB \"A\"",
+    "seccion": "VESPERTINA",
+    "tutor": "Lic. Edwin Uchuari"
+  },
+  {
+    "grado": "8vo EGB \"A\"",
+    "seccion": "VESPERTINA",
+    "tutor": "Lic. Luis Mijas"
+  },
+  {
+    "grado": "9no EGB \"A\"",
+    "seccion": "VESPERTINA",
+    "tutor": "Lic. Gloria Vaca"
+  },
+  {
+    "grado": "1ro BGU \"A\"",
+    "seccion": "VESPERTINA",
+    "tutor": "Mgtr. Alexandra Fernández"
+  },
+  {
+    "grado": "2do BGU \"A\"",
+    "seccion": "VESPERTINA",
+    "tutor": "Ing. Sara Sarango"
+  },
+  {
+    "grado": "3ro BGU \"A\"",
+    "seccion": "VESPERTINA",
+    "tutor": "Lic. Sofía Ramos"
+  }
+]

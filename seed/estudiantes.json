@@ -1,0 +1,652 @@
+[
+  {
+    "numId": 1,
+    "nombre": "AGUINDA HARO BRIANA NAOMI",
+    "grado": "8vo EGB \"A\""
+  },
+  {
+    "numId": 2,
+    "nombre": "ALBERCA JARRO MAYKEL DAMIAN",
+    "grado": "8vo EGB \"A\""
+  },
+  {
+    "numId": 3,
+    "nombre": "BONE CAICEDO MAILY ALEJANDRA",
+    "grado": "8vo EGB \"A\""
+  },
+  {
+    "numId": 4,
+    "nombre": "CAÑAR CAMPOVERDE DEYCI MARIBEL",
+    "grado": "8vo EGB \"A\""
+  },
+  {
+    "numId": 5,
+    "nombre": "COYAGO ORELLANA ELIAS ALEXIS",
+    "grado": "8vo EGB \"A\""
+  },
+  {
+    "numId": 6,
+    "nombre": "FERNANDEZ ALVAREZ KAROLINE ISABEL",
+    "grado": "8vo EGB \"A\""
+  },
+  {
+    "numId": 7,
+    "nombre": "GRANDA UNUZUNGO JOHELY BRITNEY",
+    "grado": "8vo EGB \"A\""
+  },
+  {
+    "numId": 8,
+    "nombre": "JIMENEZ JARAMILLO ADRIAN PATRICIO",
+    "grado": "8vo EGB \"A\""
+  },
+  {
+    "numId": 10,
+    "nombre": "MEDINA KUJI ELIAS ISSRAEL",
+    "grado": "8vo EGB \"A\""
+  },
+  {
+    "numId": 11,
+    "nombre": "PANDO GUAILACELA MARCO ANTONIO",
+    "grado": "8vo EGB \"A\""
+  },
+  {
+    "numId": 12,
+    "nombre": "PUCHA SANCHIMA JUAN DAVID",
+    "grado": "8vo EGB \"A\""
+  },
+  {
+    "numId": 13,
+    "nombre": "QUEZADA SANTANA ELIANA BRIGITTE",
+    "grado": "8vo EGB \"A\""
+  },
+  {
+    "numId": 14,
+    "nombre": "QUIROGA LLIGUIN ARELY JOMAIRA",
+    "grado": "8vo EGB \"A\""
+  },
+  {
+    "numId": 15,
+    "nombre": "RODRIGUEZ ESPINEL WILEYDIS NOHELY",
+    "grado": "8vo EGB \"A\""
+  },
+  {
+    "numId": 16,
+    "nombre": "TANCHIM WAMPASH JHONY ABEL",
+    "grado": "8vo EGB \"A\""
+  },
+  {
+    "numId": 17,
+    "nombre": "ZERPA OMAÑA YORKIANGEL DAMIAN",
+    "grado": "8vo EGB \"A\""
+  },
+  {
+    "numId": 18,
+    "nombre": "YANGORA SANT MELANY",
+    "grado": "8vo EGB \"A\""
+  },
+  {
+    "numId": 19,
+    "nombre": "ANDRADE GANCHOZO NATHALIA ISABEL",
+    "grado": "8vo EGB \"A\""
+  },
+  {
+    "numId": 20,
+    "nombre": "ANTUASH JIMPIKIT JESSENIA KARINA",
+    "grado": "8vo EGB \"A\""
+  },
+  {
+    "numId": 22,
+    "nombre": "BAPTISTA MONTIEL DUSKLIANY DAYARY",
+    "grado": "8vo EGB \"A\""
+  },
+  {
+    "numId": 23,
+    "nombre": "GONZALEZ TSAMARAINT ANALIA FERNANDA",
+    "grado": "8vo EGB \"A\""
+  },
+  {
+    "numId": 24,
+    "nombre": "JARA MARCILLO MARIA EMILIA",
+    "grado": "8vo EGB \"A\""
+  },
+  {
+    "numId": 25,
+    "nombre": "LEON SUQUI JUAN ANTONIO",
+    "grado": "8vo EGB \"A\""
+  },
+  {
+    "numId": 26,
+    "nombre": "PINTADO NIVELO JORDY ALEJANDRO",
+    "grado": "8vo EGB \"A\""
+  },
+  {
+    "numId": 27,
+    "nombre": "PINZON JARAMILLO KEYLER ALEXANDER",
+    "grado": "8vo EGB \"A\""
+  },
+  {
+    "numId": 28,
+    "nombre": "SAMAREÑO CHAIR YAJAIRA MARLY",
+    "grado": "8vo EGB \"A\""
+  },
+  {
+    "numId": 30,
+    "nombre": "TSENKUSH PINCHU NAY ARIEL",
+    "grado": "8vo EGB \"A\""
+  },
+  {
+    "numId": 31,
+    "nombre": "VISUMA CAJEKEY JAMMIL ALEJANDRO",
+    "grado": "8vo EGB \"A\""
+  },
+  {
+    "numId": 32,
+    "nombre": "WAMPASH UNUP DAYANIRA VALENTINA",
+    "grado": "8vo EGB \"A\""
+  },
+  {
+    "numId": 33,
+    "nombre": "WAMPUTSAR WAMPASH LISSETTE MAGDALENA",
+    "grado": "8vo EGB \"A\""
+  },
+  {
+    "numId": 34,
+    "nombre": "YANKUR GANGOTENA DOMINIC ALEXANDER",
+    "grado": "8vo EGB \"A\""
+  },
+  {
+    "numId": 62,
+    "nombre": "CALVA CAMACHO KATHERYN JAZMIN",
+    "grado": "9no EGB \"A\""
+  },
+  {
+    "numId": 63,
+    "nombre": "CAÑAR MAZA CARLOS MANUEL",
+    "grado": "9no EGB \"A\""
+  },
+  {
+    "numId": 64,
+    "nombre": "CAÑAR SARAGURO MAILYN BRIGITTE",
+    "grado": "9no EGB \"A\""
+  },
+  {
+    "numId": 65,
+    "nombre": "CHAMIK CHAIR MERLY JHULISSA",
+    "grado": "9no EGB \"A\""
+  },
+  {
+    "numId": 69,
+    "nombre": "CUENCA TACURI KENNY ROCIO",
+    "grado": "9no EGB \"A\""
+  },
+  {
+    "numId": 70,
+    "nombre": "GUAMAN NIVELO JHOSELYN MISHELL",
+    "grado": "9no EGB \"A\""
+  },
+  {
+    "numId": 71,
+    "nombre": "GUAYANAY SAMANIEGO CHRISTIAN MISAEL",
+    "grado": "9no EGB \"A\""
+  },
+  {
+    "numId": 72,
+    "nombre": "GUERRERO SUAREZ SEBASTIAN DAVID",
+    "grado": "9no EGB \"A\""
+  },
+  {
+    "numId": 73,
+    "nombre": "GUTAMA LUNA MIREYA NICOLE",
+    "grado": "9no EGB \"A\""
+  },
+  {
+    "numId": 74,
+    "nombre": "JIMENEZ ARMIJOS ALEXANDER DARIAN",
+    "grado": "9no EGB \"A\""
+  },
+  {
+    "numId": 75,
+    "nombre": "JIMENEZ JIMENEZ SNYDER ADRIEL",
+    "grado": "9no EGB \"A\""
+  },
+  {
+    "numId": 76,
+    "nombre": "LIMA SANMARTIN DILAN YAHIR",
+    "grado": "9no EGB \"A\""
+  },
+  {
+    "numId": 77,
+    "nombre": "LIMA SANMARTIN LISTDY DANIELA",
+    "grado": "9no EGB \"A\""
+  },
+  {
+    "numId": 78,
+    "nombre": "LOOR JUA JOSELYN GABRIELA",
+    "grado": "9no EGB \"A\""
+  },
+  {
+    "numId": 79,
+    "nombre": "MACAS GONZALEZ JHIMSON ALEXANDER",
+    "grado": "9no EGB \"A\""
+  },
+  {
+    "numId": 80,
+    "nombre": "MOROCHO MUZHA JAMILETH FERNANDA",
+    "grado": "9no EGB \"A\""
+  },
+  {
+    "numId": 82,
+    "nombre": "PANDIGUANA TELLO MARITZA ELIZABETH",
+    "grado": "9no EGB \"A\""
+  },
+  {
+    "numId": 87,
+    "nombre": "SEGOVIA PINCAY JESUS ADRIAN",
+    "grado": "9no EGB \"A\""
+  },
+  {
+    "numId": 88,
+    "nombre": "TSAMARAINT WAMPASH MICHAEL ALEXANDER",
+    "grado": "9no EGB \"A\""
+  },
+  {
+    "numId": 89,
+    "nombre": "WAUMBA NIVELO DANNA PAULETH",
+    "grado": "9no EGB \"A\""
+  },
+  {
+    "numId": 90,
+    "nombre": "YANKUR ANTUASH ANDDY GEOVANNY",
+    "grado": "9no EGB \"A\""
+  },
+  {
+    "numId": 91,
+    "nombre": "YANKUR CHUMAPI STEVEN ISRAEL",
+    "grado": "9no EGB \"A\""
+  },
+  {
+    "numId": 94,
+    "nombre": "ALVAREZ GUAMAN NATHALY CAROLINA",
+    "grado": "10mo EGB \"A\""
+  },
+  {
+    "numId": 95,
+    "nombre": "ANGUAZHA TAIZHA CARLOS JOSUE",
+    "grado": "10mo EGB \"A\""
+  },
+  {
+    "numId": 96,
+    "nombre": "ANTUASH GUAMBAZHO ALEXIS MATEO",
+    "grado": "10mo EGB \"A\""
+  },
+  {
+    "numId": 97,
+    "nombre": "ANTUASH GUAMBAZHO KERLYN ABIGAIL",
+    "grado": "10mo EGB \"A\""
+  },
+  {
+    "numId": 98,
+    "nombre": "BENITEZ CHAMBA MIRYAM SOLEDAD",
+    "grado": "10mo EGB \"A\""
+  },
+  {
+    "numId": 99,
+    "nombre": "BERMEO QUITO LESLIE ZHARICK",
+    "grado": "10mo EGB \"A\""
+  },
+  {
+    "numId": 100,
+    "nombre": "CAAMAÑO LUNA MABEL SHAREIDY",
+    "grado": "10mo EGB \"A\""
+  },
+  {
+    "numId": 102,
+    "nombre": "CHACHA AYUI RANDY LEONEL",
+    "grado": "10mo EGB \"A\""
+  },
+  {
+    "numId": 103,
+    "nombre": "CHAVEZ JUEP MAYTTE KATHERINE",
+    "grado": "10mo EGB \"A\""
+  },
+  {
+    "numId": 104,
+    "nombre": "CHUMAPI LITUMA ELVER SEBASTIAN",
+    "grado": "10mo EGB \"A\""
+  },
+  {
+    "numId": 106,
+    "nombre": "FERNANDEZ ALVAREZ MAYCOL MICHAEL",
+    "grado": "10mo EGB \"A\""
+  },
+  {
+    "numId": 108,
+    "nombre": "JUMBO PONCE LUIS FERNANDO",
+    "grado": "10mo EGB \"A\""
+  },
+  {
+    "numId": 109,
+    "nombre": "MACAS GONZALEZ JHOSTIN JHAIR",
+    "grado": "10mo EGB \"A\""
+  },
+  {
+    "numId": 110,
+    "nombre": "MEDINA LARA ANDRES ALEJANDRO",
+    "grado": "10mo EGB \"A\""
+  },
+  {
+    "numId": 111,
+    "nombre": "MOROCHO MUZHA YADIRA LIZETH",
+    "grado": "10mo EGB \"A\""
+  },
+  {
+    "numId": 112,
+    "nombre": "MOROCHO SAPATANGA DIANA ELIZABETH",
+    "grado": "10mo EGB \"A\""
+  },
+  {
+    "numId": 115,
+    "nombre": "ORDOÑEZ CALLE ARIANA PAOLA",
+    "grado": "10mo EGB \"A\""
+  },
+  {
+    "numId": 117,
+    "nombre": "PILLACELA PILLACELA LAURA CECILIA",
+    "grado": "10mo EGB \"A\""
+  },
+  {
+    "numId": 118,
+    "nombre": "PUCHAISELA CASTRO JOSE JOEL",
+    "grado": "10mo EGB \"A\""
+  },
+  {
+    "numId": 120,
+    "nombre": "ROSALES BARRETO NATHALY MONSERRATE",
+    "grado": "10mo EGB \"A\""
+  },
+  {
+    "numId": 121,
+    "nombre": "SALINAS JARRO MADELYN GABRIELA",
+    "grado": "10mo EGB \"A\""
+  },
+  {
+    "numId": 122,
+    "nombre": "SUQUI MINGO JONATHAN RAFAEL",
+    "grado": "10mo EGB \"A\""
+  },
+  {
+    "numId": 124,
+    "nombre": "WAMPUTSAR WAMPASH ARIEL BLADIMIR",
+    "grado": "10mo EGB \"A\""
+  },
+  {
+    "numId": 125,
+    "nombre": "AULES CORAL PAMELA ABIGAIL",
+    "grado": "10mo EGB \"A\""
+  },
+  {
+    "numId": 127,
+    "nombre": "UNUP SHACAY DENNISE MAYLI",
+    "grado": "10mo EGB \"A\""
+  },
+  {
+    "numId": 128,
+    "nombre": "RIOFRIO KAYAP MAX EMILIANO",
+    "grado": "10mo EGB \"A\""
+  },
+  {
+    "numId": 129,
+    "nombre": "TANCHIM CRISTOFER",
+    "grado": "10mo EGB \"A\""
+  },
+  {
+    "numId": 130,
+    "nombre": "GUERRERO CEVALLOS JHOEY ALEXANDER",
+    "grado": "9no EGB \"A\""
+  },
+  {
+    "numId": 131,
+    "nombre": "CHAIR MOISES",
+    "grado": "8vo EGB \"A\""
+  },
+  {
+    "numId": 132,
+    "nombre": "CHAIR GLORIA",
+    "grado": "10mo EGB \"A\""
+  },
+  {
+    "numId": 1,
+    "nombre": "AHUANANCHI JUEP ROBER JHONATAN",
+    "grado": "1ro BGU \"A\""
+  },
+  {
+    "numId": 3,
+    "nombre": "BERMEO NIVELO CHRISTOFER JAVIER",
+    "grado": "1ro BGU \"A\""
+  },
+  {
+    "numId": 4,
+    "nombre": "BERMEO NIVELO JULIOR CESAR",
+    "grado": "1ro BGU \"A\""
+  },
+  {
+    "numId": 5,
+    "nombre": "CAAMAÑO ACACHO DILAN JHAIR",
+    "grado": "1ro BGU \"A\""
+  },
+  {
+    "numId": 8,
+    "nombre": "CHAVEZ JUEP YOSTIN GABRIEL",
+    "grado": "1ro BGU \"A\""
+  },
+  {
+    "numId": 9,
+    "nombre": "GRANDA ARMIJOS ANGELA DANIELA",
+    "grado": "1ro BGU \"A\""
+  },
+  {
+    "numId": 12,
+    "nombre": "KUKUSH CHUMBIQUE EMERSON ALEXIS",
+    "grado": "1ro BGU \"A\""
+  },
+  {
+    "numId": 13,
+    "nombre": "NARANKAS UNKUCH ANGELINA SALOME",
+    "grado": "1ro BGU \"A\""
+  },
+  {
+    "numId": 15,
+    "nombre": "PANDO GUAILACELA CARLOS MANUEL",
+    "grado": "1ro BGU \"A\""
+  },
+  {
+    "numId": 17,
+    "nombre": "PUCHA SUQUI HEIDY JANINA",
+    "grado": "1ro BGU \"A\""
+  },
+  {
+    "numId": 18,
+    "nombre": "PUCHAISELA CASTRO ARIEL ANTONIO",
+    "grado": "1ro BGU \"A\""
+  },
+  {
+    "numId": 19,
+    "nombre": "QUEZADA SANTANA DEISY GUADALUPE",
+    "grado": "1ro BGU \"A\""
+  },
+  {
+    "numId": 20,
+    "nombre": "QUEZADA SANTANA GUADALUPE ROCIO",
+    "grado": "1ro BGU \"A\""
+  },
+  {
+    "numId": 22,
+    "nombre": "TANCHIM AWAK GILBER DANIEL",
+    "grado": "1ro BGU \"A\""
+  },
+  {
+    "numId": 23,
+    "nombre": "TSAMARAINT MOROCHO ADRIANA NICOL",
+    "grado": "1ro BGU \"A\""
+  },
+  {
+    "numId": 24,
+    "nombre": "TSUKANKA NANTIP DAMARIS ROSA",
+    "grado": "1ro BGU \"A\""
+  },
+  {
+    "numId": 25,
+    "nombre": "TUKUP GREFA KELVIN XAVIER",
+    "grado": "1ro BGU \"A\""
+  },
+  {
+    "numId": 26,
+    "nombre": "UCHUARI PULLAGUARI ELIZABETH ABIGAIL",
+    "grado": "1ro BGU \"A\""
+  },
+  {
+    "numId": 27,
+    "nombre": "VAZQUEZ URDIALES ADRIANA DOMENICA",
+    "grado": "1ro BGU \"A\""
+  },
+  {
+    "numId": 28,
+    "nombre": "WAJARAI KAYAP MERCY RAQUEL",
+    "grado": "1ro BGU \"A\""
+  },
+  {
+    "numId": 29,
+    "nombre": "WAMPUTSAR WAMPASH JHALISS MILENA",
+    "grado": "1ro BGU \"A\""
+  },
+  {
+    "numId": 30,
+    "nombre": "SEGOVIA PINCAY HELEN NICOLL",
+    "grado": "1ro BGU \"A\""
+  },
+  {
+    "numId": 32,
+    "nombre": "ANGAMARCA KIMBERLY ELIZABETH",
+    "grado": "2do BGU \"A\""
+  },
+  {
+    "numId": 33,
+    "nombre": "ANTUASH JIMPIKIT NATHALY GISSELA",
+    "grado": "2do BGU \"A\""
+  },
+  {
+    "numId": 36,
+    "nombre": "GUERRERO ANKUASH GELEN MAHOLY",
+    "grado": "2do BGU \"A\""
+  },
+  {
+    "numId": 37,
+    "nombre": "HERRERA CHUMAPI JAN ERICSSON",
+    "grado": "2do BGU \"A\""
+  },
+  {
+    "numId": 38,
+    "nombre": "JIMENEZ MOROCHO MARIA FERNANDA",
+    "grado": "2do BGU \"A\""
+  },
+  {
+    "numId": 39,
+    "nombre": "JUMBO YANKUR DEIBY ALEXANDER",
+    "grado": "2do BGU \"A\""
+  },
+  {
+    "numId": 40,
+    "nombre": "KUNANCH WEK ANIBAL GEOVANNY",
+    "grado": "2do BGU \"A\""
+  },
+  {
+    "numId": 41,
+    "nombre": "ORTEGA PUCHA AYDA GIOMAYRA",
+    "grado": "2do BGU \"A\""
+  },
+  {
+    "numId": 42,
+    "nombre": "PLACENCIA AWAK MARCO ANTONIO",
+    "grado": "2do BGU \"A\""
+  },
+  {
+    "numId": 43,
+    "nombre": "SHARUP GAONA BRINNY KIMBERLY",
+    "grado": "2do BGU \"A\""
+  },
+  {
+    "numId": 46,
+    "nombre": "WAMPASH PIRUCH JOSTYN FRANS",
+    "grado": "2do BGU \"A\""
+  },
+  {
+    "numId": 48,
+    "nombre": "YANKUR ANTUASH EDGAR ALEXANDER",
+    "grado": "2do BGU \"A\""
+  },
+  {
+    "numId": 49,
+    "nombre": "SANCHIM YUMA ADRIANA YESSENIA",
+    "grado": "2do BGU \"A\""
+  },
+  {
+    "numId": 50,
+    "nombre": "ABAD JIMENEZ MICAELA MARIA",
+    "grado": "3ro BGU \"A\""
+  },
+  {
+    "numId": 51,
+    "nombre": "DONOZO ANTUASH RODRIGO ISRAEL",
+    "grado": "3ro BGU \"A\""
+  },
+  {
+    "numId": 52,
+    "nombre": "GUAYANAY SAMANIEGO JEREMY JEREMIAS",
+    "grado": "3ro BGU \"A\""
+  },
+  {
+    "numId": 53,
+    "nombre": "KAYUK GONZALEZ ANA GABRIELA",
+    "grado": "3ro BGU \"A\""
+  },
+  {
+    "numId": 54,
+    "nombre": "MACAS GUACHISACA DAVID RENATO",
+    "grado": "3ro BGU \"A\""
+  },
+  {
+    "numId": 55,
+    "nombre": "MONTAÑO CHICA ASHLY ANTONELA",
+    "grado": "3ro BGU \"A\""
+  },
+  {
+    "numId": 56,
+    "nombre": "PRADO AJILA CESAR HUMBERTO",
+    "grado": "3ro BGU \"A\""
+  },
+  {
+    "numId": 57,
+    "nombre": "QUIROGA LLIGUIN STALIN MICHAEL",
+    "grado": "3ro BGU \"A\""
+  },
+  {
+    "numId": 59,
+    "nombre": "TEJEDOR RUIZ ODALIS AYLEN",
+    "grado": "3ro BGU \"A\""
+  },
+  {
+    "numId": 60,
+    "nombre": "TSUKANKA NANTIP NELSON DARWIN",
+    "grado": "3ro BGU \"A\""
+  },
+  {
+    "numId": 61,
+    "nombre": "TAMAYO CAMPOVERDE DEYVI",
+    "grado": "2do BGU \"A\""
+  },
+  {
+    "numId": 63,
+    "nombre": "WISUM SERETAM DAISY NANTAR",
+    "grado": "2do BGU \"A\""
+  }
+]

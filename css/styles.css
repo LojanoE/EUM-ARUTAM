@@ -1,0 +1,213 @@
+/* Estilos generales — UEM Arutam, Registro de Asistencia */
+:root {
+  --azul: #1a3a6b;
+  --azul-claro: #2b5aa6;
+  --gris-fondo: #f2f4f7;
+  --borde: #c9d2de;
+  --verde: #1e7d32;
+  --rojo: #b3261e;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: var(--gris-fondo);
+  color: #1c2430;
+}
+
+/* ---------- Login ---------- */
+.pagina-login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.tarjeta-login {
+  background: #fff;
+  padding: 2rem 2.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.tarjeta-login h1 {
+  font-size: 1.05rem;
+  color: var(--azul);
+  margin: 0 0 0.25rem;
+}
+
+.tarjeta-login .subtitulo {
+  margin: 0 0 1.5rem;
+  color: #5a6675;
+  font-size: 0.9rem;
+}
+
+.tarjeta-login form { text-align: left; }
+
+.tarjeta-login label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.tarjeta-login input {
+  width: 100%;
+  padding: 0.55rem 0.7rem;
+  margin-bottom: 1rem;
+  border: 1px solid var(--borde);
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.tarjeta-login button {
+  width: 100%;
+  padding: 0.65rem;
+  background: var(--azul);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.tarjeta-login button:hover { background: var(--azul-claro); }
+.tarjeta-login button:disabled { opacity: 0.6; cursor: wait; }
+
+.error {
+  color: var(--rojo);
+  font-size: 0.85rem;
+  margin: -0.4rem 0 0.8rem;
+}
+
+/* ---------- App ---------- */
+.barra-superior {
+  background: var(--azul);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 1.2rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.barra-superior h1 { font-size: 1rem; margin: 0; }
+
+.barra-superior .acciones { display: flex; gap: 0.5rem; align-items: center; }
+
+.barra-superior button,
+.barra-superior a.boton {
+  background: #fff;
+  color: var(--azul);
+  border: none;
+  border-radius: 5px;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.contenido { padding: 1.2rem; max-width: 1200px; margin: 0 auto; }
+
+.panel {
+  background: #fff;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  padding: 1rem 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.selectores {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.selectores label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+}
+
+.selectores select,
+.selectores input[type="date"] {
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--borde);
+  border-radius: 6px;
+  font-size: 0.95rem;
+  min-width: 180px;
+}
+
+.aviso { color: var(--rojo); font-weight: 600; }
+.info { color: #5a6675; font-size: 0.9rem; }
+
+/* Tabla de horario del día */
+.tabla-horario { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.tabla-horario th, .tabla-horario td {
+  border: 1px solid var(--borde);
+  padding: 0.35rem 0.5rem;
+  text-align: left;
+}
+.tabla-horario th { background: #e8edf5; }
+
+/* Tabla de registro de asistencia */
+.tabla-asistencia { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.tabla-asistencia th, .tabla-asistencia td {
+  border: 1px solid var(--borde);
+  padding: 0.3rem 0.4rem;
+}
+.tabla-asistencia th { background: #e8edf5; text-align: center; }
+.tabla-asistencia td.nombre { min-width: 240px; }
+.tabla-asistencia td.centro { text-align: center; }
+
+.tabla-asistencia select.marca {
+  width: 3.2rem;
+  padding: 0.2rem;
+  border: 1px solid var(--borde);
+  border-radius: 4px;
+  font-weight: 700;
+  text-align: center;
+}
+
+select.marca.vacia { border-color: var(--rojo); background: #fdecea; }
+select.marca.P { background: #e6f4e8; }
+select.marca.I { background: #fdecea; }
+select.marca.A { background: #fff6e0; }
+
+.fila-acciones {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+button.primario {
+  background: var(--azul);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+button.primario:hover { background: var(--azul-claro); }
+
+button.secundario {
+  background: #fff;
+  color: var(--azul);
+  border: 1px solid var(--azul);
+  border-radius: 6px;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.mensaje-ok { color: var(--verde); font-weight: 600; }
