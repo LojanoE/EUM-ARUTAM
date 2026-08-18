@@ -4,6 +4,16 @@ Historial de versiones de la app de Registro de Asistencia — UEM "Arutam".
 Versionado semántico: MAYOR.MENOR.PARCHE. La versión vigente está en
 `js/version.js` y cada versión tiene su tag de git (`vX.Y.Z`).
 
+## [1.5.0] — 2026-08-17
+
+### Cambiado
+- **La firma de los documentos impresos la pone el usuario que los genera**:
+  cada usuario ahora tiene campo `cargo`, y el reporte diario y el reporte
+  por rango firman con su nombre y cargo. Si un usuario no tiene cargo, se
+  usa como respaldo la firma global ya configurada.
+- El módulo Usuarios queda consolidado: se eliminó el panel aparte de
+  "firma en documentos" y el cargo se edita junto con cada usuario.
+
 ## [1.4.0] — 2026-08-17
 
 ### Agregado

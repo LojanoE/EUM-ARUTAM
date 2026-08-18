@@ -365,12 +365,12 @@ export async function obtenerUsuarios() {
     .sort((a, b) => a.usuario.localeCompare(b.usuario, "es"));
 }
 
-export async function agregarUsuario(usuario, password, nombre, rol) {
+export async function agregarUsuario(usuario, password, nombre, rol, cargo = "") {
   const ref = doc(db, "usuarios", usuario);
   if ((await getDoc(ref)).exists()) {
     throw new Error(`El usuario "${usuario}" ya existe.`);
   }
-  await setDoc(ref, { usuario, password, nombre, rol });
+  await setDoc(ref, { usuario, password, nombre, rol, cargo });
 }
 
 export async function actualizarUsuario(usuario, datos) {
@@ -396,4 +396,16 @@ export async function obtenerConfig() {
 
 export async function guardarConfig(datos) {
   await setDoc(doc(db, "config", CONFIG_DOC), datos, { merge: true });
+}
+
+// Firma de los documentos impresos: nombre y cargo del usuario que genera
+// el reporte. Si no tiene cargo, se usa la config global como respaldo.
+export async function firmaDelUsuario(usuario) {
+  const snap = await getDoc(doc(db, "usuarios", usuario));
+  const u = snap.exists() ? snap.data() : null;
+  const cfg = await obtenerConfig();
+  return {
+    nombre: u?.nombre || usuario,
+    cargo: u?.cargo || cfg.cargoSubinspector
+  };
 }

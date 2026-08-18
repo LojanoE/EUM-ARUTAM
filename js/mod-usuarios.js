@@ -1,7 +1,7 @@
-// Módulo: gestión de usuarios y datos de firma en documentos (solo admin).
+// Módulo: gestión de usuarios (solo admin). Cada usuario tiene nombre y
+// cargo: son los datos con los que se firman los documentos que imprime.
 import {
-  obtenerUsuarios, agregarUsuario, actualizarUsuario, eliminarUsuario,
-  obtenerConfig, guardarConfig, CONFIG_DEFECTO, esc
+  obtenerUsuarios, agregarUsuario, actualizarUsuario, eliminarUsuario, esc
 } from "./data.js";
 
 export async function initUsuarios(contenedor, ctx) {
@@ -14,40 +14,26 @@ export async function initUsuarios(contenedor, ctx) {
     <h2 class="titulo-modulo">Usuarios</h2>
 
     <div class="panel">
-      <h2 style="font-size:1rem; margin-top:0;">Firma en documentos impresos</h2>
-      <p class="info">Nombre y cargo que aparecen al pie de los reportes de asistencia.</p>
-      <div class="selectores">
-        <div style="flex:1; min-width:220px;">
-          <label for="f-subinspector">Nombre y apellido</label>
-          <input type="text" id="f-subinspector"
-                 style="width:100%; padding:0.45rem 0.6rem; border:1px solid var(--borde); border-radius:6px;">
-        </div>
-        <div style="flex:1; min-width:180px;">
-          <label for="f-cargo">Cargo</label>
-          <input type="text" id="f-cargo"
-                 style="width:100%; padding:0.45rem 0.6rem; border:1px solid var(--borde); border-radius:6px;">
-        </div>
-        <div><button class="primario" id="f-guardar">Guardar firma</button></div>
-      </div>
-      <p class="mensaje-ok" id="f-mensaje"></p>
-    </div>
-
-    <div class="panel">
       <h2 style="font-size:1rem; margin-top:0;">Agregar usuario</h2>
       <div class="selectores">
         <div>
           <label for="u-usuario">Usuario</label>
           <input type="text" id="u-usuario" placeholder="ej. lmijas"
-                 style="width:10rem; padding:0.45rem 0.6rem; border:1px solid var(--borde); border-radius:6px;">
+                 style="width:9rem; padding:0.45rem 0.6rem; border:1px solid var(--borde); border-radius:6px;">
         </div>
         <div>
           <label for="u-password">Contraseña</label>
           <input type="text" id="u-password"
-                 style="width:10rem; padding:0.45rem 0.6rem; border:1px solid var(--borde); border-radius:6px;">
+                 style="width:9rem; padding:0.45rem 0.6rem; border:1px solid var(--borde); border-radius:6px;">
         </div>
         <div style="flex:1; min-width:180px;">
-          <label for="u-nombre">Nombre visible</label>
+          <label for="u-nombre">Nombre y apellido</label>
           <input type="text" id="u-nombre" placeholder="Lic. Nombre Apellido"
+                 style="width:100%; padding:0.45rem 0.6rem; border:1px solid var(--borde); border-radius:6px;">
+        </div>
+        <div style="flex:1; min-width:150px;">
+          <label for="u-cargo">Cargo</label>
+          <input type="text" id="u-cargo" placeholder="SUB-INSPECTOR V (e)"
                  style="width:100%; padding:0.45rem 0.6rem; border:1px solid var(--borde); border-radius:6px;">
         </div>
         <div>
@@ -59,15 +45,19 @@ export async function initUsuarios(contenedor, ctx) {
         </div>
         <div><button class="primario" id="u-agregar">Agregar</button></div>
       </div>
-      <p class="info">Rol <strong>registro</strong>: consulta y registra asistencia.
-        Rol <strong>admin</strong>: además gestiona estudiantes, horarios, grados y usuarios.</p>
+      <p class="info">
+        Rol <strong>registro</strong>: consulta y registra asistencia.
+        Rol <strong>admin</strong>: además gestiona estudiantes, horarios, grados y usuarios.<br>
+        Los reportes impresos se firman con el <strong>nombre y cargo del usuario
+        que genera el documento</strong>.
+      </p>
     </div>
 
     <div class="panel">
       <div style="overflow-x:auto;">
         <table class="tabla-gestion">
           <thead>
-            <tr><th>Usuario</th><th>Nombre</th><th>Rol</th><th>Acciones</th></tr>
+            <tr><th>Usuario</th><th>Nombre</th><th>Cargo</th><th>Rol</th><th>Acciones</th></tr>
           </thead>
           <tbody id="tbody-usuarios"></tbody>
         </table>
@@ -78,36 +68,13 @@ export async function initUsuarios(contenedor, ctx) {
   const tbody = contenedor.querySelector("#tbody-usuarios");
   const mensaje = contenedor.querySelector("#u-mensaje");
 
-  // Firma en documentos
-  const config = await obtenerConfig();
-  const inpSub = contenedor.querySelector("#f-subinspector");
-  const inpCargo = contenedor.querySelector("#f-cargo");
-  inpSub.value = config.subinspector || CONFIG_DEFECTO.subinspector;
-  inpCargo.value = config.cargoSubinspector || CONFIG_DEFECTO.cargoSubinspector;
-
-  contenedor.querySelector("#f-guardar").addEventListener("click", async () => {
-    const subinspector = inpSub.value.trim();
-    const cargoSubinspector = inpCargo.value.trim();
-    if (!subinspector) {
-      alert("Ingrese el nombre del subinspector(a).");
-      return;
-    }
-    try {
-      await guardarConfig({ subinspector, cargoSubinspector });
-      contenedor.querySelector("#f-mensaje").textContent =
-        "Firma guardada. Se usará en los próximos reportes.";
-    } catch (err) {
-      console.error(err);
-      alert("Error al guardar: " + err.message);
-    }
-  });
-
   async function pintar() {
     const usuarios = await obtenerUsuarios();
     tbody.innerHTML = usuarios.map(u => `
       <tr data-id="${esc(u.id)}">
         <td class="celda-usuario">${esc(u.usuario)}</td>
         <td class="celda-nombre">${esc(u.nombre || "")}</td>
+        <td class="celda-cargo">${esc(u.cargo || "")}</td>
         <td class="centro celda-rol">${esc(u.rol)}</td>
         <td class="centro">
           <button class="btn-mini" data-editar-usuario="${esc(u.id)}">Editar</button>
@@ -122,10 +89,12 @@ export async function initUsuarios(contenedor, ctx) {
       const id = btnEditar.dataset.editarUsuario;
       const fila = btnEditar.closest("tr");
       const nombre = fila.querySelector(".celda-nombre").textContent;
+      const cargo = fila.querySelector(".celda-cargo").textContent;
       const rol = fila.querySelector(".celda-rol").textContent;
       fila.innerHTML = `
         <td class="celda-usuario">${esc(id)}</td>
         <td><input type="text" id="ue-nombre" value="${esc(nombre)}"></td>
+        <td><input type="text" id="ue-cargo" value="${esc(cargo)}"></td>
         <td class="centro">
           <select id="ue-rol" style="width:7rem;">
             <option value="registro" ${rol === "registro" ? "selected" : ""}>registro</option>
@@ -146,6 +115,7 @@ export async function initUsuarios(contenedor, ctx) {
       const id = btnGuardar.dataset.guardarUsuario;
       const fila = btnGuardar.closest("tr");
       const nombre = fila.querySelector("#ue-nombre").value.trim();
+      const cargo = fila.querySelector("#ue-cargo").value.trim();
       const rol = fila.querySelector("#ue-rol").value;
       const password = fila.querySelector("#ue-password").value.trim();
       if (!nombre) {
@@ -162,7 +132,7 @@ export async function initUsuarios(contenedor, ctx) {
         }
       }
       try {
-        const datos = { nombre, rol };
+        const datos = { nombre, cargo, rol };
         if (password) datos.password = password;
         await actualizarUsuario(id, datos);
         mensaje.textContent = `Usuario "${id}" actualizado.`;
@@ -209,16 +179,18 @@ export async function initUsuarios(contenedor, ctx) {
     const usuario = contenedor.querySelector("#u-usuario").value.trim();
     const password = contenedor.querySelector("#u-password").value.trim();
     const nombre = contenedor.querySelector("#u-nombre").value.trim();
+    const cargo = contenedor.querySelector("#u-cargo").value.trim();
     const rol = contenedor.querySelector("#u-rol").value;
     if (!usuario || !password || !nombre) {
       alert("Complete usuario, contraseña y nombre.");
       return;
     }
     try {
-      await agregarUsuario(usuario, password, nombre, rol);
+      await agregarUsuario(usuario, password, nombre, rol, cargo);
       contenedor.querySelector("#u-usuario").value = "";
       contenedor.querySelector("#u-password").value = "";
       contenedor.querySelector("#u-nombre").value = "";
+      contenedor.querySelector("#u-cargo").value = "";
       mensaje.textContent = `Usuario "${usuario}" creado.`;
     } catch (err) {
       console.error(err);

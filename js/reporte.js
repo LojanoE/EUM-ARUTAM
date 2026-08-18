@@ -2,7 +2,7 @@
 import { exigirSesion } from "./auth.js";
 import {
   obtenerEstudiantes, obtenerTutor, obtenerTodasLasAsistencias,
-  obtenerConfig, indicePorEstudiante, resumenEstudiante, esc
+  firmaDelUsuario, indicePorEstudiante, resumenEstudiante, esc
 } from "./data.js";
 
 const sesion = exigirSesion();
@@ -34,11 +34,11 @@ async function iniciar() {
     return;
   }
 
-  const [estudiantes, tutor, asistencias, config] = await Promise.all([
+  const [estudiantes, tutor, asistencias, firma] = await Promise.all([
     obtenerEstudiantes(grado),
     obtenerTutor(grado),
     obtenerTodasLasAsistencias(),
-    obtenerConfig(),
+    firmaDelUsuario(sesion.usuario),
   ]);
 
   // El índice se arma sobre TODA la colección filtrada por fechas: el
@@ -56,9 +56,9 @@ async function iniciar() {
   document.getElementById("i-seccion").textContent = tutor?.seccion || "VESPERTINA";
   document.getElementById("i-tutor").textContent = tutor?.tutor || "";
 
-  // Firma configurable (módulo Usuarios)
-  document.getElementById("f-nombre").textContent = config.subinspector;
-  document.getElementById("f-cargo").textContent = config.cargoSubinspector;
+  // Firma del usuario que genera el documento
+  document.getElementById("f-nombre").textContent = firma.nombre;
+  document.getElementById("f-cargo").textContent = firma.cargo;
 
   // Consolidado
   document.getElementById("tbody-consolidado").innerHTML = estudiantes.map((est, idx) => {

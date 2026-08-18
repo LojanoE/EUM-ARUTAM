@@ -47,8 +47,8 @@ firebase.json, firestore.rules  Configuración de reglas de Firestore
 - **Grados** (solo `admin`): agregar, editar tutor/sección, renombrar (con
   actualización en cascada de estudiantes, horarios y asistencias) y eliminar
   grados sin estudiantes.
-- **Usuarios** (solo `admin`): gestión de cuentas y de la firma (nombre y
-  cargo del subinspector) que aparece en los documentos impresos.
+- **Usuarios** (solo `admin`): gestión de cuentas. Cada usuario tiene nombre
+  y **cargo**, con los que se firman los documentos que imprime.
 
 Los roles se definen en el campo `rol` de la colección `usuarios`
 (`admin` edita; cualquier otro rol solo consulta y registra asistencia).
