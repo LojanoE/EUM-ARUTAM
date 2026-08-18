@@ -1,0 +1,158 @@
+{
+  "firebase.json": {
+    "mtime": 1786997898.4482737,
+    "seen": 1787016707.6862035,
+    "ast_hash": "",
+    "semantic_hash": ""
+  },
+  "js/app.js": {
+    "mtime": 1787007910.7541625,
+    "seen": 1787016722.6872616,
+    "ast_hash": "35bccc1957353fc695842a059e0c2e9f",
+    "semantic_hash": "35bccc1957353fc695842a059e0c2e9f"
+  },
+  "js/auth.js": {
+    "mtime": 1786997542.5101824,
+    "seen": 1787016722.6872616,
+    "ast_hash": "fcc8ea7e7be498c6b19fcd2b217cba92",
+    "semantic_hash": "fcc8ea7e7be498c6b19fcd2b217cba92"
+  },
+  "js/data.js": {
+    "mtime": 1787012903.947552,
+    "seen": 1787016722.6872616,
+    "ast_hash": "f1e3e3a8f85c2f403f3e148ebf87be62",
+    "semantic_hash": "f1e3e3a8f85c2f403f3e148ebf87be62"
+  },
+  "js/firebase-config.js": {
+    "mtime": 1786997542.5086143,
+    "seen": 1787016722.6872616,
+    "ast_hash": "01b4e838531813e40e116bbf87492f60",
+    "semantic_hash": "01b4e838531813e40e116bbf87492f60"
+  },
+  "js/imprimir.js": {
+    "mtime": 1787012977.6565962,
+    "seen": 1787016722.6872616,
+    "ast_hash": "a41e20a60a19afde3bf0869e49133141",
+    "semantic_hash": "a41e20a60a19afde3bf0869e49133141"
+  },
+  "js/mod-asistencia.js": {
+    "mtime": 1787011138.382499,
+    "seen": 1787016722.6872616,
+    "ast_hash": "fe94089a908910874ab43784f2c8a707",
+    "semantic_hash": "fe94089a908910874ab43784f2c8a707"
+  },
+  "js/mod-dashboard.js": {
+    "mtime": 1787007799.2472808,
+    "seen": 1787016722.6872616,
+    "ast_hash": "683bd263f497e3f31cac66d29fb7a6a4",
+    "semantic_hash": "683bd263f497e3f31cac66d29fb7a6a4"
+  },
+  "js/mod-estudiantes.js": {
+    "mtime": 1787011174.9422755,
+    "seen": 1787016722.6872616,
+    "ast_hash": "d3ce0aa09b158ae8b3501e633b47554b",
+    "semantic_hash": "d3ce0aa09b158ae8b3501e633b47554b"
+  },
+  "js/mod-grados.js": {
+    "mtime": 1787005464.0673068,
+    "seen": 1787016722.6872616,
+    "ast_hash": "c179eac8cb7d786ee957e19e47e054b6",
+    "semantic_hash": "c179eac8cb7d786ee957e19e47e054b6"
+  },
+  "js/mod-horarios.js": {
+    "mtime": 1787004160.1606145,
+    "seen": 1787016722.6872616,
+    "ast_hash": "8d27d4f834961a8761f43e097ea3fa4b",
+    "semantic_hash": "8d27d4f834961a8761f43e097ea3fa4b"
+  },
+  "js/mod-usuarios.js": {
+    "mtime": 1787012958.1423864,
+    "seen": 1787016722.6872616,
+    "ast_hash": "e7725240156904fee0b8139414813e80",
+    "semantic_hash": "e7725240156904fee0b8139414813e80"
+  },
+  "js/reporte.js": {
+    "mtime": 1787013005.1198146,
+    "seen": 1787016722.6872616,
+    "ast_hash": "49cf4c9bcf318ec96b748d6287fe3691",
+    "semantic_hash": "49cf4c9bcf318ec96b748d6287fe3691"
+  },
+  "js/version.js": {
+    "mtime": 1787013019.2381732,
+    "seen": 1787016722.6872616,
+    "ast_hash": "edca93b9efb9928e6ae2c9554e2cc55b",
+    "semantic_hash": "edca93b9efb9928e6ae2c9554e2cc55b"
+  },
+  "scripts/extraer_excel.py": {
+    "mtime": 1786997474.055539,
+    "seen": 1787016722.6872616,
+    "ast_hash": "775f73cbb16c9b4d864e1cd4e3e06db0",
+    "semantic_hash": "775f73cbb16c9b4d864e1cd4e3e06db0"
+  },
+  "seed/estudiantes.json": {
+    "mtime": 1786997483.4032352,
+    "seen": 1787016707.6862035,
+    "ast_hash": "",
+    "semantic_hash": ""
+  },
+  "seed/horarios.json": {
+    "mtime": 1786997483.4042642,
+    "seen": 1787016707.6862035,
+    "ast_hash": "",
+    "semantic_hash": ""
+  },
+  "seed/tutores.json": {
+    "mtime": 1786997483.4042642,
+    "seen": 1787016707.6862035,
+    "ast_hash": "",
+    "semantic_hash": ""
+  },
+  "seed/usuarios.json": {
+    "mtime": 1786997498.7048926,
+    "seen": 1787016707.6862035,
+    "ast_hash": "",
+    "semantic_hash": ""
+  },
+  "CHANGELOG.md": {
+    "mtime": 1787013019.2401807,
+    "seen": 1787016722.6872616,
+    "ast_hash": "a1b125554156adcb6931cab74a89ab74",
+    "semantic_hash": "a1b125554156adcb6931cab74a89ab74"
+  },
+  "README.md": {
+    "mtime": 1787013031.3402064,
+    "seen": 1787016722.6872616,
+    "ast_hash": "b7d121bca4b2c2ce33c7073774893b56",
+    "semantic_hash": "b7d121bca4b2c2ce33c7073774893b56"
+  },
+  "app.html": {
+    "mtime": 1787007927.5423229,
+    "seen": 1787016722.6872616,
+    "ast_hash": "d8936f1c58126cc186dd7124de1928a1",
+    "semantic_hash": "d8936f1c58126cc186dd7124de1928a1"
+  },
+  "imprimir.html": {
+    "mtime": 1787011183.5840893,
+    "seen": 1787016722.6872616,
+    "ast_hash": "76e375921fbec1d1231b0bb1c976dc91",
+    "semantic_hash": "76e375921fbec1d1231b0bb1c976dc91"
+  },
+  "index.html": {
+    "mtime": 1786998925.5201244,
+    "seen": 1787016722.6872616,
+    "ast_hash": "2796308ecffdd8078933ad0c84e9ece0",
+    "semantic_hash": "2796308ecffdd8078933ad0c84e9ece0"
+  },
+  "reporte.html": {
+    "mtime": 1787007982.5529735,
+    "seen": 1787016722.6872616,
+    "ast_hash": "1cff9016b6c4158f005f75bbde989a57",
+    "semantic_hash": "1cff9016b6c4158f005f75bbde989a57"
+  },
+  "seed/seed.html": {
+    "mtime": 1786997659.9174254,
+    "seen": 1787016722.6872616,
+    "ast_hash": "948e810bfc8b8382f38032a0a2142f2a",
+    "semantic_hash": "948e810bfc8b8382f38032a0a2142f2a"
+  }
+}
