@@ -15,7 +15,7 @@ index.html            Login
 app.html              Plataforma (shell con menú lateral y módulos)
 imprimir.html         Reporte diario imprimible (formato de la hoja IMPRIMIR)
 reporte.html          Reporte consolidado por rango de fechas (imprimible/CSV)
-js/                   firebase-config, auth, data, version, app (shell)
+js/                   firebase-config, auth, data, version, notificaciones, app (shell)
 js/mod-dashboard.js   Resumen por grado, alertas y ranking de inasistencias
 js/mod-asistencia.js  Registro diario (marcas por hora) + reporte por rango
 js/mod-estudiantes.js Búsqueda, ficha con historial, agregar/editar/mover
@@ -32,23 +32,31 @@ firebase.json, firestore.rules  Configuración de reglas de Firestore
 
 - **Dashboard**: tarjetas por grado, estado de la asistencia de hoy, alertas
   de inasistencia (3+ injustificadas seguidas o <80% de asistencia) y ranking
-  de estudiantes con más inasistencias.
+  de estudiantes con más inasistencias. Alertas y ranking se calculan sobre
+  los últimos 90 días; no incluyen estudiantes retirados.
 - **Asistencia**: registro diario por grado y fecha, con marcas por hora
   (P/I/J/A/N), igual que la hoja IMPRIMIR del Excel. Los días nuevos se
   prellenan con todos presentes para registrar solo las excepciones, y cada
   estudiante admite una observación (motivo de falta) que sale en su ficha y
-  en el reporte impreso. Incluye el reporte consolidado por rango de fechas
-  (imprimible y CSV).
-- **Estudiantes**: consulta con filtros, ficha con historial completo; el rol
-  `admin` además puede agregar, editar nombre y mover de grado (el historial
-  se conserva). No se eliminan estudiantes.
+  en el reporte impreso. El selector "Toda la fila" marca todas las horas de
+  un estudiante con el mismo código, y se avisa si hay cambios sin guardar al
+  cambiar de día o cerrar la página. Los feriados configurados no se registran.
+  Incluye el reporte consolidado por rango de fechas (imprimible y CSV).
+- **Estudiantes**: consulta con filtros (incluye opción de ver retirados),
+  ficha con historial completo; el rol `admin` además puede agregar, editar
+  nombre, mover de grado (el historial se conserva) y **retirar/reincorporar**.
+  Un estudiante retirado desaparece de la nómina diaria y de las alertas, pero
+  conserva su historial y sale en los reportes del período en que estuvo
+  activo. No se eliminan estudiantes.
 - **Horarios**: vista semanal por grado; el rol `admin` puede editar, agregar
   o quitar bloques.
 - **Grados** (solo `admin`): agregar, editar tutor/sección, renombrar (con
   actualización en cascada de estudiantes, horarios y asistencias) y eliminar
   grados sin estudiantes.
 - **Usuarios** (solo `admin`): gestión de cuentas. Cada usuario tiene nombre
-  y **cargo**, con los que se firman los documentos que imprime.
+  y **cargo**, con los que se firman los documentos que imprime. Incluye la
+  configuración de **feriados y suspensiones** (fechas sin clases que no se
+  registran ni computan en los porcentajes).
 
 Los roles se definen en el campo `rol` de la colección `usuarios`
 (`admin` edita; cualquier otro rol solo consulta y registra asistencia).
@@ -59,6 +67,11 @@ y un botón `data-modulo="nombre"` en el menú de `app.html`.
 
 Códigos de asistencia: `P` Presente, `I` Injustificado, `J` Justificado,
 `A` Atraso, `N` No hay clases.
+
+Toda escritura en la base se confirma con una notificación verde (esquina
+inferior derecha) y todo error se avisa con una notificación roja con el
+detalle. El guardado de asistencia además relee el documento en Firestore
+para confirmar que quedó registrado.
 
 ## Puesta en marcha (una sola vez)
 

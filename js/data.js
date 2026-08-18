@@ -12,6 +12,24 @@ export function esc(s) {
     ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 }
 
+// Caché en memoria para no re-descargar lo mismo al cambiar de módulo.
+// Se invalida en cada escritura y vence a los 2 minutos (por si otro
+// usuario escribe desde otra sesión).
+const _cache = new Map();
+const CACHE_TTL_MS = 2 * 60 * 1000;
+
+async function conCache(clave, cargar) {
+  const hit = _cache.get(clave);
+  if (hit && Date.now() - hit.t < CACHE_TTL_MS) return hit.datos;
+  const datos = await cargar();
+  _cache.set(clave, { t: Date.now(), datos });
+  return datos;
+}
+
+function invalidarCache() {
+  _cache.clear();
+}
+
 export const DIAS_SEMANA = ["LUNES", "MARTES", "MIÉRCOLES", "JUEVES", "VIERNES"];
 export const CODIGOS = ["P", "I", "J", "A", "N"];
 export const CODIGOS_DESC = {
@@ -25,15 +43,23 @@ export function diaDeFecha(fecha /* "YYYY-MM-DD" */) {
 }
 
 export function fechaHoy() {
+  return fechaMenosDias(0);
+}
+
+// Fecha "YYYY-MM-DD" de hoy menos n días (para acotar consultas).
+export function fechaMenosDias(n) {
   const d = new Date();
+  d.setDate(d.getDate() - n);
   const m = String(d.getMonth() + 1).padStart(2, "0");
   const dia = String(d.getDate()).padStart(2, "0");
   return `${d.getFullYear()}-${m}-${dia}`;
 }
 
-export async function obtenerGrados() {
-  const snap = await getDocs(collection(db, "tutores"));
-  return snap.docs.map(d => d.id).sort();
+export function obtenerGrados() {
+  return conCache("grados", async () => {
+    const snap = await getDocs(collection(db, "tutores"));
+    return snap.docs.map(d => d.id).sort();
+  });
 }
 
 export async function obtenerTutor(grado) {
@@ -41,17 +67,22 @@ export async function obtenerTutor(grado) {
   return snap.exists() ? snap.data() : null;
 }
 
-export async function obtenerEstudiantes(grado) {
-  // Sin orderBy en la query: where + orderBy exigiría un índice compuesto.
-  // Se ordena en el cliente (localeCompare ordena bien tildes y Ñ).
-  const q = query(
-    collection(db, "estudiantes"),
-    where("grado", "==", grado)
-  );
-  const snap = await getDocs(q);
-  return snap.docs
-    .map(d => ({ id: d.id, ...d.data() }))
-    .sort((a, b) => a.nombre.localeCompare(b.nombre, "es"));
+// Por defecto solo estudiantes activos; con incluirRetirados=true también
+// devuelve los retirados (activo === false), p. ej. para reportes históricos.
+export function obtenerEstudiantes(grado, incluirRetirados = false) {
+  return conCache(`est:${grado}:${incluirRetirados}`, async () => {
+    // Sin orderBy en la query: where + orderBy exigiría un índice compuesto.
+    // Se ordena en el cliente (localeCompare ordena bien tildes y Ñ).
+    const q = query(
+      collection(db, "estudiantes"),
+      where("grado", "==", grado)
+    );
+    const snap = await getDocs(q);
+    return snap.docs
+      .map(d => ({ id: d.id, ...d.data() }))
+      .filter(e => incluirRetirados || e.activo !== false)
+      .sort((a, b) => a.nombre.localeCompare(b.nombre, "es"));
+  });
 }
 
 export async function obtenerHorario(grado, dia) {
@@ -76,7 +107,9 @@ export async function obtenerAsistencia(grado, fecha) {
 }
 
 export async function guardarAsistencia(grado, fecha, registros, registradoPor, observaciones = {}) {
-  await setDoc(doc(db, "asistencias", idAsistencia(grado, fecha)), {
+  invalidarCache();
+  const ref = doc(db, "asistencias", idAsistencia(grado, fecha));
+  await setDoc(ref, {
     grado,
     fecha,
     registros,
@@ -84,24 +117,38 @@ export async function guardarAsistencia(grado, fecha, registros, registradoPor, 
     registradoPor,
     actualizadoEn: serverTimestamp()
   });
+  // Read-back: confirmar que el documento quedó realmente en la base.
+  // El mensaje de éxito de la interfaz significa "está guardado", no solo
+  // "se envió".
+  const verif = await getDoc(ref);
+  const guardados = verif.exists() ? Object.keys(verif.data().registros || {}).length : -1;
+  if (guardados !== Object.keys(registros).length) {
+    throw new Error(
+      "No se pudo confirmar el guardado en la base de datos. " +
+      "Revise su conexión e inténtelo de nuevo.");
+  }
 }
 
 /* ---------- Gestión de estudiantes (admin) ---------- */
 
-export async function obtenerTodosLosEstudiantes() {
-  const snap = await getDocs(collection(db, "estudiantes"));
-  return snap.docs
-    .map(d => ({ id: d.id, ...d.data() }))
-    .sort((a, b) => a.nombre.localeCompare(b.nombre, "es"));
+export function obtenerTodosLosEstudiantes() {
+  return conCache("est:todos", async () => {
+    const snap = await getDocs(collection(db, "estudiantes"));
+    return snap.docs
+      .map(d => ({ id: d.id, ...d.data() }))
+      .sort((a, b) => a.nombre.localeCompare(b.nombre, "es"));
+  });
 }
 
 export async function agregarEstudiante(nombre, grado) {
-  await addDoc(collection(db, "estudiantes"), { numId: null, nombre, grado });
+  invalidarCache();
+  await addDoc(collection(db, "estudiantes"), { nombre, grado, activo: true });
 }
 
-// Sirve para editar el nombre y para mover de grado (el id no cambia,
-// por lo que el historial de asistencia se conserva).
+// Sirve para editar el nombre, mover de grado (el id no cambia, por lo que
+// el historial de asistencia se conserva) y retirar/reincorporar (activo).
 export async function actualizarEstudiante(id, datos) {
+  invalidarCache();
   await updateDoc(doc(db, "estudiantes", id), datos);
 }
 
@@ -153,10 +200,12 @@ export async function agregarGrado(grado, seccion, tutor) {
   const ref = doc(db, "tutores", grado);
   const snap = await getDoc(ref);
   if (snap.exists()) throw new Error(`El grado "${grado}" ya existe.`);
+  invalidarCache();
   await setDoc(ref, { grado, seccion, tutor });
 }
 
 export async function actualizarGrado(grado, datos) {
+  invalidarCache();
   await updateDoc(doc(db, "tutores", grado), datos);
 }
 
@@ -224,6 +273,7 @@ export async function renombrarGrado(viejo, nuevo, datosTutor) {
   }
 
   await ejecutarEnLotes(ops);
+  invalidarCache();
   return {
     estudiantes: estSnap.size,
     bloques: horSnap.size,
@@ -249,14 +299,22 @@ export async function eliminarGrado(grado) {
   for (const d of horSnap.docs) ops.push(b => b.delete(d.ref));
   for (const d of asiSnap.docs) ops.push(b => b.delete(d.ref));
   await ejecutarEnLotes(ops);
+  invalidarCache();
   return conteos;
 }
 
 /* ---------- Historial de asistencia (dashboard y ficha de estudiante) ---------- */
 
-export async function obtenerTodasLasAsistencias() {
-  const snap = await getDocs(collection(db, "asistencias"));
-  return snap.docs.map(d => d.data());
+// Toda la colección `asistencias`, o solo desde una fecha ("YYYY-MM-DD")
+// para acotar lecturas. El rango es sobre un solo campo: no exige índice
+// compuesto. La ficha del estudiante usa la colección completa; el dashboard
+// se limita a los últimos 90 días.
+export function obtenerTodasLasAsistencias(desde = null) {
+  return conCache(`asistencias:${desde || "todas"}`, async () => {
+    const col = collection(db, "asistencias");
+    const snap = await getDocs(desde ? query(col, where("fecha", ">=", desde)) : col);
+    return snap.docs.map(d => d.data());
+  });
 }
 
 // Construye un índice por estudiante sobre toda la colección `asistencias`.
@@ -297,13 +355,16 @@ export function indicePorEstudiante(asistencias) {
 
 // Resumen por estudiante a partir del índice: días registrados, días
 // asistidos (al menos una P o A) y porcentaje de asistencia.
+// Los días con solo marcas "N" (no hay clases / feriado) no computan.
 export function resumenEstudiante(entrada) {
   if (!entrada) {
     return { diasRegistrados: 0, diasAsistidos: 0, porcentaje: null,
              I: 0, J: 0, A: 0, P: 0 };
   }
-  const diasRegistrados = Object.keys(entrada.dias).length;
-  const diasAsistidos = Object.values(entrada.dias)
+  const diasComputables = Object.values(entrada.dias)
+    .filter(cods => cods.some(c => c !== "N"));
+  const diasRegistrados = diasComputables.length;
+  const diasAsistidos = diasComputables
     .filter(cods => cods.some(c => c === "P" || c === "A")).length;
   const porcentaje = diasRegistrados > 0
     ? Math.round((diasAsistidos / diasRegistrados) * 100)
@@ -329,25 +390,22 @@ export async function obtenerAsistenciasDeGrado(grado) {
   return snap.docs.map(d => d.data());
 }
 
-// Resumen por estudiante dentro de [desde, hasta] (fechas "YYYY-MM-DD").
-// Devuelve { estudianteId: {P,I,J,A,N, diasRegistrados, diasAsistidos, porcentaje} }
-export function resumenEnRango(asistencias, desde, hasta) {
-  const enRango = asistencias.filter(a => a.fecha >= desde && a.fecha <= hasta);
-  return indicePorEstudiante(enRango);
-}
-
-// indicePorEstudiante + resumenEstudiante ya cubren los conteos del rango.
+// Para el reporte por rango: filtrar las asistencias por fecha en el cliente
+// y armar el índice con indicePorEstudiante + resumenEstudiante.
 
 /* ---------- Alertas de inasistencia ---------- */
 
 // Días injustificados "puros" seguidos (racha final): días con al menos una
 // marca I y ninguna P/A. Devuelve la longitud de la racha más reciente.
+// Los días con solo "N" (no hay clases / feriado) se saltan: no cortan la
+// racha ni la alargan.
 export function rachaInjustificadas(entrada) {
   if (!entrada) return 0;
   const fechas = Object.keys(entrada.dias).sort();
   let racha = 0;
   for (let i = fechas.length - 1; i >= 0; i--) {
     const cods = entrada.dias[fechas[i]];
+    if (!cods.some(c => c !== "N")) continue;
     const injustificado = cods.some(c => c === "I") &&
       !cods.some(c => c === "P" || c === "A");
     if (!injustificado) break;
@@ -386,7 +444,8 @@ export async function eliminarUsuario(usuario) {
 const CONFIG_DOC = "institucion";
 export const CONFIG_DEFECTO = {
   subinspector: "SHARUP GAONA BRINNY KIMBERLY",
-  cargoSubinspector: "SUB-INSPECTOR V (e)"
+  cargoSubinspector: "SUB-INSPECTOR V (e)",
+  feriados: []
 };
 
 export async function obtenerConfig() {
@@ -396,6 +455,17 @@ export async function obtenerConfig() {
 
 export async function guardarConfig(datos) {
   await setDoc(doc(db, "config", CONFIG_DOC), datos, { merge: true });
+}
+
+// Feriados y suspensiones: lista de fechas "YYYY-MM-DD" en la config
+// institucional. Esos días no se registran ni computan en los porcentajes.
+export async function obtenerFeriados() {
+  return (await obtenerConfig()).feriados || [];
+}
+
+export async function guardarFeriados(fechas) {
+  const unicas = [...new Set(fechas)].sort();
+  await guardarConfig({ feriados: unicas });
 }
 
 // Firma de los documentos impresos: nombre y cargo del usuario que genera

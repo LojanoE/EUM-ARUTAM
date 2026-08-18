@@ -34,8 +34,8 @@ async function iniciar() {
     return;
   }
 
-  const [estudiantes, tutor, asistencias, firma] = await Promise.all([
-    obtenerEstudiantes(grado),
+  const [estudiantesGrado, tutor, asistencias, firma] = await Promise.all([
+    obtenerEstudiantes(grado, true), // incluye retirados
     obtenerTutor(grado),
     obtenerTodasLasAsistencias(),
     firmaDelUsuario(sesion.usuario),
@@ -45,6 +45,11 @@ async function iniciar() {
   // historial sigue al estudiante aunque haya sido movido de grado.
   const enRango = asistencias.filter(a => a.fecha >= desde && a.fecha <= hasta);
   const indice = indicePorEstudiante(enRango);
+
+  // Nómina del reporte: activos del grado + retirados que tengan registros
+  // dentro del rango (estuvieron activos en ese período).
+  const estudiantes = estudiantesGrado
+    .filter(e => e.activo !== false || indice[e.id]);
 
   // Encabezado
   document.getElementById("d-grado").textContent = grado;
@@ -63,14 +68,15 @@ async function iniciar() {
   // Consolidado
   document.getElementById("tbody-consolidado").innerHTML = estudiantes.map((est, idx) => {
     const r = resumenEstudiante(indice[est.id]);
+    const nombre = est.nombre + (est.activo === false ? " (retirado)" : "");
     filasCSV.push([
-      idx + 1, est.nombre, r.P, r.J, r.I, r.A,
+      idx + 1, nombre, r.P, r.J, r.I, r.A,
       r.diasRegistrados, r.diasAsistidos,
       r.porcentaje === null ? "" : r.porcentaje + "%"
     ]);
     return `<tr>
       <td class="centro">${idx + 1}</td>
-      <td class="nombre">${esc(est.nombre)}</td>
+      <td class="nombre">${esc(nombre)}</td>
       <td class="centro">${r.P || ""}</td>
       <td class="centro">${r.J || ""}</td>
       <td class="centro">${r.I || ""}</td>

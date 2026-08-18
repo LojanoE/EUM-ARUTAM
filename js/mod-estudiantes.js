@@ -4,6 +4,7 @@ import {
   indicePorEstudiante, resumenEstudiante, agregarEstudiante,
   actualizarEstudiante, diaDeFecha, CODIGOS_DESC, esc
 } from "./data.js";
+import { notificarOk, notificarError } from "./notificaciones.js";
 
 export async function initEstudiantes(contenedor, ctx) {
   const [grados, estudiantes, asistencias] = await Promise.all([
@@ -27,6 +28,12 @@ export async function initEstudiantes(contenedor, ctx) {
         <label for="f-buscar">Buscar por nombre</label>
         <input type="text" id="f-buscar" placeholder="Apellidos o nombres..."
                style="width:100%; padding:0.45rem 0.6rem; border:1px solid var(--borde); border-radius:6px;">
+      </div>
+      <div>
+        <label for="f-retirados">&nbsp;</label>
+        <label style="display:flex; align-items:center; gap:0.4rem; font-weight:normal;">
+          <input type="checkbox" id="f-retirados"> Incluir retirados
+        </label>
       </div>
     </div>
     ${ctx.esAdmin ? `
@@ -68,6 +75,7 @@ export async function initEstudiantes(contenedor, ctx) {
 
   const fGrado = contenedor.querySelector("#f-grado");
   const fBuscar = contenedor.querySelector("#f-buscar");
+  const fRetirados = contenedor.querySelector("#f-retirados");
   const tbody = contenedor.querySelector("#tbody-est");
   const lblConteo = contenedor.querySelector("#lbl-conteo");
   const fichaContenedor = contenedor.querySelector("#ficha-contenedor");
@@ -76,7 +84,8 @@ export async function initEstudiantes(contenedor, ctx) {
     const texto = fBuscar.value.trim().toUpperCase();
     return estudiantes.filter(e =>
       (!fGrado.value || e.grado === fGrado.value) &&
-      (!texto || e.nombre.toUpperCase().includes(texto))
+      (!texto || e.nombre.toUpperCase().includes(texto)) &&
+      (fRetirados.checked || e.activo !== false)
     );
   }
 
@@ -85,9 +94,10 @@ export async function initEstudiantes(contenedor, ctx) {
     lblConteo.textContent = `${lista.length} estudiante(s)`;
     tbody.innerHTML = lista.map(est => {
       const r = resumenEstudiante(indice[est.id]);
+      const retirado = est.activo === false;
       return `
         <tr class="clickeable" data-id="${esc(est.id)}">
-          <td>${esc(est.nombre)}</td>
+          <td>${esc(est.nombre)}${retirado ? ` <span class="insignia N">RETIRADO</span>` : ""}</td>
           <td>${esc(est.grado)}</td>
           <td class="centro">${r.diasAsistidos}</td>
           <td class="centro">${r.I}</td>
@@ -97,6 +107,9 @@ export async function initEstudiantes(contenedor, ctx) {
           ${ctx.esAdmin ? `
           <td class="centro">
             <button class="btn-mini" data-editar="${esc(est.id)}">Editar / Mover</button>
+            <button class="btn-mini ${retirado ? "" : "peligro"}" data-retirar="${esc(est.id)}">
+              ${retirado ? "Reincorporar" : "Retirar"}
+            </button>
           </td>` : ""}
         </tr>`;
     }).join("");
@@ -109,7 +122,7 @@ export async function initEstudiantes(contenedor, ctx) {
     fichaContenedor.innerHTML = `
       <div class="ficha">
         <h3>${esc(est.nombre)}</h3>
-        <p class="info">Grado actual: <strong>${esc(est.grado)}</strong></p>
+        <p class="info">Grado actual: <strong>${esc(est.grado)}</strong>${est.activo === false ? " — <strong>RETIRADO</strong>" : ""}</p>
         <div class="totales">
           <span>Días registrados<strong>${r.diasRegistrados}</strong></span>
           <span>Días asistidos<strong>${r.diasAsistidos}</strong></span>
@@ -164,7 +177,7 @@ export async function initEstudiantes(contenedor, ctx) {
       const nombre = fila.querySelector("#e-nombre").value.trim().toUpperCase();
       const grado = fila.querySelector("#e-grado").value;
       if (!nombre) {
-        alert("El nombre no puede estar vacío.");
+        notificarError("El nombre no puede estar vacío.");
         return;
       }
       const cambioGrado = grado !== est.grado;
@@ -172,16 +185,49 @@ export async function initEstudiantes(contenedor, ctx) {
           !confirm(`¿Mover a ${est.nombre} de "${est.grado}" a "${grado}"?\nSu historial de asistencia se conserva.`)) {
         return;
       }
-      await actualizarEstudiante(est.id, { nombre, grado });
-      est.nombre = nombre;
-      est.grado = grado;
-      estudiantes.sort((a, b) => a.nombre.localeCompare(b.nombre, "es"));
-      pintarTabla();
+      try {
+        await actualizarEstudiante(est.id, { nombre, grado });
+        est.nombre = nombre;
+        est.grado = grado;
+        estudiantes.sort((a, b) => a.nombre.localeCompare(b.nombre, "es"));
+        notificarOk(cambioGrado
+          ? `${nombre} movido a "${grado}".`
+          : `Nombre actualizado: ${nombre}.`);
+        pintarTabla();
+      } catch (err) {
+        notificarError("Error al actualizar el estudiante", err);
+      }
     });
     fila.querySelector("#e-cancelar").addEventListener("click", pintarTabla);
   }
 
   tbody.addEventListener("click", (e) => {
+    const btnRetirar = e.target.closest("[data-retirar]");
+    if (btnRetirar) {
+      const est = estudiantes.find(x => x.id === btnRetirar.dataset.retirar);
+      if (!est) return;
+      const retirar = est.activo !== false;
+      const accion = retirar ? "retirar" : "reincorporar";
+      if (!confirm(`¿${accion.charAt(0).toUpperCase() + accion.slice(1)} a ${est.nombre}?\n` +
+        (retirar
+          ? "Dejará de aparecer en la nómina diaria y en las alertas, pero su historial se conserva."
+          : "Volverá a aparecer en la nómina diaria."))) {
+        return;
+      }
+      (async () => {
+        try {
+          await actualizarEstudiante(est.id, { activo: !retirar });
+          est.activo = !retirar;
+          notificarOk(retirar
+            ? `${est.nombre} retirado. Su historial se conserva.`
+            : `${est.nombre} reincorporado a la nómina.`);
+          pintarTabla();
+        } catch (err) {
+          notificarError(`Error al ${accion} al estudiante`, err);
+        }
+      })();
+      return;
+    }
     const btnEditar = e.target.closest("[data-editar]");
     if (btnEditar) {
       const est = estudiantes.find(x => x.id === btnEditar.dataset.editar);
@@ -199,22 +245,28 @@ export async function initEstudiantes(contenedor, ctx) {
 
   fGrado.addEventListener("change", pintarTabla);
   fBuscar.addEventListener("input", pintarTabla);
+  fRetirados.addEventListener("change", pintarTabla);
 
   if (ctx.esAdmin) {
     contenedor.querySelector("#n-agregar").addEventListener("click", async () => {
       const nombre = contenedor.querySelector("#n-nombre").value.trim().toUpperCase();
       const grado = contenedor.querySelector("#n-grado").value;
       if (!nombre) {
-        alert("Ingrese el nombre del estudiante.");
+        notificarError("Ingrese el nombre del estudiante.");
         return;
       }
-      await agregarEstudiante(nombre, grado);
-      // Recargar la lista para obtener el id asignado por Firestore.
-      const nuevos = await obtenerTodosLosEstudiantes();
-      estudiantes.length = 0;
-      estudiantes.push(...nuevos);
-      contenedor.querySelector("#n-nombre").value = "";
-      pintarTabla();
+      try {
+        await agregarEstudiante(nombre, grado);
+        // Recargar la lista para obtener el id asignado por Firestore.
+        const nuevos = await obtenerTodosLosEstudiantes();
+        estudiantes.length = 0;
+        estudiantes.push(...nuevos);
+        contenedor.querySelector("#n-nombre").value = "";
+        notificarOk(`${nombre} agregado a "${grado}".`);
+        pintarTabla();
+      } catch (err) {
+        notificarError("Error al agregar el estudiante", err);
+      }
     });
   }
 

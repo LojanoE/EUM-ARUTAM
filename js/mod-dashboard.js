@@ -2,23 +2,27 @@
 import {
   obtenerGrados, obtenerTodosLosEstudiantes, obtenerAsistencia,
   obtenerTodasLasAsistencias, indicePorEstudiante, resumenEstudiante,
-  rachaInjustificadas, fechaHoy, diaDeFecha, esc
+  rachaInjustificadas, fechaHoy, fechaMenosDias, diaDeFecha, esc
 } from "./data.js";
 
 // Umbrales de alerta (régimen estudiantil): días injustificados seguidos
 // y porcentaje mínimo de asistencia.
 const UMBRAL_RACHA = 3;
 const UMBRAL_PCT = 80;
+// Ventana de análisis de alertas y ranking (acota las lecturas de Firestore).
+const DIAS_VENTANA = 90;
 
 export async function initDashboard(contenedor) {
   const hoy = fechaHoy();
   const diaHoy = diaDeFecha(hoy);
 
-  const [grados, estudiantes, asistencias] = await Promise.all([
+  const [grados, todos, asistencias] = await Promise.all([
     obtenerGrados(),
     obtenerTodosLosEstudiantes(),
-    obtenerTodasLasAsistencias(),
+    obtenerTodasLasAsistencias(fechaMenosDias(DIAS_VENTANA)),
   ]);
+  // Los retirados no cuentan en tarjetas, alertas ni ranking.
+  const estudiantes = todos.filter(e => e.activo !== false);
 
   const porGrado = {};
   for (const g of grados) porGrado[g] = [];
@@ -74,7 +78,7 @@ export async function initDashboard(contenedor) {
         <h3>Total institución</h3>
         <div class="numero">${totalEst}</div>
         <div class="detalle">estudiantes en ${grados.length} grados</div>
-        <div class="detalle">${asistencias.length} días con registro</div>
+        <div class="detalle">${asistencias.length} días con registro (últimos ${DIAS_VENTANA} días)</div>
       </div>
     </div>`;
 
@@ -90,7 +94,8 @@ export async function initDashboard(contenedor) {
 
   html += `
     <div class="panel">
-      <h2 style="font-size:1rem; margin-top:0;">Alertas de inasistencia</h2>`;
+      <h2 style="font-size:1rem; margin-top:0;">Alertas de inasistencia</h2>
+      <p class="info">Calculadas sobre los últimos ${DIAS_VENTANA} días.</p>`;
   if (alertas.length === 0) {
     html += `<p class="info">Sin alertas: ningún estudiante acumula ${UMBRAL_RACHA}+ ` +
             `injustificadas seguidas ni menos del ${UMBRAL_PCT}% de asistencia.</p>`;
@@ -130,7 +135,8 @@ export async function initDashboard(contenedor) {
 
   html += `
     <div class="panel">
-      <h2 style="font-size:1rem; margin-top:0;">Estudiantes con más inasistencias</h2>`;
+      <h2 style="font-size:1rem; margin-top:0;">Estudiantes con más inasistencias</h2>
+      <p class="info">Últimos ${DIAS_VENTANA} días.</p>`;
   if (ranking.length === 0) {
     html += `<p class="info">Aún no hay inasistencias registradas.</p>`;
   } else {

@@ -1,8 +1,11 @@
 // Módulo: gestión de usuarios (solo admin). Cada usuario tiene nombre y
 // cargo: son los datos con los que se firman los documentos que imprime.
+// Incluye la configuración de feriados y suspensiones (días sin clases).
 import {
-  obtenerUsuarios, agregarUsuario, actualizarUsuario, eliminarUsuario, esc
+  obtenerUsuarios, agregarUsuario, actualizarUsuario, eliminarUsuario,
+  obtenerFeriados, guardarFeriados, esc
 } from "./data.js";
+import { notificarError } from "./notificaciones.js";
 
 export async function initUsuarios(contenedor, ctx) {
   if (!ctx.esAdmin) {
@@ -63,6 +66,20 @@ export async function initUsuarios(contenedor, ctx) {
         </table>
       </div>
       <p class="info" id="u-mensaje"></p>
+    </div>
+
+    <div class="panel">
+      <h2 style="font-size:1rem; margin-top:0;">Feriados y suspensiones</h2>
+      <p class="info">
+        Una fecha por línea, en formato AAAA-MM-DD (ej. 2026-10-09). Esos días
+        no se registran asistencia ni cuentan en los porcentajes.
+      </p>
+      <textarea id="cfg-feriados" rows="5"
+        style="width:100%; max-width:22rem; padding:0.45rem 0.6rem; border:1px solid var(--borde); border-radius:6px; font-family:monospace;"></textarea>
+      <div class="fila-acciones">
+        <button class="primario" id="cfg-guardar">Guardar feriados</button>
+        <span id="cfg-mensaje" class="mensaje-ok"></span>
+      </div>
     </div>`;
 
   const tbody = contenedor.querySelector("#tbody-usuarios");
@@ -119,7 +136,7 @@ export async function initUsuarios(contenedor, ctx) {
       const rol = fila.querySelector("#ue-rol").value;
       const password = fila.querySelector("#ue-password").value.trim();
       if (!nombre) {
-        alert("El nombre no puede estar vacío.");
+        notificarError("El nombre no puede estar vacío.");
         return;
       }
       // No dejar el sistema sin administradores.
@@ -127,7 +144,7 @@ export async function initUsuarios(contenedor, ctx) {
         const usuarios = await obtenerUsuarios();
         const admins = usuarios.filter(u => u.rol === "admin" && u.id !== id);
         if (admins.length === 0) {
-          alert("Debe quedar al menos un usuario con rol admin.");
+          notificarError("Debe quedar al menos un usuario con rol admin.");
           return;
         }
       }
@@ -137,8 +154,7 @@ export async function initUsuarios(contenedor, ctx) {
         await actualizarUsuario(id, datos);
         mensaje.textContent = `Usuario "${id}" actualizado.`;
       } catch (err) {
-        console.error(err);
-        alert("Error: " + err.message);
+        notificarError("Error al actualizar el usuario", err);
       }
       await pintar();
       return;
@@ -153,14 +169,14 @@ export async function initUsuarios(contenedor, ctx) {
     if (btnEliminar) {
       const id = btnEliminar.dataset.eliminarUsuario;
       if (id === ctx.sesion.usuario) {
-        alert("No puede eliminar la cuenta con la que inició sesión.");
+        notificarError("No puede eliminar la cuenta con la que inició sesión.");
         return;
       }
       const usuarios = await obtenerUsuarios();
       const objetivo = usuarios.find(u => u.id === id);
       if (objetivo?.rol === "admin" &&
           usuarios.filter(u => u.rol === "admin").length === 1) {
-        alert("Debe quedar al menos un usuario con rol admin.");
+        notificarError("Debe quedar al menos un usuario con rol admin.");
         return;
       }
       if (!confirm(`¿Eliminar el usuario "${id}"?`)) return;
@@ -168,8 +184,7 @@ export async function initUsuarios(contenedor, ctx) {
         await eliminarUsuario(id);
         mensaje.textContent = `Usuario "${id}" eliminado.`;
       } catch (err) {
-        console.error(err);
-        alert("Error: " + err.message);
+        notificarError("Error al eliminar el usuario", err);
       }
       await pintar();
     }
@@ -182,7 +197,7 @@ export async function initUsuarios(contenedor, ctx) {
     const cargo = contenedor.querySelector("#u-cargo").value.trim();
     const rol = contenedor.querySelector("#u-rol").value;
     if (!usuario || !password || !nombre) {
-      alert("Complete usuario, contraseña y nombre.");
+      notificarError("Complete usuario, contraseña y nombre.");
       return;
     }
     try {
@@ -193,11 +208,32 @@ export async function initUsuarios(contenedor, ctx) {
       contenedor.querySelector("#u-cargo").value = "";
       mensaje.textContent = `Usuario "${usuario}" creado.`;
     } catch (err) {
-      console.error(err);
-      alert("Error: " + err.message);
+      notificarError("Error al crear el usuario", err);
     }
     await pintar();
   });
 
   await pintar();
+
+  // Feriados y suspensiones (config institucional).
+  const txtFeriados = contenedor.querySelector("#cfg-feriados");
+  const cfgMensaje = contenedor.querySelector("#cfg-mensaje");
+  txtFeriados.value = (await obtenerFeriados()).join("\n");
+
+  contenedor.querySelector("#cfg-guardar").addEventListener("click", async () => {
+    const lineas = txtFeriados.value.split("\n")
+      .map(l => l.trim()).filter(Boolean);
+    const invalidas = lineas.filter(l => !/^\d{4}-\d{2}-\d{2}$/.test(l));
+    if (invalidas.length > 0) {
+      notificarError("Fechas con formato incorrecto (use AAAA-MM-DD): " + invalidas.join(", "));
+      return;
+    }
+    try {
+      await guardarFeriados(lineas);
+      txtFeriados.value = lineas.join("\n");
+      cfgMensaje.textContent = "Feriados guardados.";
+    } catch (err) {
+      notificarError("Error al guardar feriados", err);
+    }
+  });
 }

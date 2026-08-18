@@ -4,6 +4,55 @@ Historial de versiones de la app de Registro de Asistencia — UEM "Arutam".
 Versionado semántico: MAYOR.MENOR.PARCHE. La versión vigente está en
 `js/version.js` y cada versión tiene su tag de git (`vX.Y.Z`).
 
+## [1.7.0] — 2026-08-18
+
+### Agregado
+- **Notificaciones visuales (toasts)** en toda la plataforma: aviso verde al
+  guardar correctamente y aviso rojo con el detalle cuando ocurre un error
+  (`js/notificaciones.js`). Reemplazan los `alert()` de error y confirman las
+  acciones que antes no avisaban nada.
+- **Verificación real del guardado de asistencia**: tras escribir en
+  Firestore se relee el documento y se comprueba que quedó completo; el aviso
+  verde significa "está en la base", no solo "se envió".
+- **Red de seguridad global** (`js/app.js`): cualquier error o promesa fallida
+  sin capturar se muestra como notificación roja en vez de pasar en silencio.
+
+### Corregido
+- Los módulos **Horarios** (agregar/editar/quitar bloque) y **Estudiantes**
+  (agregar, editar/mover, retirar/reincorporar) no tenían `try/catch`: un
+  fallo de red o de reglas pasaba inadvertido. Ahora avisan y confirman.
+
+## [1.6.0] — 2026-08-18
+
+### Agregado
+- **Feriados y suspensiones**: lista de fechas sin clases editable desde el
+  módulo Usuarios (solo admin, colección `config`). Esos días no se pueden
+  registrar (el módulo Asistencia lo avisa) y no computan en los porcentajes.
+- **Estudiantes retirados**: el admin puede retirar y reincorporar estudiantes
+  desde el módulo Estudiantes. Un retirado desaparece de la nómina diaria, del
+  dashboard y de las alertas, pero conserva todo su historial; el reporte por
+  rango lo incluye si tuvo registros dentro del período (marcado como
+  "(retirado)").
+- **Atajo "Toda la fila"** en el registro diario: un selector por estudiante
+  marca todas sus horas con el mismo código (útil para faltas de día completo).
+- **Aviso de cambios sin guardar** en el registro diario: al cambiar de grado
+  o fecha, o al cerrar la página, se pide confirmación para no perder marcas.
+
+### Cambiado
+- El Dashboard ahora analiza solo los **últimos 90 días** de asistencia
+  (alertas y ranking), en vez de descargar toda la colección en cada visita.
+- Caché en memoria (2 min) de grados, estudiantes y asistencias: cambiar de
+  módulo ya no re-descarga todo de Firestore. Se invalida en cada escritura.
+- Los días con solo marcas "N" (no hay clases) ya no inflan los "días
+  registrados" ni cortan las rachas de injustificadas.
+- Botón "Guardar asistencia" muestra "Guardando…" y se deshabilita mientras
+  guarda (evita dobles envíos).
+
+### Corregido
+- Eliminada la función sin uso `resumenEnRango` y el campo muerto `numId: null`
+  al agregar estudiantes desde la app.
+- `graphify-out/` (carpeta de análisis, ajena a la app) queda en `.gitignore`.
+
 ## [1.5.0] — 2026-08-17
 
 ### Cambiado

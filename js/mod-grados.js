@@ -4,6 +4,7 @@ import {
   obtenerTutores, contarPorGrado, agregarGrado, actualizarGrado,
   renombrarGrado, eliminarGrado, esc
 } from "./data.js";
+import { notificarError } from "./notificaciones.js";
 
 export async function initGrados(contenedor, ctx) {
   if (!ctx.esAdmin) {
@@ -100,7 +101,7 @@ export async function initGrados(contenedor, ctx) {
       const seccion = fila.querySelector("#ge-seccion").value.trim().toUpperCase();
       const tutor = fila.querySelector("#ge-tutor").value.trim();
       if (!nuevo) {
-        alert("El nombre del grado no puede estar vacío.");
+        notificarError("El nombre del grado no puede estar vacío.");
         return;
       }
       try {
@@ -123,8 +124,7 @@ export async function initGrados(contenedor, ctx) {
             `${r.bloques} bloque(s) y ${r.diasAsistencia} día(s) de asistencia actualizados.`;
         }
       } catch (err) {
-        console.error(err);
-        alert("Error: " + err.message);
+        notificarError("Error al guardar el grado", err);
       }
       await pintar();
       return;
@@ -141,7 +141,7 @@ export async function initGrados(contenedor, ctx) {
       try {
         const c = await contarPorGrado(grado);
         if (c.estudiantes > 0) {
-          alert(`"${grado}" tiene ${c.estudiantes} estudiante(s).\n` +
+          notificarError(`"${grado}" tiene ${c.estudiantes} estudiante(s). ` +
                 `Muévalos a otro grado desde el módulo Estudiantes antes de eliminarlo.`);
           return;
         }
@@ -156,8 +156,7 @@ export async function initGrados(contenedor, ctx) {
         await eliminarGrado(grado);
         mensaje.textContent = `Grado "${grado}" eliminado.`;
       } catch (err) {
-        console.error(err);
-        alert("Error: " + err.message);
+        notificarError("Error al eliminar el grado", err);
       }
       await pintar();
     }
@@ -168,7 +167,7 @@ export async function initGrados(contenedor, ctx) {
     const seccion = contenedor.querySelector("#g-seccion").value.trim().toUpperCase();
     const tutor = contenedor.querySelector("#g-tutor").value.trim();
     if (!nombre) {
-      alert("Ingrese el nombre del grado.");
+      notificarError("Ingrese el nombre del grado.");
       return;
     }
     try {
@@ -177,8 +176,7 @@ export async function initGrados(contenedor, ctx) {
       contenedor.querySelector("#g-tutor").value = "";
       mensaje.textContent = `Grado "${nombre}" creado. Agréguele su horario desde el módulo Horarios.`;
     } catch (err) {
-      console.error(err);
-      alert("Error: " + err.message);
+      notificarError("Error al crear el grado", err);
     }
     await pintar();
   });

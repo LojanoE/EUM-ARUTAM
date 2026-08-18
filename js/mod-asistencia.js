@@ -1,8 +1,9 @@
 // Módulo: registro de asistencia diaria (nómina con marcas por hora).
 import {
   obtenerGrados, obtenerEstudiantes, obtenerHorario, obtenerAsistencia,
-  guardarAsistencia, diaDeFecha, fechaHoy, CODIGOS, esc
+  guardarAsistencia, obtenerFeriados, diaDeFecha, fechaHoy, CODIGOS, esc
 } from "./data.js";
+import { notificarOk, notificarError } from "./notificaciones.js";
 
 export async function initAsistencia(contenedor, ctx) {
   contenedor.innerHTML = `
@@ -85,17 +86,44 @@ export async function initAsistencia(contenedor, ctx) {
 
   let estudiantes = [];
   let horarioDia = [];
+  // Estado del registro en pantalla: grado/fecha cargados y si hay cambios
+  // sin guardar (para avisar antes de descartarlos).
+  let gradoActual = null;
+  let fechaActual = null;
+  let sucio = false;
 
   inpFecha.value = fechaHoy();
-  const grados = await obtenerGrados();
+  const [grados, feriados] = await Promise.all([obtenerGrados(), obtenerFeriados()]);
   selGrado.innerHTML = grados
     .map(g => `<option value="${esc(g)}">${esc(g)}</option>`)
     .join("");
+
+  function marcarSucio() {
+    sucio = true;
+    mensaje.textContent = "Cambios sin guardar.";
+  }
+
+  // Avisa si el usuario cambia de grado/fecha o sale de la página con la
+  // nómina editada sin guardar.
+  window.addEventListener("beforeunload", (e) => {
+    if (sucio) e.preventDefault();
+  });
 
   async function cargar() {
     mensaje.textContent = "";
     const grado = selGrado.value;
     const fecha = inpFecha.value;
+
+    if (sucio && (grado !== gradoActual || fecha !== fechaActual)) {
+      if (!confirm("Hay cambios sin guardar. ¿Descartarlos y cargar el nuevo día?")) {
+        selGrado.value = gradoActual || grado;
+        inpFecha.value = fechaActual || fecha;
+        mensaje.textContent = "Cambios sin guardar.";
+        return;
+      }
+      sucio = false;
+    }
+
     avisoDia.hidden = true;
     panelHorario.hidden = true;
     panelAsistencia.hidden = true;
@@ -105,6 +133,11 @@ export async function initAsistencia(contenedor, ctx) {
     const dia = diaDeFecha(fecha);
     if (!dia) {
       avisoDia.textContent = "La fecha seleccionada es fin de semana; no hay clases.";
+      avisoDia.hidden = false;
+      return;
+    }
+    if (feriados.includes(fecha)) {
+      avisoDia.textContent = "La fecha seleccionada es feriado o suspensión; no hay clases.";
       avisoDia.hidden = false;
       return;
     }
@@ -126,6 +159,10 @@ export async function initAsistencia(contenedor, ctx) {
     pintarNomina(asistenciaPrevia);
     panelHorario.hidden = false;
     panelAsistencia.hidden = false;
+    gradoActual = grado;
+    fechaActual = fecha;
+    sucio = false;
+    mensaje.textContent = "";
   }
 
   function pintarHorario() {
@@ -154,7 +191,7 @@ export async function initAsistencia(contenedor, ctx) {
     // como presentes y solo se cambian las excepciones.
     const prellenarP = !asistenciaPrevia;
 
-    let cabecera = "<tr><th>Nº</th><th>Estudiante</th>";
+    let cabecera = "<tr><th>Nº</th><th>Estudiante</th><th>Toda la fila</th>";
     for (let h = 1; h <= numHoras; h++) cabecera += `<th>${h}ª</th>`;
     cabecera += "<th>Observación</th></tr>";
     theadAsistencia.innerHTML = cabecera;
@@ -173,6 +210,12 @@ export async function initAsistencia(contenedor, ctx) {
       return `<tr>
         <td class="centro">${idx + 1}</td>
         <td class="nombre">${esc(est.nombre)}</td>
+        <td class="centro">
+          <select class="fila-todo" data-fila-est="${esc(est.id)}" title="Marcar toda la fila con el mismo código">
+            <option value=""></option>
+            ${CODIGOS.map(c => `<option value="${c}">${c}</option>`).join("")}
+          </select>
+        </td>
         ${celdas}
         <td><input type="text" class="obs" data-obs-est="${esc(est.id)}"
                    placeholder="Motivo (si es I o J)"
@@ -185,7 +228,27 @@ export async function initAsistencia(contenedor, ctx) {
     tbodyAsistencia.querySelectorAll("select.marca").forEach(sel => {
       sel.addEventListener("change", () => {
         sel.className = "marca " + (sel.value || "vacia");
+        marcarSucio();
       });
+    });
+
+    // Atajo: marcar todas las horas de la fila con el mismo código.
+    tbodyAsistencia.querySelectorAll("select.fila-todo").forEach(sel => {
+      sel.addEventListener("change", () => {
+        if (!sel.value) return;
+        const estId = sel.dataset.filaEst;
+        tbodyAsistencia.querySelectorAll(`select.marca[data-est="${CSS.escape(estId)}"]`)
+          .forEach(m => {
+            m.value = sel.value;
+            m.className = "marca " + sel.value;
+          });
+        sel.value = "";
+        marcarSucio();
+      });
+    });
+
+    tbodyAsistencia.querySelectorAll("input.obs").forEach(inp => {
+      inp.addEventListener("input", marcarSucio);
     });
   }
 
@@ -222,9 +285,10 @@ export async function initAsistencia(contenedor, ctx) {
   inpFecha.addEventListener("change", cargar);
 
   contenedor.querySelector("#btn-todos-p")
-    .addEventListener("click", () => marcarTodos("P"));
+    .addEventListener("click", () => { marcarTodos("P"); marcarSucio(); });
 
-  contenedor.querySelector("#btn-guardar").addEventListener("click", async () => {
+  const btnGuardar = contenedor.querySelector("#btn-guardar");
+  btnGuardar.addEventListener("click", async () => {
     const grado = selGrado.value;
     const fecha = inpFecha.value;
     const { registros, observaciones, incompletos } = recogerRegistros();
@@ -232,12 +296,18 @@ export async function initAsistencia(contenedor, ctx) {
         !confirm(`Hay ${incompletos} marca(s) sin llenar. ¿Guardar de todos modos?`)) {
       return;
     }
+    btnGuardar.disabled = true;
+    btnGuardar.textContent = "Guardando…";
     try {
       await guardarAsistencia(grado, fecha, registros, ctx.sesion.usuario, observaciones);
+      sucio = false;
       mensaje.textContent = "Asistencia guardada correctamente.";
+      notificarOk(`Asistencia de ${grado} del ${fecha} guardada y verificada en la base de datos.`);
     } catch (err) {
-      console.error(err);
-      alert("Error al guardar: " + err.message);
+      notificarError("Error al guardar la asistencia", err);
+    } finally {
+      btnGuardar.disabled = false;
+      btnGuardar.textContent = "Guardar asistencia";
     }
   });
 
@@ -258,11 +328,11 @@ export async function initAsistencia(contenedor, ctx) {
     const desde = contenedor.querySelector("#r-desde").value;
     const hasta = contenedor.querySelector("#r-hasta").value;
     if (!grado || !desde || !hasta) {
-      alert("Seleccione el grado y ambas fechas del rango.");
+      notificarError("Seleccione el grado y ambas fechas del rango.");
       return;
     }
     if (desde > hasta) {
-      alert("La fecha 'desde' no puede ser posterior a 'hasta'.");
+      notificarError("La fecha 'desde' no puede ser posterior a 'hasta'.");
       return;
     }
     const url = `reporte.html?grado=${encodeURIComponent(grado)}` +

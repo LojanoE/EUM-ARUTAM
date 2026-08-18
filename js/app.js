@@ -1,6 +1,7 @@
 // Shell de la plataforma: sesión, navegación entre módulos y permisos por rol.
 import { exigirSesion, cerrarSesion } from "./auth.js";
 import { APP_VERSION } from "./version.js";
+import { notificarError } from "./notificaciones.js";
 import { initDashboard } from "./mod-dashboard.js";
 import { initAsistencia } from "./mod-asistencia.js";
 import { initEstudiantes } from "./mod-estudiantes.js";
@@ -10,6 +11,15 @@ import { initUsuarios } from "./mod-usuarios.js";
 
 const sesion = exigirSesion();
 if (!sesion) throw new Error("Sin sesión");
+
+// Red de seguridad: ningún error (de módulos o promesas sin capturar) debe
+// pasar en silencio; se muestra como notificación roja.
+window.addEventListener("unhandledrejection", (e) => {
+  notificarError("Error inesperado", e.reason);
+});
+window.addEventListener("error", (e) => {
+  notificarError("Error inesperado", e.error || new Error(e.message));
+});
 
 // Contexto compartido con todos los módulos.
 const ctx = { sesion, esAdmin: sesion.rol === "admin" };

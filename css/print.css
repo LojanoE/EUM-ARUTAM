@@ -109,9 +109,10 @@ body {
   margin-bottom: 2px !important;
 }
 
-/* Al imprimir: ocultar la barra de herramientas */
+/* Al imprimir: ocultar la barra de herramientas y las notificaciones */
 @media print {
   .no-imprimir { display: none !important; }
+  #toasts { display: none !important; }
   body { background: #fff; }
   #reporte { padding: 0; }
 }

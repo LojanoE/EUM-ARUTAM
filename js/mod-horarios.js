@@ -4,6 +4,7 @@ import {
   agregarBloqueHorario, actualizarBloqueHorario, eliminarBloqueHorario,
   DIAS_SEMANA, fechaHoy, diaDeFecha, esc
 } from "./data.js";
+import { notificarOk, notificarError } from "./notificaciones.js";
 
 export async function initHorarios(contenedor, ctx) {
   const grados = await obtenerGrados();
@@ -119,11 +120,16 @@ export async function initHorarios(contenedor, ctx) {
     const btnGuardar = e.target.closest("[data-guardar-bloque]");
     if (btnGuardar) {
       const fila = btnGuardar.closest("tr");
-      await actualizarBloqueHorario(btnGuardar.dataset.guardarBloque, {
-        asignatura: fila.querySelector("#b-asignatura").value.trim().toUpperCase(),
-        tiempo: fila.querySelector("#b-tiempo").value.trim(),
-        docente: fila.querySelector("#b-docente").value.trim(),
-      });
+      try {
+        await actualizarBloqueHorario(btnGuardar.dataset.guardarBloque, {
+          asignatura: fila.querySelector("#b-asignatura").value.trim().toUpperCase(),
+          tiempo: fila.querySelector("#b-tiempo").value.trim(),
+          docente: fila.querySelector("#b-docente").value.trim(),
+        });
+        notificarOk("Bloque de horario actualizado.");
+      } catch (err) {
+        notificarError("Error al actualizar el bloque", err);
+      }
       await pintar();
       return;
     }
@@ -136,7 +142,12 @@ export async function initHorarios(contenedor, ctx) {
     const btnQuitar = e.target.closest("[data-quitar-bloque]");
     if (btnQuitar) {
       if (!confirm("¿Quitar este bloque del horario?")) return;
-      await eliminarBloqueHorario(btnQuitar.dataset.quitarBloque);
+      try {
+        await eliminarBloqueHorario(btnQuitar.dataset.quitarBloque);
+        notificarOk("Bloque eliminado del horario.");
+      } catch (err) {
+        notificarError("Error al quitar el bloque", err);
+      }
       await pintar();
       return;
     }
@@ -148,15 +159,20 @@ export async function initHorarios(contenedor, ctx) {
       const tiempo = contenido.querySelector(`[data-nuevo-tiempo="${dia}"]`).value.trim();
       const docente = contenido.querySelector(`[data-nuevo-docente="${dia}"]`).value.trim();
       if (!asignatura || !tiempo || !docente) {
-        alert("Complete asignatura, tiempo y docente para agregar el bloque.");
+        notificarError("Complete asignatura, tiempo y docente para agregar el bloque.");
         return;
       }
-      const bloques = await obtenerHorariosDeGrado(grado);
-      const delDia = bloques.filter(b => b.dia === dia);
-      const orden = delDia.length > 0
-        ? Math.max(...delDia.map(b => b.orden)) + 1
-        : 1;
-      await agregarBloqueHorario({ grado, dia, orden, asignatura, tiempo, docente });
+      try {
+        const bloques = await obtenerHorariosDeGrado(grado);
+        const delDia = bloques.filter(b => b.dia === dia);
+        const orden = delDia.length > 0
+          ? Math.max(...delDia.map(b => b.orden)) + 1
+          : 1;
+        await agregarBloqueHorario({ grado, dia, orden, asignatura, tiempo, docente });
+        notificarOk(`Bloque de ${asignatura} agregado al ${dia}.`);
+      } catch (err) {
+        notificarError("Error al agregar el bloque", err);
+      }
       await pintar();
     }
   });
