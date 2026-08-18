@@ -75,11 +75,12 @@ export async function obtenerAsistencia(grado, fecha) {
   return snap.exists() ? snap.data() : null;
 }
 
-export async function guardarAsistencia(grado, fecha, registros, registradoPor) {
+export async function guardarAsistencia(grado, fecha, registros, registradoPor, observaciones = {}) {
   await setDoc(doc(db, "asistencias", idAsistencia(grado, fecha)), {
     grado,
     fecha,
     registros,
+    observaciones,
     registradoPor,
     actualizadoEn: serverTimestamp()
   });
@@ -270,6 +271,7 @@ export function indicePorEstudiante(asistencias) {
         dias: {},
         faltas: []
       };
+      const obs = a.observaciones?.[estId] || null;
       const codigosDia = [];
       for (const [hora, codigo] of Object.entries(marcasHora)) {
         if (e.marcas[codigo] !== undefined) e.marcas[codigo]++;
@@ -279,7 +281,8 @@ export function indicePorEstudiante(asistencias) {
             fecha: a.fecha,
             hora: Number(hora),
             codigo,
-            grado: a.grado
+            grado: a.grado,
+            obs
           });
         }
       }

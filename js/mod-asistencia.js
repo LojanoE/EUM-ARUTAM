@@ -123,7 +123,7 @@ export async function initAsistencia(contenedor, ctx) {
 
     lblDia.textContent = dia;
     pintarHorario();
-    pintarNomina(asistenciaPrevia ? asistenciaPrevia.registros : {});
+    pintarNomina(asistenciaPrevia);
     panelHorario.hidden = false;
     panelAsistencia.hidden = false;
   }
@@ -146,19 +146,24 @@ export async function initAsistencia(contenedor, ctx) {
     return opts.join("");
   }
 
-  function pintarNomina(registros) {
+  function pintarNomina(asistenciaPrevia) {
     const numHoras = horarioDia.length;
+    const registros = asistenciaPrevia?.registros || {};
+    const observaciones = asistenciaPrevia?.observaciones || {};
+    // Registro rápido: si el día no tiene registro previo, todos parten
+    // como presentes y solo se cambian las excepciones.
+    const prellenarP = !asistenciaPrevia;
 
     let cabecera = "<tr><th>Nº</th><th>Estudiante</th>";
     for (let h = 1; h <= numHoras; h++) cabecera += `<th>${h}ª</th>`;
-    cabecera += "</tr>";
+    cabecera += "<th>Observación</th></tr>";
     theadAsistencia.innerHTML = cabecera;
 
     tbodyAsistencia.innerHTML = estudiantes.map((est, idx) => {
       const marcas = registros[est.id] || {};
       let celdas = "";
       for (let h = 1; h <= numHoras; h++) {
-        const valor = marcas[h] || "";
+        const valor = marcas[h] || (prellenarP ? "P" : "");
         celdas += `<td class="centro">
           <select class="marca ${valor || "vacia"}" data-est="${esc(est.id)}" data-hora="${h}">
             ${opcionesMarca(valor)}
@@ -169,6 +174,9 @@ export async function initAsistencia(contenedor, ctx) {
         <td class="centro">${idx + 1}</td>
         <td class="nombre">${esc(est.nombre)}</td>
         ${celdas}
+        <td><input type="text" class="obs" data-obs-est="${esc(est.id)}"
+                   placeholder="Motivo (si es I o J)"
+                   value="${esc(observaciones[est.id] || "")}"></td>
       </tr>`;
     }).join("");
 
@@ -190,6 +198,7 @@ export async function initAsistencia(contenedor, ctx) {
 
   function recogerRegistros() {
     const registros = {};
+    const observaciones = {};
     let incompletos = 0;
     tbodyAsistencia.querySelectorAll("select.marca").forEach(sel => {
       const estId = sel.dataset.est;
@@ -201,7 +210,11 @@ export async function initAsistencia(contenedor, ctx) {
       registros[estId] = registros[estId] || {};
       registros[estId][hora] = sel.value;
     });
-    return { registros, incompletos };
+    tbodyAsistencia.querySelectorAll("input.obs").forEach(inp => {
+      const texto = inp.value.trim();
+      if (texto) observaciones[inp.dataset.obsEst] = texto;
+    });
+    return { registros, observaciones, incompletos };
   }
 
   contenedor.querySelector("#btn-cargar").addEventListener("click", cargar);
@@ -214,13 +227,13 @@ export async function initAsistencia(contenedor, ctx) {
   contenedor.querySelector("#btn-guardar").addEventListener("click", async () => {
     const grado = selGrado.value;
     const fecha = inpFecha.value;
-    const { registros, incompletos } = recogerRegistros();
+    const { registros, observaciones, incompletos } = recogerRegistros();
     if (incompletos > 0 &&
         !confirm(`Hay ${incompletos} marca(s) sin llenar. ¿Guardar de todos modos?`)) {
       return;
     }
     try {
-      await guardarAsistencia(grado, fecha, registros, ctx.sesion.usuario);
+      await guardarAsistencia(grado, fecha, registros, ctx.sesion.usuario, observaciones);
       mensaje.textContent = "Asistencia guardada correctamente.";
     } catch (err) {
       console.error(err);

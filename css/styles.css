@@ -177,6 +177,15 @@ body {
   text-align: center;
 }
 
+.tabla-asistencia input.obs {
+  width: 100%;
+  min-width: 140px;
+  padding: 0.2rem 0.35rem;
+  border: 1px solid var(--borde);
+  border-radius: 4px;
+  font-size: 0.82rem;
+}
+
 select.marca.vacia { border-color: var(--rojo); background: #fdecea; }
 select.marca.P { background: #e6f4e8; }
 select.marca.I { background: #fdecea; }

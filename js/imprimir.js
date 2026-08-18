@@ -124,6 +124,20 @@ async function iniciar() {
     </tr>`;
   }).join("");
 
+  // Línea de observaciones: se autorrellena con los comentarios del día
+  // (Nº y nombre + motivo); si no hay, queda la línea de puntos.
+  const observaciones = asistencia?.observaciones || {};
+  const partes = [];
+  estudiantes.forEach((est, idx) => {
+    const texto = observaciones[est.id];
+    if (texto) partes.push(`${idx + 1} ${est.nombre}: ${texto}`);
+  });
+  if (partes.length > 0) {
+    const span = document.getElementById("obs-linea");
+    span.classList.remove("linea-puntos");
+    span.textContent = partes.join(";  ") + ".";
+  }
+
   document.getElementById("reporte").hidden = false;
   estado.textContent = asistencia
     ? `Reporte del ${fecha} (${grado}) — con asistencia registrada.`

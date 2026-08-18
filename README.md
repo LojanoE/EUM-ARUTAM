@@ -34,8 +34,11 @@ firebase.json, firestore.rules  Configuración de reglas de Firestore
   de inasistencia (3+ injustificadas seguidas o <80% de asistencia) y ranking
   de estudiantes con más inasistencias.
 - **Asistencia**: registro diario por grado y fecha, con marcas por hora
-  (P/I/J/A/N), igual que la hoja IMPRIMIR del Excel. Incluye el reporte
-  consolidado por rango de fechas (imprimible y CSV).
+  (P/I/J/A/N), igual que la hoja IMPRIMIR del Excel. Los días nuevos se
+  prellenan con todos presentes para registrar solo las excepciones, y cada
+  estudiante admite una observación (motivo de falta) que sale en su ficha y
+  en el reporte impreso. Incluye el reporte consolidado por rango de fechas
+  (imprimible y CSV).
 - **Estudiantes**: consulta con filtros, ficha con historial completo; el rol
   `admin` además puede agregar, editar nombre y mover de grado (el historial
   se conserva). No se eliminan estudiantes.

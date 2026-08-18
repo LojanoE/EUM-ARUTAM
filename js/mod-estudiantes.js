@@ -123,7 +123,7 @@ export async function initEstudiantes(contenedor, ctx) {
         ${faltas.length === 0 ? `<p class="info">Sin faltas ni atrasos registrados.</p>` : `
         <table class="tabla-gestion">
           <thead>
-            <tr><th>Fecha</th><th>Día</th><th>Hora</th><th>Código</th><th>Grado en esa fecha</th></tr>
+            <tr><th>Fecha</th><th>Día</th><th>Hora</th><th>Código</th><th>Grado en esa fecha</th><th>Observación</th></tr>
           </thead>
           <tbody>
             ${faltas.map(f => `
@@ -133,6 +133,7 @@ export async function initEstudiantes(contenedor, ctx) {
                 <td class="centro">${f.hora}ª</td>
                 <td class="centro"><span class="insignia ${f.codigo}">${f.codigo} — ${CODIGOS_DESC[f.codigo]}</span></td>
                 <td>${esc(f.grado)}</td>
+                <td>${f.obs ? esc(f.obs) : ""}</td>
               </tr>`).join("")}
           </tbody>
         </table>`}

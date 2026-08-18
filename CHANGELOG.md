@@ -4,6 +4,17 @@ Historial de versiones de la app de Registro de Asistencia — UEM "Arutam".
 Versionado semántico: MAYOR.MENOR.PARCHE. La versión vigente está en
 `js/version.js` y cada versión tiene su tag de git (`vX.Y.Z`).
 
+## [1.4.0] — 2026-08-17
+
+### Agregado
+- **Registro rápido de asistencia**: al abrir un día sin registro previo,
+  toda la nómina se prellena con `P` (presente); solo se cambian las
+  excepciones. Si el día ya tiene registro, se cargan las marcas guardadas.
+- **Observación por estudiante**: columna opcional en la nómina para anotar
+  el motivo de una falta (I/J) o atraso. Se guarda en el documento de
+  asistencia (`observaciones`) y se muestra en la ficha del estudiante
+  (historial) y en la línea OBSERVACIONES del reporte diario impreso.
+
 ## [1.3.0] — 2026-08-17
 
 ### Agregado
