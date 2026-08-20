@@ -4,6 +4,30 @@ Historial de versiones de la app de Registro de Asistencia — UEM "Arutam".
 Versionado semántico: MAYOR.MENOR.PARCHE. La versión vigente está en
 `js/version.js` y cada versión tiene su tag de git (`vX.Y.Z`).
 
+## [1.8.0] — 2026-08-20
+
+### Agregado
+- **Modal de confirmación propio** (`js/notificaciones.js`, `confirmarAccion()`):
+  reemplaza los `confirm()` nativos del navegador en los 8 puntos donde se usaban
+  (eliminar/renombrar grado, eliminar usuario, quitar bloque de horario, mover
+  y retirar/reincorporar estudiante, descartar cambios sin guardar, guardar con
+  marcas incompletas). Mismo estilo visual que los toasts; se cierra con Escape
+  o clic fuera, y marca en rojo las acciones destructivas.
+- **Indicador de carga en el registro de asistencia**: al cargar grado/fecha se
+  deshabilitan los controles y se muestra "Cargando nómina…" mientras se leen
+  estudiantes, horario y asistencia previa de Firestore; antes la pantalla
+  parecía congelada en conexiones lentas. Los errores de carga ahora se avisan
+  con un mensaje específico en vez de depender solo de la red de seguridad global.
+- **Atajos de teclado en la nómina de asistencia**: con el foco en una celda,
+  teclear P/I/J/A/N marca el código sin abrir el desplegable y avanza a la
+  siguiente celda; las flechas mueven el foco entre horas (izq/der) y
+  estudiantes (arriba/abajo). Pensado para cargar la asistencia completa del
+  grado sin soltar el teclado.
+- **Columnas Nº y Nombre fijas** en la tabla de asistencia al hacer scroll
+  horizontal por las horas, y marcas más compactas en pantallas angostas
+  (`css/styles.css`) — para no perder de vista a qué estudiante se le está
+  marcando en tablets/celulares.
+
 ## [1.7.0] — 2026-08-18
 
 ### Agregado

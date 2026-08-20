@@ -3,7 +3,7 @@ import {
   obtenerGrados, obtenerEstudiantes, obtenerHorario, obtenerAsistencia,
   guardarAsistencia, obtenerFeriados, diaDeFecha, fechaHoy, CODIGOS, esc
 } from "./data.js";
-import { notificarOk, notificarError } from "./notificaciones.js";
+import { notificarOk, notificarError, confirmarAccion } from "./notificaciones.js";
 
 export async function initAsistencia(contenedor, ctx) {
   contenedor.innerHTML = `
@@ -21,6 +21,7 @@ export async function initAsistencia(contenedor, ctx) {
         <button class="secundario" id="btn-cargar">Cargar</button>
       </div>
       <p id="aviso-dia" class="aviso" hidden></p>
+      <p id="cargando-nomina" class="info cargando" hidden>Cargando nómina…</p>
     </div>
 
     <div class="panel selectores">
@@ -69,6 +70,8 @@ export async function initAsistencia(contenedor, ctx) {
       </div>
       <p class="info">
         Códigos: P = Presente, I = Injustificado, J = Justificado, A = Atraso, N = No hay clases.
+        Atajos con el foco en una celda: teclee la letra del código para marcarla sin abrir
+        el menú (avanza a la siguiente), y use las flechas para moverse entre horas y estudiantes.
       </p>
     </div>`;
 
@@ -83,6 +86,8 @@ export async function initAsistencia(contenedor, ctx) {
   const lblDia = contenedor.querySelector("#lbl-dia");
   const lblResumen = contenedor.querySelector("#lbl-resumen");
   const mensaje = contenedor.querySelector("#mensaje");
+  const btnCargar = contenedor.querySelector("#btn-cargar");
+  const cargando = contenedor.querySelector("#cargando-nomina");
 
   let estudiantes = [];
   let horarioDia = [];
@@ -115,7 +120,10 @@ export async function initAsistencia(contenedor, ctx) {
     const fecha = inpFecha.value;
 
     if (sucio && (grado !== gradoActual || fecha !== fechaActual)) {
-      if (!confirm("Hay cambios sin guardar. ¿Descartarlos y cargar el nuevo día?")) {
+      const descartar = await confirmarAccion(
+        "Hay cambios sin guardar. ¿Descartarlos y cargar el nuevo día?",
+        { textoConfirmar: "Descartar cambios", peligro: true });
+      if (!descartar) {
         selGrado.value = gradoActual || grado;
         inpFecha.value = fechaActual || fecha;
         mensaje.textContent = "Cambios sin guardar.";
@@ -142,27 +150,43 @@ export async function initAsistencia(contenedor, ctx) {
       return;
     }
 
-    [estudiantes, horarioDia] = await Promise.all([
-      obtenerEstudiantes(grado),
-      obtenerHorario(grado, dia),
-    ]);
-    const asistenciaPrevia = await obtenerAsistencia(grado, fecha);
+    // Estado de carga: las 3 lecturas a Firestore pueden demorar en
+    // conexiones lentas; sin esto la pantalla parece congelada y el usuario
+    // hace clic varias veces sobre "Cargar".
+    cargando.hidden = false;
+    selGrado.disabled = true;
+    inpFecha.disabled = true;
+    btnCargar.disabled = true;
+    try {
+      [estudiantes, horarioDia] = await Promise.all([
+        obtenerEstudiantes(grado),
+        obtenerHorario(grado, dia),
+      ]);
+      const asistenciaPrevia = await obtenerAsistencia(grado, fecha);
 
-    if (horarioDia.length === 0) {
-      avisoDia.textContent = `No hay horario registrado para ${grado} el día ${dia}.`;
-      avisoDia.hidden = false;
-      return;
+      if (horarioDia.length === 0) {
+        avisoDia.textContent = `No hay horario registrado para ${grado} el día ${dia}.`;
+        avisoDia.hidden = false;
+        return;
+      }
+
+      lblDia.textContent = dia;
+      pintarHorario();
+      pintarNomina(asistenciaPrevia);
+      panelHorario.hidden = false;
+      panelAsistencia.hidden = false;
+      gradoActual = grado;
+      fechaActual = fecha;
+      sucio = false;
+      mensaje.textContent = "";
+    } catch (err) {
+      notificarError("Error al cargar la nómina", err);
+    } finally {
+      cargando.hidden = true;
+      selGrado.disabled = false;
+      inpFecha.disabled = false;
+      btnCargar.disabled = false;
     }
-
-    lblDia.textContent = dia;
-    pintarHorario();
-    pintarNomina(asistenciaPrevia);
-    panelHorario.hidden = false;
-    panelAsistencia.hidden = false;
-    gradoActual = grado;
-    fechaActual = fecha;
-    sucio = false;
-    mensaje.textContent = "";
   }
 
   function pintarHorario() {
@@ -191,7 +215,8 @@ export async function initAsistencia(contenedor, ctx) {
     // como presentes y solo se cambian las excepciones.
     const prellenarP = !asistenciaPrevia;
 
-    let cabecera = "<tr><th>Nº</th><th>Estudiante</th><th>Toda la fila</th>";
+    let cabecera = `<tr><th class="col-fija col-num">Nº</th>
+      <th class="col-fija col-nombre">Estudiante</th><th>Toda la fila</th>`;
     for (let h = 1; h <= numHoras; h++) cabecera += `<th>${h}ª</th>`;
     cabecera += "<th>Observación</th></tr>";
     theadAsistencia.innerHTML = cabecera;
@@ -208,8 +233,8 @@ export async function initAsistencia(contenedor, ctx) {
         </td>`;
       }
       return `<tr>
-        <td class="centro">${idx + 1}</td>
-        <td class="nombre">${esc(est.nombre)}</td>
+        <td class="centro col-fija col-num">${idx + 1}</td>
+        <td class="nombre col-fija col-nombre">${esc(est.nombre)}</td>
         <td class="centro">
           <select class="fila-todo" data-fila-est="${esc(est.id)}" title="Marcar toda la fila con el mismo código">
             <option value=""></option>
@@ -259,6 +284,57 @@ export async function initAsistencia(contenedor, ctx) {
     });
   }
 
+  // Enfoca la celda de marca del estudiante (por índice en `estudiantes`) y
+  // la hora dados; no hace nada si cae fuera de la grilla.
+  function enfocarCelda(idxEst, hora) {
+    if (idxEst < 0 || idxEst >= estudiantes.length) return;
+    if (hora < 1 || hora > horarioDia.length) return;
+    const est = estudiantes[idxEst];
+    tbodyAsistencia
+      .querySelector(`select.marca[data-est="${CSS.escape(est.id)}"][data-hora="${hora}"]`)
+      ?.focus();
+  }
+
+  // Tras marcar con la letra del código, avanza a la siguiente hora del
+  // mismo estudiante o, si era la última, a la primera hora del siguiente
+  // (como el tabulado de una hoja de cálculo).
+  function avanzarFoco(sel) {
+    const hora = Number(sel.dataset.hora);
+    const idxEst = estudiantes.findIndex(x => x.id === sel.dataset.est);
+    if (hora < horarioDia.length) enfocarCelda(idxEst, hora + 1);
+    else enfocarCelda(idxEst + 1, 1);
+  }
+
+  // Atajos de teclado en la nómina: con el foco en una celda de marca,
+  // teclear P/I/J/A/N la asigna sin abrir el desplegable, y las flechas
+  // mueven el foco entre horas (izq/der) y estudiantes (arriba/abajo) en
+  // vez de recorrer las opciones del <select> — para cargar la asistencia
+  // completa del grado sin soltar el teclado.
+  tbodyAsistencia.addEventListener("keydown", (e) => {
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    const sel = e.target;
+    if (!sel.matches("select.marca")) return;
+
+    const letra = e.key.toUpperCase();
+    if (CODIGOS.includes(letra)) {
+      e.preventDefault();
+      sel.value = letra;
+      sel.className = "marca " + letra;
+      marcarSucio();
+      avanzarFoco(sel);
+      return;
+    }
+
+    const hora = Number(sel.dataset.hora);
+    const idxEst = estudiantes.findIndex(x => x.id === sel.dataset.est);
+    switch (e.key) {
+      case "ArrowRight": e.preventDefault(); enfocarCelda(idxEst, hora + 1); break;
+      case "ArrowLeft":  e.preventDefault(); enfocarCelda(idxEst, hora - 1); break;
+      case "ArrowDown":  e.preventDefault(); enfocarCelda(idxEst + 1, hora); break;
+      case "ArrowUp":    e.preventDefault(); enfocarCelda(idxEst - 1, hora); break;
+    }
+  });
+
   function recogerRegistros() {
     const registros = {};
     const observaciones = {};
@@ -280,7 +356,7 @@ export async function initAsistencia(contenedor, ctx) {
     return { registros, observaciones, incompletos };
   }
 
-  contenedor.querySelector("#btn-cargar").addEventListener("click", cargar);
+  btnCargar.addEventListener("click", cargar);
   selGrado.addEventListener("change", cargar);
   inpFecha.addEventListener("change", cargar);
 
@@ -292,8 +368,9 @@ export async function initAsistencia(contenedor, ctx) {
     const grado = selGrado.value;
     const fecha = inpFecha.value;
     const { registros, observaciones, incompletos } = recogerRegistros();
-    if (incompletos > 0 &&
-        !confirm(`Hay ${incompletos} marca(s) sin llenar. ¿Guardar de todos modos?`)) {
+    if (incompletos > 0 && !(await confirmarAccion(
+        `Hay ${incompletos} marca(s) sin llenar. ¿Guardar de todos modos?`,
+        { textoConfirmar: "Guardar de todos modos" }))) {
       return;
     }
     btnGuardar.disabled = true;

@@ -4,7 +4,7 @@ import {
   indicePorEstudiante, resumenEstudiante, agregarEstudiante,
   actualizarEstudiante, diaDeFecha, CODIGOS_DESC, esc
 } from "./data.js";
-import { notificarOk, notificarError } from "./notificaciones.js";
+import { notificarOk, notificarError, confirmarAccion } from "./notificaciones.js";
 
 export async function initEstudiantes(contenedor, ctx) {
   const [grados, estudiantes, asistencias] = await Promise.all([
@@ -181,8 +181,9 @@ export async function initEstudiantes(contenedor, ctx) {
         return;
       }
       const cambioGrado = grado !== est.grado;
-      if (cambioGrado &&
-          !confirm(`¿Mover a ${est.nombre} de "${est.grado}" a "${grado}"?\nSu historial de asistencia se conserva.`)) {
+      if (cambioGrado && !(await confirmarAccion(
+          `¿Mover a ${est.nombre} de "${est.grado}" a "${grado}"?\nSu historial de asistencia se conserva.`,
+          { textoConfirmar: "Mover estudiante" }))) {
         return;
       }
       try {
@@ -201,31 +202,30 @@ export async function initEstudiantes(contenedor, ctx) {
     fila.querySelector("#e-cancelar").addEventListener("click", pintarTabla);
   }
 
-  tbody.addEventListener("click", (e) => {
+  tbody.addEventListener("click", async (e) => {
     const btnRetirar = e.target.closest("[data-retirar]");
     if (btnRetirar) {
       const est = estudiantes.find(x => x.id === btnRetirar.dataset.retirar);
       if (!est) return;
       const retirar = est.activo !== false;
       const accion = retirar ? "retirar" : "reincorporar";
-      if (!confirm(`¿${accion.charAt(0).toUpperCase() + accion.slice(1)} a ${est.nombre}?\n` +
+      const confirmado = await confirmarAccion(
+        `¿${accion.charAt(0).toUpperCase() + accion.slice(1)} a ${est.nombre}?\n` +
         (retirar
           ? "Dejará de aparecer en la nómina diaria y en las alertas, pero su historial se conserva."
-          : "Volverá a aparecer en la nómina diaria."))) {
-        return;
+          : "Volverá a aparecer en la nómina diaria."),
+        { textoConfirmar: accion.charAt(0).toUpperCase() + accion.slice(1), peligro: retirar });
+      if (!confirmado) return;
+      try {
+        await actualizarEstudiante(est.id, { activo: !retirar });
+        est.activo = !retirar;
+        notificarOk(retirar
+          ? `${est.nombre} retirado. Su historial se conserva.`
+          : `${est.nombre} reincorporado a la nómina.`);
+        pintarTabla();
+      } catch (err) {
+        notificarError(`Error al ${accion} al estudiante`, err);
       }
-      (async () => {
-        try {
-          await actualizarEstudiante(est.id, { activo: !retirar });
-          est.activo = !retirar;
-          notificarOk(retirar
-            ? `${est.nombre} retirado. Su historial se conserva.`
-            : `${est.nombre} reincorporado a la nómina.`);
-          pintarTabla();
-        } catch (err) {
-          notificarError(`Error al ${accion} al estudiante`, err);
-        }
-      })();
       return;
     }
     const btnEditar = e.target.closest("[data-editar]");

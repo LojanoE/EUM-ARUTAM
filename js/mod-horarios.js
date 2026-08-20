@@ -4,7 +4,7 @@ import {
   agregarBloqueHorario, actualizarBloqueHorario, eliminarBloqueHorario,
   DIAS_SEMANA, fechaHoy, diaDeFecha, esc
 } from "./data.js";
-import { notificarOk, notificarError } from "./notificaciones.js";
+import { notificarOk, notificarError, confirmarAccion } from "./notificaciones.js";
 
 export async function initHorarios(contenedor, ctx) {
   const grados = await obtenerGrados();
@@ -141,7 +141,8 @@ export async function initHorarios(contenedor, ctx) {
 
     const btnQuitar = e.target.closest("[data-quitar-bloque]");
     if (btnQuitar) {
-      if (!confirm("¿Quitar este bloque del horario?")) return;
+      if (!(await confirmarAccion("¿Quitar este bloque del horario?",
+          { textoConfirmar: "Quitar bloque", peligro: true }))) return;
       try {
         await eliminarBloqueHorario(btnQuitar.dataset.quitarBloque);
         notificarOk("Bloque eliminado del horario.");

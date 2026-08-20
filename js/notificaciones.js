@@ -41,3 +41,40 @@ export function notificarError(texto, err) {
   const detalle = err?.message ? ` — ${err.message}` : "";
   mostrar(texto + detalle, "toast-error", DURACION_ERROR_MS);
 }
+
+// Modal de confirmación: reemplaza el confirm() nativo del navegador por un
+// diálogo con el mismo estilo visual que el resto de la plataforma. Acepta
+// mensajes con saltos de línea (\n). Devuelve una Promise<boolean> — true si
+// el usuario confirma, false si cancela, cierra con Escape o hace clic fuera.
+export function confirmarAccion(mensaje, opciones = {}) {
+  const { textoConfirmar = "Confirmar", textoCancelar = "Cancelar", peligro = false } = opciones;
+  return new Promise((resolve) => {
+    const overlay = document.createElement("div");
+    overlay.className = "modal-overlay";
+    overlay.innerHTML = `
+      <div class="modal-confirmar" role="alertdialog" aria-modal="true">
+        <p class="modal-mensaje"></p>
+        <div class="modal-acciones">
+          <button type="button" class="secundario" data-modal-cancelar>${textoCancelar}</button>
+          <button type="button" class="${peligro ? "peligro" : "primario"}" data-modal-confirmar>${textoConfirmar}</button>
+        </div>
+      </div>`;
+    overlay.querySelector(".modal-mensaje").textContent = mensaje;
+    document.body.appendChild(overlay);
+
+    function cerrar(resultado) {
+      document.removeEventListener("keydown", alTeclado);
+      overlay.remove();
+      resolve(resultado);
+    }
+    function alTeclado(e) {
+      if (e.key === "Escape") cerrar(false);
+    }
+
+    overlay.querySelector("[data-modal-confirmar]").addEventListener("click", () => cerrar(true));
+    overlay.querySelector("[data-modal-cancelar]").addEventListener("click", () => cerrar(false));
+    overlay.addEventListener("click", (e) => { if (e.target === overlay) cerrar(false); });
+    document.addEventListener("keydown", alTeclado);
+    overlay.querySelector("[data-modal-confirmar]").focus();
+  });
+}

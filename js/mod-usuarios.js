@@ -5,7 +5,7 @@ import {
   obtenerUsuarios, agregarUsuario, actualizarUsuario, eliminarUsuario,
   obtenerFeriados, guardarFeriados, esc
 } from "./data.js";
-import { notificarError } from "./notificaciones.js";
+import { notificarError, confirmarAccion } from "./notificaciones.js";
 
 export async function initUsuarios(contenedor, ctx) {
   if (!ctx.esAdmin) {
@@ -179,7 +179,8 @@ export async function initUsuarios(contenedor, ctx) {
         notificarError("Debe quedar al menos un usuario con rol admin.");
         return;
       }
-      if (!confirm(`¿Eliminar el usuario "${id}"?`)) return;
+      if (!(await confirmarAccion(`¿Eliminar el usuario "${id}"?`,
+          { textoConfirmar: "Eliminar usuario", peligro: true }))) return;
       try {
         await eliminarUsuario(id);
         mensaje.textContent = `Usuario "${id}" eliminado.`;

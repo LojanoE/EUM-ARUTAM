@@ -4,7 +4,7 @@ import {
   obtenerTutores, contarPorGrado, agregarGrado, actualizarGrado,
   renombrarGrado, eliminarGrado, esc
 } from "./data.js";
-import { notificarError } from "./notificaciones.js";
+import { notificarError, confirmarAccion } from "./notificaciones.js";
 
 export async function initGrados(contenedor, ctx) {
   if (!ctx.esAdmin) {
@@ -109,12 +109,14 @@ export async function initGrados(contenedor, ctx) {
           await actualizarGrado(viejo, { seccion, tutor });
         } else {
           const c = await contarPorGrado(viejo);
-          if (!confirm(
+          const renombrar = await confirmarAccion(
             `¿Renombrar "${viejo}" a "${nuevo}"?\n\n` +
             `Se actualizarán en cascada:\n` +
             `- ${c.estudiantes} estudiante(s)\n` +
             `- ${c.bloques} bloque(s) de horario\n` +
-            `- ${c.diasAsistencia} día(s) de asistencia registrada`)) {
+            `- ${c.diasAsistencia} día(s) de asistencia registrada`,
+            { textoConfirmar: "Renombrar grado" });
+          if (!renombrar) {
             return;
           }
           mensaje.textContent = "Renombrando y actualizando referencias...";
@@ -145,12 +147,14 @@ export async function initGrados(contenedor, ctx) {
                 `Muévalos a otro grado desde el módulo Estudiantes antes de eliminarlo.`);
           return;
         }
-        if (!confirm(
+        const eliminar = await confirmarAccion(
           `¿Eliminar el grado "${grado}"?\n\n` +
           `Se eliminarán también:\n` +
           `- ${c.bloques} bloque(s) de horario\n` +
           `- ${c.diasAsistencia} día(s) de asistencia registrada\n\n` +
-          `Esta acción no se puede deshacer.`)) {
+          `Esta acción no se puede deshacer.`,
+          { textoConfirmar: "Eliminar grado", peligro: true });
+        if (!eliminar) {
           return;
         }
         await eliminarGrado(grado);
