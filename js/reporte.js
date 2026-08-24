@@ -4,6 +4,7 @@ import {
   obtenerEstudiantes, obtenerTutor, obtenerTodasLasAsistencias,
   firmaDelUsuario, indicePorEstudiante, resumenEstudiante, esc
 } from "./data.js";
+import { notaModoOffline } from "./offline.js";
 
 const sesion = exigirSesion();
 if (!sesion) throw new Error("Sin sesión");
@@ -88,7 +89,7 @@ async function iniciar() {
   }).join("");
 
   document.getElementById("reporte").hidden = false;
-  estado.textContent =
+  estado.textContent = notaModoOffline() +
     `Reporte del ${desde} al ${hasta} (${grado}) — ${estudiantes.length} estudiantes.`;
 }
 

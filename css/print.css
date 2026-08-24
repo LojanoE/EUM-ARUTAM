@@ -1,7 +1,7 @@
 /* Formato de los reportes — una página A4 vertical */
 @page {
   size: A4 portrait;
-  margin: 8mm;
+  margin: 2.54cm;
 }
 
 body {

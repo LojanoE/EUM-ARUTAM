@@ -1,6 +1,8 @@
 // Configuración de Firebase — proyecto uem-arutam
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {
+  initializeFirestore, persistentLocalCache, persistentMultipleTabManager
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCqcA4adwXG1NKSw-NQBekyaASIDJUl-FY",
@@ -13,4 +15,10 @@ const firebaseConfig = {
 };
 
 export const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
+// Caché persistente en IndexedDB: las lecturas hechas con internet quedan
+// disponibles sin conexión (la impresión de reportes funciona offline).
+// El manejador multi-pestaña permite tener app.html e imprimir.html abiertos
+// a la vez. Las escrituras siguen yendo al servidor.
+export const db = initializeFirestore(app, {
+  localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() })
+});

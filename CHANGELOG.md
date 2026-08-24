@@ -4,6 +4,31 @@ Historial de versiones de la app de Registro de Asistencia — UEM "Arutam".
 Versionado semántico: MAYOR.MENOR.PARCHE. La versión vigente está en
 `js/version.js` y cada versión tiene su tag de git (`vX.Y.Z`).
 
+## [1.9.0] — 2026-08-24
+
+### Agregado
+- **Impresión sin internet** (datos en caché): las hojas de impresión
+  (`imprimir.html` y `reporte.html`) funcionan sin conexión para cualquier
+  grado, usando los datos descargados previamente.
+  - Caché persistente de Firestore en IndexedDB
+    (`js/firebase-config.js`, `persistentLocalCache` multi-pestaña): las
+    lecturas hechas con internet quedan disponibles offline.
+  - Precarga automática al entrar a la app y botón "Actualizar datos" en la
+    barra lateral (`js/offline.js`, `js/app.js`): descarga estudiantes,
+    tutores, horarios, todo el historial de asistencias y la firma del
+    usuario, con las mismas consultas que usan las páginas de impresión. La
+    fecha de la última precarga se muestra junto al botón.
+  - Service worker (`sw.js`) que cachea los archivos estáticos y los scripts
+    del CDN de Firebase, para que las páginas abran aunque no haya internet.
+  - Aviso "Sin conexión — datos en caché del …" en la barra de herramientas
+    de las hojas de impresión cuando se generan offline.
+- El **registro** de asistencia sigue requiriendo conexión; no cambió.
+
+### Cambiado
+- Margen de impresión de las hojas de asistencia: de 8 mm a 2.54 cm
+  (margen "Normal") en `css/print.css`.
+- Encabezado de las hojas de impresión: periodo académico **2026 - 2027**.
+
 ## [1.8.0] — 2026-08-20
 
 ### Agregado

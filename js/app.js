@@ -1,7 +1,8 @@
 // Shell de la plataforma: sesión, navegación entre módulos y permisos por rol.
 import { exigirSesion, cerrarSesion } from "./auth.js";
 import { APP_VERSION } from "./version.js";
-import { notificarError } from "./notificaciones.js";
+import { notificarError, notificarOk } from "./notificaciones.js";
+import { prepararCacheOffline, fechaUltimaPrecarga } from "./offline.js";
 import { initDashboard } from "./mod-dashboard.js";
 import { initAsistencia } from "./mod-asistencia.js";
 import { initEstudiantes } from "./mod-estudiantes.js";
@@ -48,6 +49,50 @@ document.getElementById("btn-salir").addEventListener("click", () => {
   cerrarSesion();
   location.href = "index.html";
 });
+
+/* ---------- Datos para imprimir sin internet ---------- */
+
+// Service worker: cachea los archivos estáticos para que las páginas
+// (incluidas las hojas de impresión) abran sin conexión.
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js").catch(err =>
+    console.warn("No se pudo registrar el service worker:", err));
+}
+
+const lblOffline = document.getElementById("lbl-offline");
+const btnOffline = document.getElementById("btn-offline");
+
+function pintarEstadoOffline(ts) {
+  lblOffline.textContent = ts
+    ? "Datos sin conexión: " +
+      new Date(ts).toLocaleString("es-EC", { dateStyle: "short", timeStyle: "short" })
+    : "Datos sin conexión: sin descargar";
+}
+
+// Descarga en caché los datos de todos los grados para imprimir offline.
+// Se lanza solo al entrar a la app y con el botón "Actualizar datos".
+async function actualizarCacheOffline(manual) {
+  if (!navigator.onLine) {
+    if (manual) notificarError("Sin conexión: no se pueden actualizar los datos.");
+    return;
+  }
+  btnOffline.disabled = true;
+  try {
+    const ts = await prepararCacheOffline(sesion);
+    pintarEstadoOffline(ts);
+    if (manual) notificarOk("Datos listos para imprimir sin internet.");
+  } catch (err) {
+    console.error(err);
+    pintarEstadoOffline(fechaUltimaPrecarga());
+    if (manual) notificarError("No se pudo actualizar la caché", err);
+  } finally {
+    btnOffline.disabled = false;
+  }
+}
+
+btnOffline.addEventListener("click", () => actualizarCacheOffline(true));
+pintarEstadoOffline(fechaUltimaPrecarga());
+actualizarCacheOffline(false);
 
 async function mostrarModulo(nombre) {
   if (MODULOS[nombre].soloAdmin && !ctx.esAdmin) return;

@@ -19,7 +19,7 @@
       <div class="enc-izquierda">
         <p class="linea-principal">UNIDAD EDUCATIVA DEL MILENIO "ARUTAM"</p>
         <p>EL PANGUI - ZAMORA CHINCHIPE - ECUADOR</p>
-        <p>INSPECCIÓN PERIODO ACADÉMICO 2025 - 2026</p>
+        <p>INSPECCIÓN PERIODO ACADÉMICO 2026 - 2027</p>
       </div>
       <table class="enc-datos">
         <tr><td class="etq">GRADO</td><td id="d-grado"></td></tr>
@@ -66,6 +66,10 @@
     </div>
   </div>
 
+  <script>
+    // Service worker: permite abrir esta hoja sin internet.
+    if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+  </script>
   <script type="module" src="js/reporte.js"></script>
 </body>
 </html>

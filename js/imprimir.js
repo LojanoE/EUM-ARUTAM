@@ -4,6 +4,7 @@ import {
   obtenerEstudiantes, obtenerHorario, obtenerTutor, obtenerAsistencia,
   firmaDelUsuario, diaDeFecha, esc
 } from "./data.js";
+import { notaModoOffline } from "./offline.js";
 import { collection, getDocs }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { db } from "./firebase-config.js";
@@ -139,9 +140,9 @@ async function iniciar() {
   }
 
   document.getElementById("reporte").hidden = false;
-  estado.textContent = asistencia
+  estado.textContent = notaModoOffline() + (asistencia
     ? `Reporte del ${fecha} (${grado}) — con asistencia registrada.`
-    : `Reporte del ${fecha} (${grado}) — en blanco, para llenar a mano.`;
+    : `Reporte del ${fecha} (${grado}) — en blanco, para llenar a mano.`);
 }
 
 document.getElementById("btn-imprimir").addEventListener("click", () => window.print());

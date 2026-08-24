@@ -316,6 +316,15 @@ button.secundario {
 
 .sidebar-pie button:hover { background: rgba(255, 255, 255, 0.28); }
 
+/* Estado de la caché para imprimir sin internet */
+.offline-estado {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.75);
+}
+
 .contenido-app { flex: 1; padding: 1.4rem; min-width: 0; }
 
 .titulo-modulo { margin: 0 0 1rem; font-size: 1.25rem; color: var(--azul); }

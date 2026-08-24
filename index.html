@@ -25,6 +25,9 @@
     import { login, sesionActual } from "./js/auth.js";
     import { APP_VERSION } from "./js/version.js";
 
+    // Service worker: cachea los archivos estáticos para uso sin internet.
+    if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+
     document.getElementById("lbl-version").textContent = "v" + APP_VERSION;
 
     // Si ya hay sesión activa, ir directo a la app.
