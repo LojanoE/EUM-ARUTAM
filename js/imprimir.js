@@ -5,9 +5,6 @@ import {
   firmaDelUsuario, diaDeFecha, esc
 } from "./data.js";
 import { notaModoOffline } from "./offline.js";
-import { collection, getDocs }
-  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-import { db } from "./firebase-config.js";
 
 const sesion = exigirSesion();
 if (!sesion) throw new Error("Sin sesión");
@@ -27,23 +24,6 @@ function fechaLarga(f) {
 
 function contar(marcas, codigo) {
   return Object.values(marcas || {}).filter(v => v === codigo).length;
-}
-
-async function diasAsistidosAcumulados(estudianteIds) {
-  // Días con al menos una marca P o A por estudiante, hasta la fecha del
-  // reporte. Se busca en TODA la colección para que el historial siga al
-  // estudiante aunque haya sido movido de grado.
-  const acum = Object.fromEntries(estudianteIds.map(id => [id, 0]));
-  const snap = await getDocs(collection(db, "asistencias"));
-  for (const docu of snap.docs) {
-    const data = docu.data();
-    if (data.fecha > fecha) continue;
-    for (const id of estudianteIds) {
-      const marcas = Object.values(data.registros?.[id] || {});
-      if (marcas.some(v => v === "P" || v === "A")) acum[id]++;
-    }
-  }
-  return acum;
 }
 
 async function iniciar() {
@@ -95,18 +75,16 @@ async function iniciar() {
   // Cabecera de nómina
   const numHoras = horario.length;
   let filaFecha = `<tr><th rowspan="3">Nº</th><th rowspan="3">NÓMINA DE ESTUDIANTES</th>
-    <th colspan="${numHoras}">${fechaLarga(fecha)}</th><th colspan="4">TOTAL</th></tr>`;
+    <th colspan="${numHoras}">${fechaLarga(fecha)}</th><th colspan="3">TOTAL</th></tr>`;
   let filaHoras = `<tr><th colspan="${numHoras}">Horas</th>
     <th rowspan="2">JUSTIFICADO</th><th rowspan="2">INJUSTIFICADO</th>
-    <th rowspan="2">ATRASO</th><th rowspan="2">DÍAS ASISTIDOS</th></tr>`;
+    <th rowspan="2">ATRASO</th></tr>`;
   let filaNums = "<tr>";
   for (let h = 1; h <= numHoras; h++) filaNums += `<th>${h}ª</th>`;
   filaNums += "</tr>";
   document.getElementById("thead-nomina").innerHTML = filaFecha + filaHoras + filaNums;
 
   // Nómina
-  const ids = estudiantes.map(e => e.id);
-  const acum = await diasAsistidosAcumulados(ids);
   document.getElementById("tbody-nomina").innerHTML = estudiantes.map((est, idx) => {
     const marcas = registros[est.id] || {};
     let celdas = "";
@@ -121,7 +99,6 @@ async function iniciar() {
       <td class="centro">${hayMarcas ? contar(marcas, "J") : ""}</td>
       <td class="centro">${hayMarcas ? contar(marcas, "I") : ""}</td>
       <td class="centro">${hayMarcas ? contar(marcas, "A") : ""}</td>
-      <td class="centro">${acum[est.id] || ""}</td>
     </tr>`;
   }).join("");
 
@@ -143,6 +120,23 @@ async function iniciar() {
   estado.textContent = notaModoOffline() + (asistencia
     ? `Reporte del ${fecha} (${grado}) — con asistencia registrada.`
     : `Reporte del ${fecha} (${grado}) — en blanco, para llenar a mano.`);
+
+  ajustarAUnaPagina();
+}
+
+// Red de seguridad: si el reporte no cabe en una hoja A4 (cursos con muchos
+// estudiantes u horas), lo reduce hasta que quepa, en vez de saltar a una
+// segunda página. En cursos normales la escala se queda en 1.
+function ajustarAUnaPagina() {
+  const rep = document.getElementById("reporte");
+  // A4 (29.7cm) menos el padding de impresión (0.9cm arriba y abajo), a 96dpi.
+  const altoUtil = ((29.7 - 1.8) / 2.54) * 96;
+  let escala = 1;
+  rep.style.setProperty("--escala", escala);
+  while (rep.scrollHeight > altoUtil && escala > 0.7) {
+    escala = Math.round((escala - 0.02) * 100) / 100;
+    rep.style.setProperty("--escala", escala);
+  }
 }
 
 document.getElementById("btn-imprimir").addEventListener("click", () => window.print());

@@ -1,7 +1,11 @@
 /* Formato de los reportes — una página A4 vertical */
+/* Sin margen de página: el navegador dibuja su encabezado (fecha, hora, URL,
+   nº de página) dentro del margen; al quitarlo desaparece sin que el usuario
+   tenga que tocar el diálogo de impresión. El margen real se aplica como
+   padding de #reporte en el bloque @media print. */
 @page {
   size: A4 portrait;
-  margin: 2.54cm;
+  margin: 0;
 }
 
 body {
@@ -31,7 +35,13 @@ body {
 
 .barra-herramientas span { color: #fff; font-size: 0.85rem; }
 
-#reporte { padding: 0 0.5rem; }
+/* --escala la ajusta js/imprimir.js sólo si el reporte no cabe en una hoja.
+   Se usa zoom (y no transform) porque reflowea de verdad y el navegador
+   pagina sobre el resultado. */
+#reporte {
+  padding: 0 0.5rem;
+  zoom: var(--escala, 1);
+}
 
 /* Encabezado */
 .encabezado {
@@ -83,6 +93,7 @@ body {
 .tabla td.centro { text-align: center; }
 .tabla td.nombre { font-size: 7.5pt; }
 
+.tabla-horario-dia { table-layout: fixed; }
 .tabla-horario-dia td { height: 13pt; }
 
 .tabla-nomina td { height: 11pt; }
@@ -114,5 +125,5 @@ body {
   .no-imprimir { display: none !important; }
   #toasts { display: none !important; }
   body { background: #fff; }
-  #reporte { padding: 0; }
+  #reporte { padding: 0.9cm 1cm; }
 }

@@ -33,8 +33,9 @@ export async function initAsistencia(contenedor, ctx) {
         <label for="r-hasta">hasta</label>
         <input type="date" id="r-hasta">
       </div>
-      <div>
+      <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
         <button class="secundario" id="btn-reporte">Generar reporte por rango</button>
+        <button class="secundario" id="btn-imprimir">Imprimir reporte del día</button>
       </div>
       <p class="info" style="width:100%; margin:0;">
         Consolidado del grado seleccionado entre dos fechas, listo para imprimir o exportar a CSV.
@@ -65,7 +66,6 @@ export async function initAsistencia(contenedor, ctx) {
       <div class="fila-acciones">
         <button class="secundario" id="btn-todos-p">Todos presentes</button>
         <button class="primario" id="btn-guardar">Guardar asistencia</button>
-        <button class="secundario" id="btn-imprimir">Imprimir reporte</button>
         <span id="mensaje" class="mensaje-ok"></span>
       </div>
       <p class="info">
@@ -391,6 +391,9 @@ export async function initAsistencia(contenedor, ctx) {
   contenedor.querySelector("#btn-imprimir").addEventListener("click", () => {
     const grado = selGrado.value;
     const fecha = inpFecha.value;
+    if (!grado || !fecha) {
+      return notificarError("Elija grado y fecha antes de imprimir.");
+    }
     const url = `imprimir.html?grado=${encodeURIComponent(grado)}&fecha=${encodeURIComponent(fecha)}`;
     window.open(url, "_blank");
   });

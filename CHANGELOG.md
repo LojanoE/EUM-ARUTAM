@@ -4,6 +4,27 @@ Historial de versiones de la app de Registro de Asistencia — UEM "Arutam".
 Versionado semántico: MAYOR.MENOR.PARCHE. La versión vigente está en
 `js/version.js` y cada versión tiene su tag de git (`vX.Y.Z`).
 
+## [1.10.0] — 2026-08-24
+
+### Cambiado
+- **Hoja de impresión de asistencia en una sola página** (`imprimir.html`,
+  `js/imprimir.js`, `css/print.css`):
+  - Se quita el margen de `@page` (lo movía Chrome a su propio encabezado de
+    fecha/hora/URL/página) y se recupera como padding interno del reporte, lo
+    que devuelve espacio vertical útil.
+  - En la tabla de horario del día, la columna **TEMA** pasa a ser la más
+    ancha (antes era la más angosta por no tener contenido de referencia) y
+    **Nº** queda al final, angosta; se fijan anchos por columna con
+    `<colgroup>` y `table-layout: fixed`.
+  - Se quita la columna **DÍAS ASISTIDOS** de la nómina, junto con
+    `diasAsistidosAcumulados()`, que leía toda la colección `asistencias` de
+    Firestore en cada impresión.
+  - Auto-ajuste de escala como red de seguridad para cursos con muchos
+    estudiantes u horas, para que el reporte siga cabiendo en una hoja A4.
+- El botón **"Imprimir reporte"** se mueve del panel de asistencia (donde
+  quedaba junto a "Guardar asistencia") al panel de reportes, junto a
+  "Generar reporte por rango" (`js/mod-asistencia.js`).
+
 ## [1.9.0] — 2026-08-24
 
 ### Agregado
