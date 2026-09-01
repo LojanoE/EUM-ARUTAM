@@ -35,12 +35,18 @@ body {
 
 .barra-herramientas span { color: #fff; font-size: 0.85rem; }
 
-/* --escala la ajusta js/imprimir.js sólo si el reporte no cabe en una hoja.
-   Se usa zoom (y no transform) porque reflowea de verdad y el navegador
-   pagina sobre el resultado. */
-#reporte {
+/* --escala la ajusta js/hoja-asistencia.js (ajustarAUnaPagina) sólo si la
+   hoja no cabe en una página. Se usa zoom (y no transform) porque reflowea
+   de verdad y el navegador pagina sobre el resultado. Cada hoja de la
+   impresión por lote tiene su propia --escala independiente. */
+.hoja-asistencia {
   padding: 0 0.5rem;
   zoom: var(--escala, 1);
+}
+
+/* Impresión por lote (imprimir-lote.html): una hoja por página. */
+#lote .hoja-asistencia:not(:last-child) {
+  page-break-after: always;
 }
 
 /* Encabezado */
@@ -125,5 +131,5 @@ body {
   .no-imprimir { display: none !important; }
   #toasts { display: none !important; }
   body { background: #fff; }
-  #reporte { padding: 0.9cm 1cm; }
+  .hoja-asistencia { padding: 0.9cm 1cm; }
 }

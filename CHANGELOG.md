@@ -4,6 +4,27 @@ Historial de versiones de la app de Registro de Asistencia — UEM "Arutam".
 Versionado semántico: MAYOR.MENOR.PARCHE. La versión vigente está en
 `js/version.js` y cada versión tiene su tag de git (`vX.Y.Z`).
 
+## [1.11.0] — 2026-09-01
+
+### Agregado
+- **Imprimir en blanco** (`js/mod-asistencia.js`, `js/imprimir.js`): casilla
+  "Imprimir en blanco" junto al botón "Imprimir reporte del día" que fuerza la
+  hoja vacía aunque ya haya asistencia guardada ese día — para reimprimir y
+  entregar de nuevo al profesor sin las marcas ya registradas.
+- **Impresión por lote** (`imprimir-lote.html`, `js/imprimir-lote.js`): nuevo
+  botón "Imprimir por lote…" que abre un selector de fecha y varios grados y
+  genera, en una sola pestaña, todas las hojas seleccionadas (una por grado,
+  con salto de página entre cada una) listas para imprimir o guardar como PDF
+  en un solo trabajo de impresión. Pensado para que un inspector reparta hojas
+  en blanco a varios profesores a la vez para que tomen lista a mano. Los
+  grados sin horario ese día se omiten con un aviso, sin interrumpir el resto
+  del lote.
+
+### Cambiado
+- El render de una hoja de asistencia (`imprimir.html`) se extrae a
+  `js/hoja-asistencia.js`, compartido ahora entre la impresión individual y
+  la impresión por lote, para que ambas usen exactamente el mismo formato.
+
 ## [1.10.0] — 2026-08-24
 
 ### Cambiado

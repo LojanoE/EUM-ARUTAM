@@ -1,10 +1,8 @@
 // Arma el reporte diario con el formato de la hoja IMPRIMIR de los Excel.
 import { exigirSesion } from "./auth.js";
-import {
-  obtenerEstudiantes, obtenerHorario, obtenerTutor, obtenerAsistencia,
-  firmaDelUsuario, diaDeFecha, esc
-} from "./data.js";
+import { firmaDelUsuario } from "./data.js";
 import { notaModoOffline } from "./offline.js";
+import { plantillaHojaHTML, cargarDatosHoja, pintarHoja, ajustarAUnaPagina } from "./hoja-asistencia.js";
 
 const sesion = exigirSesion();
 if (!sesion) throw new Error("Sin sesión");
@@ -12,131 +10,40 @@ if (!sesion) throw new Error("Sin sesión");
 const params = new URLSearchParams(location.search);
 const grado = params.get("grado");
 const fecha = params.get("fecha");
+const vacio = params.get("vacio") === "1";
 const estado = document.getElementById("estado");
-
-const MESES = ["ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO",
-  "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"];
-
-function fechaLarga(f) {
-  const [y, m, d] = f.split("-").map(Number);
-  return `${d} DE ${MESES[m - 1]} DE ${y}`;
-}
-
-function contar(marcas, codigo) {
-  return Object.values(marcas || {}).filter(v => v === codigo).length;
-}
+const reporte = document.getElementById("reporte");
 
 async function iniciar() {
   if (!grado || !fecha) {
     estado.textContent = "Faltan parámetros: grado y fecha.";
     return;
   }
-  const dia = diaDeFecha(fecha);
-  if (!dia) {
-    estado.textContent = "La fecha es fin de semana; no hay clases.";
+
+  reporte.innerHTML = plantillaHojaHTML();
+
+  const [datos, firma] = await Promise.all([
+    cargarDatosHoja({ grado, fecha, vacio }),
+    firmaDelUsuario(sesion.usuario),
+  ]);
+
+  if (!datos.ok) {
+    estado.textContent = datos.motivo;
     return;
   }
 
-  const [estudiantes, horario, tutor, asistencia, firma] = await Promise.all([
-    obtenerEstudiantes(grado),
-    obtenerHorario(grado, dia),
-    obtenerTutor(grado),
-    obtenerAsistencia(grado, fecha),
-    firmaDelUsuario(sesion.usuario),
-  ]);
-  const registros = asistencia?.registros || {};
+  pintarHoja(reporte, datos, firma);
+  reporte.hidden = false;
 
-  // Firma del usuario que genera el documento
-  document.getElementById("f-nombre").textContent = firma.nombre;
-  document.getElementById("f-cargo").textContent = firma.cargo;
+  estado.textContent = notaModoOffline() + (
+    vacio
+      ? `Reporte del ${fecha} (${grado}) — en blanco a pedido (aunque haya asistencia guardada).`
+      : datos.asistencia
+        ? `Reporte del ${fecha} (${grado}) — con asistencia registrada.`
+        : `Reporte del ${fecha} (${grado}) — en blanco, para llenar a mano.`
+  );
 
-  // Encabezado
-  document.getElementById("d-grado").textContent = grado;
-  document.getElementById("d-fecha").textContent = fechaLarga(fecha);
-  document.getElementById("d-documento").textContent =
-    `${fecha.replaceAll("-", "")}_${grado}`;
-  document.getElementById("d-dia").textContent = dia;
-  document.getElementById("i-grado").textContent = grado;
-  document.getElementById("i-seccion").textContent = tutor?.seccion || "VESPERTINA";
-  document.getElementById("i-tutor").textContent = tutor?.tutor || "";
-
-  // Horario del día
-  document.getElementById("tbody-horario").innerHTML = horario.map((h, i) => `
-    <tr>
-      <td class="centro">${i + 1}</td>
-      <td>${esc(h.asignatura)}</td>
-      <td class="centro">${esc(h.tiempo)}</td>
-      <td></td>
-      <td>${esc(h.docente)}</td>
-      <td></td>
-      <td></td>
-    </tr>`).join("");
-
-  // Cabecera de nómina
-  const numHoras = horario.length;
-  let filaFecha = `<tr><th rowspan="3">Nº</th><th rowspan="3">NÓMINA DE ESTUDIANTES</th>
-    <th colspan="${numHoras}">${fechaLarga(fecha)}</th><th colspan="3">TOTAL</th></tr>`;
-  let filaHoras = `<tr><th colspan="${numHoras}">Horas</th>
-    <th rowspan="2">JUSTIFICADO</th><th rowspan="2">INJUSTIFICADO</th>
-    <th rowspan="2">ATRASO</th></tr>`;
-  let filaNums = "<tr>";
-  for (let h = 1; h <= numHoras; h++) filaNums += `<th>${h}ª</th>`;
-  filaNums += "</tr>";
-  document.getElementById("thead-nomina").innerHTML = filaFecha + filaHoras + filaNums;
-
-  // Nómina
-  document.getElementById("tbody-nomina").innerHTML = estudiantes.map((est, idx) => {
-    const marcas = registros[est.id] || {};
-    let celdas = "";
-    for (let h = 1; h <= numHoras; h++) {
-      celdas += `<td class="centro">${marcas[h] || ""}</td>`;
-    }
-    const hayMarcas = Object.keys(marcas).length > 0;
-    return `<tr>
-      <td class="centro">${idx + 1}</td>
-      <td class="nombre">${esc(est.nombre)}</td>
-      ${celdas}
-      <td class="centro">${hayMarcas ? contar(marcas, "J") : ""}</td>
-      <td class="centro">${hayMarcas ? contar(marcas, "I") : ""}</td>
-      <td class="centro">${hayMarcas ? contar(marcas, "A") : ""}</td>
-    </tr>`;
-  }).join("");
-
-  // Línea de observaciones: se autorrellena con los comentarios del día
-  // (Nº y nombre + motivo); si no hay, queda la línea de puntos.
-  const observaciones = asistencia?.observaciones || {};
-  const partes = [];
-  estudiantes.forEach((est, idx) => {
-    const texto = observaciones[est.id];
-    if (texto) partes.push(`${idx + 1} ${est.nombre}: ${texto}`);
-  });
-  if (partes.length > 0) {
-    const span = document.getElementById("obs-linea");
-    span.classList.remove("linea-puntos");
-    span.textContent = partes.join(";  ") + ".";
-  }
-
-  document.getElementById("reporte").hidden = false;
-  estado.textContent = notaModoOffline() + (asistencia
-    ? `Reporte del ${fecha} (${grado}) — con asistencia registrada.`
-    : `Reporte del ${fecha} (${grado}) — en blanco, para llenar a mano.`);
-
-  ajustarAUnaPagina();
-}
-
-// Red de seguridad: si el reporte no cabe en una hoja A4 (cursos con muchos
-// estudiantes u horas), lo reduce hasta que quepa, en vez de saltar a una
-// segunda página. En cursos normales la escala se queda en 1.
-function ajustarAUnaPagina() {
-  const rep = document.getElementById("reporte");
-  // A4 (29.7cm) menos el padding de impresión (0.9cm arriba y abajo), a 96dpi.
-  const altoUtil = ((29.7 - 1.8) / 2.54) * 96;
-  let escala = 1;
-  rep.style.setProperty("--escala", escala);
-  while (rep.scrollHeight > altoUtil && escala > 0.7) {
-    escala = Math.round((escala - 0.02) * 100) / 100;
-    rep.style.setProperty("--escala", escala);
-  }
+  ajustarAUnaPagina(reporte);
 }
 
 document.getElementById("btn-imprimir").addEventListener("click", () => window.print());

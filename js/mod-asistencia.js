@@ -33,12 +33,20 @@ export async function initAsistencia(contenedor, ctx) {
         <label for="r-hasta">hasta</label>
         <input type="date" id="r-hasta">
       </div>
-      <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
+      <div style="display:flex; gap:0.6rem; flex-wrap:wrap; align-items:center;">
         <button class="secundario" id="btn-reporte">Generar reporte por rango</button>
         <button class="secundario" id="btn-imprimir">Imprimir reporte del día</button>
+        <label class="check-en-linea">
+          <input type="checkbox" id="chk-imprimir-vacio">
+          Imprimir en blanco
+        </label>
+        <button class="secundario" id="btn-imprimir-lote">Imprimir por lote…</button>
       </div>
       <p class="info" style="width:100%; margin:0;">
         Consolidado del grado seleccionado entre dos fechas, listo para imprimir o exportar a CSV.
+        "Imprimir en blanco" fuerza la hoja vacía aunque ya haya asistencia guardada ese día
+        (para reimprimir y entregar de nuevo). "Imprimir por lote" genera de una vez las hojas
+        de varios grados para un mismo día.
       </p>
     </div>
 
@@ -388,13 +396,26 @@ export async function initAsistencia(contenedor, ctx) {
     }
   });
 
+  const chkVacio = contenedor.querySelector("#chk-imprimir-vacio");
+
   contenedor.querySelector("#btn-imprimir").addEventListener("click", () => {
     const grado = selGrado.value;
     const fecha = inpFecha.value;
     if (!grado || !fecha) {
       return notificarError("Elija grado y fecha antes de imprimir.");
     }
-    const url = `imprimir.html?grado=${encodeURIComponent(grado)}&fecha=${encodeURIComponent(fecha)}`;
+    let url = `imprimir.html?grado=${encodeURIComponent(grado)}&fecha=${encodeURIComponent(fecha)}`;
+    if (chkVacio.checked) url += "&vacio=1";
+    window.open(url, "_blank");
+  });
+
+  contenedor.querySelector("#btn-imprimir-lote").addEventListener("click", async () => {
+    const seleccion = await seleccionarLote(grados, inpFecha.value);
+    if (!seleccion) return;
+    const { fecha, gradosElegidos, vacio } = seleccion;
+    let url = `imprimir-lote.html?fecha=${encodeURIComponent(fecha)}` +
+      `&grados=${gradosElegidos.map(encodeURIComponent).join(",")}`;
+    if (vacio) url += "&vacio=1";
     window.open(url, "_blank");
   });
 
@@ -421,4 +442,74 @@ export async function initAsistencia(contenedor, ctx) {
   });
 
   await cargar();
+}
+
+// Modal para elegir fecha + varios grados antes de abrir imprimir-lote.html.
+// Mismo patrón visual que confirmarAccion() de notificaciones.js. Devuelve
+// { fecha, gradosElegidos, vacio } o null si el usuario cancela.
+function seleccionarLote(grados, fechaSugerida) {
+  return new Promise((resolve) => {
+    const overlay = document.createElement("div");
+    overlay.className = "modal-overlay";
+    overlay.innerHTML = `
+      <div class="modal-confirmar modal-lote" role="dialog" aria-modal="true">
+        <h3 style="margin-top:0;">Imprimir asistencia por lote</h3>
+        <div>
+          <label for="lote-fecha">Fecha</label>
+          <input type="date" id="lote-fecha">
+        </div>
+        <p style="margin:0.9rem 0 0.3rem;">
+          <label><input type="checkbox" id="lote-todos"> Seleccionar todos los grados</label>
+        </p>
+        <div class="modal-lista-grados">
+          ${grados.map(g => `
+            <label>
+              <input type="checkbox" class="lote-grado" value="${esc(g)}">
+              ${esc(g)}
+            </label>`).join("")}
+        </div>
+        <p style="margin:0.9rem 0 0.3rem;">
+          <label>
+            <input type="checkbox" id="lote-vacio" checked>
+            Imprimir en blanco (para tomar lista a mano)
+          </label>
+        </p>
+        <div class="modal-acciones">
+          <button type="button" class="secundario" data-modal-cancelar>Cancelar</button>
+          <button type="button" class="primario" data-modal-confirmar>Imprimir</button>
+        </div>
+      </div>`;
+    document.body.appendChild(overlay);
+
+    const inpLoteFecha = overlay.querySelector("#lote-fecha");
+    inpLoteFecha.value = fechaSugerida || fechaHoy();
+    const chkTodos = overlay.querySelector("#lote-todos");
+    const chksGrado = [...overlay.querySelectorAll(".lote-grado")];
+    const chkVacio = overlay.querySelector("#lote-vacio");
+
+    chkTodos.addEventListener("change", () => {
+      chksGrado.forEach(c => { c.checked = chkTodos.checked; });
+    });
+
+    function cerrar(resultado) {
+      document.removeEventListener("keydown", alTeclado);
+      overlay.remove();
+      resolve(resultado);
+    }
+    function alTeclado(e) {
+      if (e.key === "Escape") cerrar(null);
+    }
+
+    overlay.querySelector("[data-modal-confirmar]").addEventListener("click", () => {
+      const fecha = inpLoteFecha.value;
+      const gradosElegidos = chksGrado.filter(c => c.checked).map(c => c.value);
+      if (!fecha) return notificarError("Elija la fecha a imprimir.");
+      if (gradosElegidos.length === 0) return notificarError("Elija al menos un grado.");
+      cerrar({ fecha, gradosElegidos, vacio: chkVacio.checked });
+    });
+    overlay.querySelector("[data-modal-cancelar]").addEventListener("click", () => cerrar(null));
+    overlay.addEventListener("click", (e) => { if (e.target === overlay) cerrar(null); });
+    document.addEventListener("keydown", alTeclado);
+    inpLoteFecha.focus();
+  });
 }

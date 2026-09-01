@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Reporte de Asistencia — UEM "Arutam"</title>
+  <title>Impresión por lote — UEM "Arutam"</title>
   <link rel="stylesheet" href="css/print.css">
 </head>
 <body>
@@ -12,13 +12,13 @@
     <span id="estado">Cargando datos...</span>
   </div>
 
-  <!-- Contenido pintado por js/imprimir.js con hoja-asistencia.js -->
-  <div id="reporte" class="hoja-asistencia" hidden></div>
+  <!-- Una hoja por grado, pintada por js/imprimir-lote.js con hoja-asistencia.js -->
+  <div id="lote"></div>
 
   <script>
     // Service worker: permite abrir esta hoja sin internet.
     if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
   </script>
-  <script type="module" src="js/imprimir.js"></script>
+  <script type="module" src="js/imprimir-lote.js"></script>
 </body>
 </html>

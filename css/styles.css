@@ -149,6 +149,18 @@ body {
 .aviso { color: var(--rojo); font-weight: 600; }
 .info { color: #5a6675; font-size: 0.9rem; }
 
+/* Casilla en línea junto a un botón (p. ej. "Imprimir en blanco"), distinta
+   de las etiquetas de .selectores (que van en bloque, arriba del campo). */
+.check-en-linea {
+  display: flex !important;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.9rem;
+  font-weight: 400 !important;
+  margin-bottom: 0 !important;
+  cursor: pointer;
+}
+
 /* Tabla de horario del día */
 .tabla-horario { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
 .tabla-horario th, .tabla-horario td {
@@ -495,6 +507,32 @@ button.secundario {
   display: flex;
   justify-content: flex-end;
   gap: 0.6rem;
+}
+
+/* Modal "Imprimir por lote" */
+.modal-lote { max-width: 24rem; text-align: left; }
+.modal-lote label { cursor: pointer; }
+.modal-lote #lote-fecha {
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--borde);
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+
+.modal-lista-grados {
+  max-height: 12rem;
+  overflow-y: auto;
+  border: 1px solid var(--borde);
+  border-radius: 6px;
+  padding: 0.4rem 0.6rem;
+}
+
+.modal-lista-grados label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.15rem 0;
+  font-size: 0.9rem;
 }
 
 button.peligro {
