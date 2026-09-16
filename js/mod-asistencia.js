@@ -111,6 +111,13 @@ export async function initAsistencia(contenedor, ctx) {
     .map(g => `<option value="${esc(g)}">${esc(g)}</option>`)
     .join("");
 
+  // Llegada desde el dashboard: abre directamente el grado (y el día) que se
+  // pulsó allí, sin obligar a repetir la selección.
+  if (ctx?.params?.grado && grados.includes(ctx.params.grado)) {
+    selGrado.value = ctx.params.grado;
+  }
+  if (ctx?.params?.fecha) inpFecha.value = ctx.params.fecha;
+
   function marcarSucio() {
     sucio = true;
     mensaje.textContent = "Cambios sin guardar.";

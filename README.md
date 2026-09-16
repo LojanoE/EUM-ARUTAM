@@ -1,11 +1,13 @@
 # EUM-ARUTAM — Registro de Asistencia
 
 Aplicación web estática para registrar e imprimir la asistencia diaria de la
-sección vespertina de la Unidad Educativa del Milenio "Arutam"
+sección vespertina de la Unidad Educativa "Arutam"
 (8vo–10mo EGB "A" y 1ro–3ro BGU "A"). Reemplaza los Excel de `DOC/`.
 
 - **Alojamiento**: GitHub Pages (archivos estáticos, sin build).
-- **Base de datos**: Firebase Firestore (proyecto `uem-arutam`).
+- **Base de datos**: Firebase Firestore (proyecto `uem-arutam`; el id viene
+  del nombre anterior de la institución y no se puede cambiar sin migrar los
+  datos, por eso se mantiene).
 - **Login**: usuario/contraseña contra la colección `usuarios` (sin Firebase Auth).
 
 ## Estructura
@@ -30,10 +32,14 @@ firebase.json, firestore.rules  Configuración de reglas de Firestore
 
 ### Módulos y permisos
 
-- **Dashboard**: tarjetas por grado, estado de la asistencia de hoy, alertas
-  de inasistencia (3+ injustificadas seguidas o <80% de asistencia) y ranking
-  de estudiantes con más inasistencias. Alertas y ranking se calculan sobre
-  los últimos 90 días; no incluyen estudiantes retirados.
+- **Dashboard**: resumen del día arriba (cuántos grados llevan registrada la
+  asistencia, cuáles faltan, presentes/ausentes y % de asistencia de hoy),
+  una tarjeta por grado con su estado del día y un botón que lleva directo a
+  registrarlo o corregirlo, y debajo el seguimiento de inasistencias:
+  alertas (3+ injustificadas seguidas o <80% de asistencia) y ranking de
+  estudiantes con más horas perdidas, ambos filtrables por grado y con enlace
+  a la ficha del estudiante. Alertas y ranking se calculan sobre los últimos
+  90 días; no incluyen estudiantes retirados.
 - **Asistencia**: registro diario por grado y fecha, con marcas por hora
   (P/I/J/A/N), igual que la hoja IMPRIMIR del Excel. Los días nuevos se
   prellenan con todos presentes para registrar solo las excepciones, y cada
@@ -64,6 +70,11 @@ Los roles se definen en el campo `rol` de la colección `usuarios`
 Para agregar un módulo nuevo: crear `js/mod-nombre.js` que exporte
 `initNombre(contenedor, ctx)`, agregar su entrada en `MODULOS` de `js/app.js`
 y un botón `data-modulo="nombre"` en el menú de `app.html`.
+
+El `ctx` que reciben los módulos trae `sesion`, `esAdmin`, `irA(modulo,
+params)` para abrir otro módulo y `params` con lo que envió quien abrió este
+(p. ej. el dashboard manda `{ grado, fecha }` a Asistencia y
+`{ estudianteId }` a Estudiantes). Es `null` al entrar por el menú.
 
 Códigos de asistencia: `P` Presente, `I` Injustificado, `J` Justificado,
 `A` Atraso, `N` No hay clases.

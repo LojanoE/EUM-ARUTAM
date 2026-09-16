@@ -25,7 +25,7 @@ export function plantillaHojaHTML() {
   return `
     <div class="encabezado">
       <div class="enc-izquierda">
-        <p class="linea-principal">UNIDAD EDUCATIVA DEL MILENIO "ARUTAM"</p>
+        <p class="linea-principal">UNIDAD EDUCATIVA "ARUTAM"</p>
         <p>EL PANGUI - ZAMORA CHINCHIPE - ECUADOR</p>
         <p>INSPECCIÓN PERIODO ACADÉMICO 2026 - 2027</p>
       </div>

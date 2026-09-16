@@ -271,4 +271,10 @@ export async function initEstudiantes(contenedor, ctx) {
   }
 
   pintarTabla();
+
+  // Llegada desde el dashboard (alerta o ranking): abre la ficha directamente.
+  if (ctx?.params?.estudianteId) {
+    const est = estudiantes.find(x => x.id === ctx.params.estudianteId);
+    if (est) pintarFicha(est);
+  }
 }

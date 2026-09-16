@@ -1,4 +1,4 @@
-/* Estilos generales — UEM Arutam, Registro de Asistencia */
+/* Estilos generales — UE Arutam, Registro de Asistencia */
 :root {
   --azul: #1a3a6b;
   --azul-claro: #2b5aa6;
@@ -6,6 +6,8 @@
   --borde: #c9d2de;
   --verde: #1e7d32;
   --rojo: #b3261e;
+  --ambar: #a8660a;
+  --texto-suave: #5a6675;
 }
 
 * { box-sizing: border-box; }
@@ -342,28 +344,298 @@ button.secundario {
 .titulo-modulo { margin: 0 0 1rem; font-size: 1.25rem; color: var(--azul); }
 
 /* ---------- Dashboard ---------- */
-.tarjetas {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+/* La pantalla se lee de arriba abajo: qué falta hoy → estado por grado →
+   seguimiento histórico. El color solo indica estado (verde listo, ámbar
+   pendiente, rojo alerta), nunca decora. */
+
+.dash-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
   gap: 1rem;
-  margin-bottom: 1.2rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
 }
 
-.tarjeta {
+.dash-cabecera .titulo-modulo { margin-bottom: 0; }
+
+.dash-fecha {
+  margin: 0.15rem 0 0;
+  font-size: 0.9rem;
+  color: var(--texto-suave);
+}
+
+/* "martes, 15 de septiembre" viene en minúsculas del formateador de fechas;
+   se capitaliza solo la inicial (no cada palabra, como haría `capitalize`). */
+.dash-fecha::first-letter { text-transform: uppercase; }
+
+.dash-subtitulo {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--azul);
+}
+
+.panel-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.6rem;
+}
+
+.panel-titulo {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--azul);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dash-filtro {
+  font-size: 0.85rem;
+  color: var(--texto-suave);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.dash-filtro select {
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--borde);
+  border-radius: 6px;
+  font-size: 0.88rem;
+}
+
+/* Franja de estado del día */
+.dash-hero {
   background: #fff;
   border: 1px solid var(--borde);
-  border-radius: 8px;
-  padding: 1rem;
+  border-left: 6px solid var(--azul);
+  border-radius: 10px;
+  padding: 1.1rem 1.3rem;
+  margin-bottom: 1.4rem;
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.tarjeta h3 { margin: 0 0 0.4rem; font-size: 0.95rem; color: var(--azul); }
+.dash-hero.ok { border-left-color: var(--verde); }
+.dash-hero.pendiente { border-left-color: var(--ambar); }
+.dash-hero.sin-clases { border-left-color: #98a2b0; }
 
-.tarjeta .numero { font-size: 1.6rem; font-weight: 700; }
+.hero-principal { flex: 1 1 22rem; min-width: 15rem; }
 
-.tarjeta .detalle { font-size: 0.8rem; color: #5a6675; margin-top: 0.2rem; }
+.hero-etiqueta {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--texto-suave);
+}
 
-.tarjeta .estado-ok { color: var(--verde); font-weight: 600; }
-.tarjeta .estado-pendiente { color: var(--rojo); font-weight: 600; }
+.hero-titular {
+  margin: 0.15rem 0 0.7rem;
+  font-size: 1.45rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.hero-pie {
+  margin: 0.55rem 0 0;
+  font-size: 0.85rem;
+  color: var(--texto-suave);
+}
+
+.hero-kpis { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+
+.kpi {
+  flex: 1 1 6.4rem;
+  min-width: 6.4rem;
+  background: var(--gris-fondo);
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 0.6rem 0.8rem;
+  text-align: center;
+}
+
+.kpi-num { display: block; font-size: 1.4rem; font-weight: 700; line-height: 1.15; }
+
+.kpi-lbl {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--texto-suave);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+/* Modificadores propios del KPI: no se llaman "ok"/"alerta" a secas porque
+   `.alerta` es la fila de la lista de alertas y le impondría su estilo. */
+.kpi.kpi-ok .kpi-num { color: var(--verde); }
+.kpi.kpi-alerta .kpi-num { color: var(--rojo); }
+
+button.kpi { font: inherit; cursor: pointer; border-color: var(--borde); }
+button.kpi:hover { background: #e7ecf4; }
+
+/* Barra de progreso reutilizable (hero, tarjetas y ranking) */
+.barra {
+  height: 8px;
+  border-radius: 999px;
+  background: #e3e8f0;
+  overflow: hidden;
+}
+
+.barra > span { display: block; height: 100%; background: var(--azul); border-radius: 999px; }
+.barra.ok > span { background: var(--verde); }
+.barra.aviso > span { background: var(--ambar); }
+.barra.peligro > span { background: var(--rojo); }
+
+/* Tarjetas de grado */
+.grid-grados {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: 0.9rem;
+  margin-bottom: 1.6rem;
+}
+
+.tarjeta-grado {
+  background: #fff;
+  border: 1px solid var(--borde);
+  border-top: 4px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 0.85rem 0.95rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.tarjeta-grado.ok { border-top-color: var(--verde); }
+.tarjeta-grado.pendiente { border-top-color: var(--ambar); }
+.tarjeta-grado.sin-clases { border-top-color: #98a2b0; }
+
+.tg-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.tg-cabecera h3 { margin: 0; font-size: 0.95rem; color: var(--azul); }
+
+.tg-cuerpo { display: flex; flex-direction: column; gap: 0.4rem; }
+
+.tg-cifra { margin: 0; font-size: 1.35rem; font-weight: 700; line-height: 1.1; }
+.tg-cifra small { font-size: 0.8rem; font-weight: 400; color: var(--texto-suave); }
+
+.tg-meta { margin: 0; font-size: 0.78rem; color: var(--texto-suave); }
+.tg-meta-alerta { color: var(--rojo); font-weight: 600; }
+
+.tg-pie { margin-top: auto; }
+.tg-pie .btn-mini { width: 100%; padding: 0.4rem; }
+
+/* Etiquetas de estado */
+.chip {
+  display: inline-block;
+  padding: 0.12rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.chip-ok { background: #e6f4e8; color: var(--verde); }
+.chip-aviso { background: #fff3da; color: var(--ambar); }
+.chip-peligro { background: #fdecea; color: var(--rojo); }
+.chip-neutro { background: #eceff3; color: #5a6572; }
+
+/* Lista de alertas (sustituye a la tabla de 5 columnas) */
+.lista-alertas {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.alerta {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--borde);
+  border-left: 4px solid var(--ambar);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.alerta:hover, .alerta:focus { background: #f2f6fc; outline: none; }
+.alerta:focus { box-shadow: 0 0 0 2px rgba(43, 90, 166, 0.35); }
+.alerta.critica { border-left-color: var(--rojo); background: #fffafa; }
+.alerta.critica:hover, .alerta.critica:focus { background: #fdeeec; }
+
+.alerta-info { flex: 1 1 14rem; min-width: 0; }
+.alerta-nombre { display: block; font-weight: 600; font-size: 0.9rem; }
+.alerta-grado { display: block; font-size: 0.78rem; color: var(--texto-suave); }
+.alerta-motivos { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+
+.alerta-ver {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--azul);
+  white-space: nowrap;
+  margin-left: auto;
+}
+
+/* Celda con barra del ranking: barra proporcional + cifra a la derecha */
+.celda-barra {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 8rem;
+}
+
+.celda-barra .barra { flex: 1; }
+
+.celda-barra-num {
+  font-size: 0.78rem;
+  color: var(--texto-suave);
+  white-space: nowrap;
+}
+
+/* Estado vacío de un panel */
+.vacio {
+  margin: 0;
+  padding: 1.2rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--texto-suave);
+  background: var(--gris-fondo);
+  border-radius: 8px;
+}
+
+/* Botón de texto ("ver todas") */
+.btn-enlace {
+  margin-top: 0.7rem;
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--azul);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.btn-mini.destacado { background: var(--azul); color: #fff; }
+.btn-mini.destacado:hover { background: var(--azul-claro); border-color: var(--azul-claro); }
 
 /* ---------- Tablas de gestión (estudiantes / horarios / ranking) ---------- */
 .tabla-gestion { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
@@ -577,6 +849,17 @@ button.peligro:hover { background: #8f1d17; }
   .nav-item { border-left: none; border-bottom: 3px solid transparent; }
   .nav-item.activo { border-bottom-color: #fff; }
   .sidebar-pie { flex-direction: row; align-items: center; gap: 0.8rem; }
+
+  /* Dashboard: la franja del día se apila y los indicadores pasan a una
+     rejilla de 2 columnas para no quedar en una fila ilegible. */
+  /* En columna, la base de 22rem de `.hero-principal` se aplicaría a la
+     altura y dejaría un hueco enorme: se vuelve a base automática. */
+  .dash-hero { flex-direction: column; align-items: stretch; gap: 1rem; }
+  .hero-principal { flex: 0 1 auto; }
+  .hero-kpis { display: grid; grid-template-columns: repeat(2, 1fr); }
+  .kpi { min-width: 0; }
+  .grid-grados { grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); }
+  .alerta-ver { margin-left: 0; }
 
   /* Nómina de asistencia: nombre más angosto y marcas más compactas para
      que quepan más horas visibles antes de tener que hacer scroll. */

@@ -1,8 +1,53 @@
 # Changelog
 
-Historial de versiones de la app de Registro de Asistencia — UEM "Arutam".
+Historial de versiones de la app de Registro de Asistencia — UE "Arutam".
 Versionado semántico: MAYOR.MENOR.PARCHE. La versión vigente está en
 `js/version.js` y cada versión tiene su tag de git (`vX.Y.Z`).
+
+## [1.13.0] — 2026-09-15
+
+### Cambiado
+- **Nuevo nombre de la institución**: pasa de UNIDAD EDUCATIVA DEL MILENIO
+  "ARUTAM" a **UNIDAD EDUCATIVA "ARUTAM"**. Se actualiza el encabezado de
+  todos los documentos impresos (`js/hoja-asistencia.js`, que alimenta la
+  impresión individual y por lote, y `reporte.html`) y el título del login
+  (`index.html`).
+- La sigla **UEM** (Unidad Educativa del Milenio) pasa a **UE** en el menú
+  lateral (`app.html`), en los títulos de pestaña de todas las páginas y en
+  el usuario inicial de `seed/usuarios.json`.
+- No cambian los identificadores técnicos que quedarían rotos si se tocaran:
+  el proyecto de Firebase (`uem-arutam`), las claves de sesión y de caché en
+  el navegador, y el nombre del repositorio.
+- **Rediseño del dashboard** (`js/mod-dashboard.js`, `css/styles.css`). Antes
+  la pantalla eran tarjetas con el número de estudiantes de cada grado y dos
+  tablas largas; la información del día (lo único que se usa a diario) quedaba
+  en letra pequeña y no se podía hacer nada desde ahí. Ahora:
+  - **Franja de estado del día** arriba de todo: "4 de 6 grados registrados"
+    con barra de avance, la lista de los grados que faltan, la fecha en
+    palabras y cuatro indicadores (presentes, ausentes, % de asistencia de hoy
+    y alertas activas). Distingue el fin de semana del feriado o suspensión.
+  - **Tarjetas por grado orientadas a hoy**: etiqueta de estado
+    (Registrado / Pendiente / Sin clases), presentes sobre el total con barra,
+    el desglose de ausencias del día y un botón que lleva directo a registrar
+    o corregir ese grado. El número de estudiantes pasa a dato secundario.
+  - **Alertas como lista** en vez de tabla de cinco columnas, con el motivo en
+    etiquetas y distinción visual entre alerta crítica (injustificadas
+    seguidas) y de seguimiento (porcentaje bajo).
+  - **Ranking más corto y legible**: barra proporcional de horas perdidas,
+    menos columnas y la aclaración de que son horas clase, no días.
+  - **Filtro por grado** para alertas y ranking, y botones "ver todas/todos"
+    para no volcar listas enteras de entrada.
+  - **Navegación directa**: la tarjeta de un grado abre el registro de
+    asistencia de ese grado y ese día; un estudiante de las alertas o del
+    ranking abre su ficha (también con Enter desde el teclado).
+  - Botón **Actualizar datos**, que descarta la caché en memoria y vuelve a
+    leer de Firestore.
+
+### Agregado
+- `ctx.irA(modulo, params)` en el shell (`js/app.js`): un módulo puede abrir
+  otro ya situado. `js/mod-asistencia.js` acepta `grado`/`fecha` y
+  `js/mod-estudiantes.js` acepta `estudianteId`.
+- `refrescarCache()` en `js/data.js` para forzar una relectura.
 
 ## [1.11.0] — 2026-09-01
 

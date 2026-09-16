@@ -23,7 +23,14 @@ window.addEventListener("error", (e) => {
 });
 
 // Contexto compartido con todos los módulos.
-const ctx = { sesion, esAdmin: sesion.rol === "admin" };
+// `irA` deja que un módulo abra otro (p. ej. el dashboard manda a registrar
+// la asistencia del grado pendiente) sin pasar por el menú lateral.
+const ctx = {
+  sesion,
+  esAdmin: sesion.rol === "admin",
+  params: null,
+  irA: (nombre, params) => mostrarModulo(nombre, params),
+};
 
 const MODULOS = {
   dashboard:   { titulo: "Dashboard",   init: initDashboard },
@@ -94,8 +101,12 @@ btnOffline.addEventListener("click", () => actualizarCacheOffline(true));
 pintarEstadoOffline(fechaUltimaPrecarga());
 actualizarCacheOffline(false);
 
-async function mostrarModulo(nombre) {
+// `params` permite abrir un módulo ya situado: el dashboard lo usa para
+// llevar al registro de un grado concreto o a la ficha de un estudiante.
+// Se entrega al módulo en `ctx.params` (null cuando se entra por el menú).
+async function mostrarModulo(nombre, params = null) {
   if (MODULOS[nombre].soloAdmin && !ctx.esAdmin) return;
+  ctx.params = params;
   document.querySelectorAll(".nav-item").forEach(b =>
     b.classList.toggle("activo", b.dataset.modulo === nombre));
   for (const key of Object.keys(MODULOS)) {

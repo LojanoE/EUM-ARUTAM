@@ -30,6 +30,12 @@ function invalidarCache() {
   _cache.clear();
 }
 
+// Fuerza que la próxima lectura vuelva a Firestore aunque la caché siga
+// vigente (botón "Actualizar datos" del dashboard).
+export function refrescarCache() {
+  invalidarCache();
+}
+
 export const DIAS_SEMANA = ["LUNES", "MARTES", "MIÉRCOLES", "JUEVES", "VIERNES"];
 export const CODIGOS = ["P", "I", "J", "A", "N"];
 export const CODIGOS_DESC = {
