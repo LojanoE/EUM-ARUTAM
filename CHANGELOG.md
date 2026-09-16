@@ -4,6 +4,25 @@ Historial de versiones de la app de Registro de Asistencia — UE "Arutam".
 Versionado semántico: MAYOR.MENOR.PARCHE. La versión vigente está en
 `js/version.js` y cada versión tiene su tag de git (`vX.Y.Z`).
 
+## [1.13.1] — 2026-09-15
+
+### Corregido
+- **La app seguía mostrando la versión anterior después de desplegar**
+  (`sw.js`). El service worker respondía "caché primero con revalidación":
+  servía la copia guardada y recién entonces descargaba la nueva, así que
+  tras cada despliegue la pantalla quedaba una recarga atrasada (se veía
+  v1.11.0 con v1.13.0 ya publicada). Ahora los archivos propios van **red
+  primero**, con un límite de espera de 4 s y caída a la copia guardada: con
+  internet siempre se ve la versión recién desplegada y sin internet la app y
+  las hojas de impresión siguen abriendo igual que antes. Los scripts del CDN
+  de Firebase se mantienen "caché primero" porque su URL incluye la versión.
+
+### Agregado
+- Aviso **"Hay una versión nueva de la aplicación — Recargar"**
+  (`js/app.js`, `js/notificaciones.js`): cuando se despliega una versión
+  mientras la app está abierta, aparece un aviso azul con botón. No recarga
+  solo, para no perder una nómina a medio llenar.
+
 ## [1.13.0] — 2026-09-15
 
 ### Cambiado

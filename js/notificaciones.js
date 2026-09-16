@@ -42,6 +42,28 @@ export function notificarError(texto, err) {
   mostrar(texto + detalle, "toast-error", DURACION_ERROR_MS);
 }
 
+// Aviso con acción (azul), p. ej. "hay una versión nueva → Recargar". No se
+// cierra solo: espera a que el usuario pulse el botón o descarte el aviso,
+// para no interrumpir lo que esté haciendo (una nómina a medio llenar).
+export function notificarAccion(texto, textoBoton, accion) {
+  const toast = document.createElement("div");
+  toast.className = "toast toast-aviso";
+  toast.textContent = texto + " ";
+  const boton = document.createElement("button");
+  boton.className = "toast-boton";
+  boton.textContent = textoBoton;
+  boton.addEventListener("click", (e) => {
+    e.stopPropagation();
+    accion();
+  });
+  toast.appendChild(boton);
+  toast.addEventListener("click", () => {
+    toast.classList.add("saliendo");
+    toast.addEventListener("transitionend", () => toast.remove(), { once: true });
+  });
+  contenedorToasts().appendChild(toast);
+}
+
 // Modal de confirmación: reemplaza el confirm() nativo del navegador por un
 // diálogo con el mismo estilo visual que el resto de la plataforma. Acepta
 // mensajes con saltos de línea (\n). Devuelve una Promise<boolean> — true si

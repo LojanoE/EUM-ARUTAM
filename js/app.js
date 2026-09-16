@@ -1,7 +1,7 @@
 // Shell de la plataforma: sesión, navegación entre módulos y permisos por rol.
 import { exigirSesion, cerrarSesion } from "./auth.js";
 import { APP_VERSION } from "./version.js";
-import { notificarError, notificarOk } from "./notificaciones.js";
+import { notificarAccion, notificarError, notificarOk } from "./notificaciones.js";
 import { prepararCacheOffline, fechaUltimaPrecarga } from "./offline.js";
 import { initDashboard } from "./mod-dashboard.js";
 import { initAsistencia } from "./mod-asistencia.js";
@@ -62,6 +62,16 @@ document.getElementById("btn-salir").addEventListener("click", () => {
 // Service worker: cachea los archivos estáticos para que las páginas
 // (incluidas las hojas de impresión) abran sin conexión.
 if ("serviceWorker" in navigator) {
+  // Si ya había un service worker al cargar, un cambio de controlador
+  // significa que se desplegó una versión nueva. No se recarga solo (podría
+  // haber una nómina sin guardar): se avisa y el usuario decide cuándo.
+  const habiaControlador = Boolean(navigator.serviceWorker.controller);
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (!habiaControlador) return;
+    notificarAccion(
+      "Hay una versión nueva de la aplicación.", "Recargar",
+      () => location.reload());
+  });
   navigator.serviceWorker.register("sw.js").catch(err =>
     console.warn("No se pudo registrar el service worker:", err));
 }
