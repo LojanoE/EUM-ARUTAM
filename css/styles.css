@@ -854,6 +854,28 @@ button.peligro:hover { background: #8f1d17; }
 .tabla-asistencia .col-num { left: 0; width: 2.2rem; }
 .tabla-asistencia .col-nombre { left: 2.2rem; box-shadow: 2px 0 4px rgba(0, 0, 0, 0.08); }
 
+/* ---------- Himnos ---------- */
+/* Una tarjeta por himno; en pantallas angostas se apilan solas. */
+.himnos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+  gap: 1rem;
+  align-items: start;
+}
+.himnos-grid .panel { margin-bottom: 0; }
+.himnos-grid h3 { margin: 0 0 0.8rem; color: var(--azul); font-size: 1.05rem; }
+.himno-video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  border-radius: 6px;
+  background: #000;
+}
+/* Los Shorts de YouTube son verticales. */
+.himno-video.vertical { aspect-ratio: 9 / 16; max-width: 360px; margin: 0 auto; }
+.himno-enlace { display: inline-block; margin-top: 0.6rem; color: var(--azul-claro); }
+
 /* ---------- Responsive ---------- */
 @media (max-width: 820px) {
   .layout { flex-direction: column; }

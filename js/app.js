@@ -7,6 +7,7 @@ import { initDashboard } from "./mod-dashboard.js";
 import { initAsistencia } from "./mod-asistencia.js";
 import { initEstudiantes } from "./mod-estudiantes.js";
 import { initHorarios } from "./mod-horarios.js";
+import { initHimnos } from "./mod-himnos.js";
 import { initGrados } from "./mod-grados.js";
 import { initUsuarios } from "./mod-usuarios.js";
 
@@ -37,6 +38,7 @@ const MODULOS = {
   asistencia:  { titulo: "Asistencia",  init: initAsistencia },
   estudiantes: { titulo: "Estudiantes", init: initEstudiantes },
   horarios:    { titulo: "Horarios",    init: initHorarios },
+  himnos:      { titulo: "Himnos",      init: initHimnos },
   grados:      { titulo: "Grados",      init: initGrados, soloAdmin: true },
   usuarios:    { titulo: "Usuarios",    init: initUsuarios, soloAdmin: true },
 };

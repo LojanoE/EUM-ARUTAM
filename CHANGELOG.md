@@ -4,6 +4,18 @@ Historial de versiones de la app de Registro de Asistencia — UE "Arutam".
 Versionado semántico: MAYOR.MENOR.PARCHE. La versión vigente está en
 `js/version.js` y cada versión tiene su tag de git (`vX.Y.Z`).
 
+## [1.14.0] — 2026-09-25
+
+### Agregado
+- **Sección "Himnos"** en el menú lateral (`js/mod-himnos.js`, `app.html`,
+  `js/app.js`, `css/styles.css`), visible para todos los roles. Reproduce
+  los dos himnos de la institución desde YouTube (el video normal en 16:9 y
+  el Short en vertical), con un enlace "Abrir en YouTube" por si el video no
+  se puede reproducir dentro de la app. Necesita internet: YouTube no se
+  guarda para uso offline.
+- Se agrega el módulo a la precarga del service worker y se sube el `CACHE`
+  a `uem-arutam-v6` (`sw.js`).
+
 ## [1.13.1] — 2026-09-15
 
 ### Corregido
