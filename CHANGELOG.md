@@ -4,6 +4,21 @@ Historial de versiones de la app de Registro de Asistencia — UE "Arutam".
 Versionado semántico: MAYOR.MENOR.PARCHE. La versión vigente está en
 `js/version.js` y cada versión tiene su tag de git (`vX.Y.Z`).
 
+## [1.15.0] — 2026-10-22
+
+### Agregado
+- **App instalable (PWA)**: `manifest.webmanifest`, iconos en `icons/`,
+  `theme-color` y metas de iOS en todas las páginas; abre en `app.html` en
+  modo standalone. El `CACHE` del service worker sube a `uem-arutam-v7`.
+
+### Cambiado
+- **Vista móvil**: la barra lateral pasa a ser un menú deslizable (☰) con
+  barra superior que muestra el módulo actual; se cierra al elegir módulo,
+  tocar el fondo o pulsar Escape.
+- Campos a todo el ancho, objetivos táctiles de 44 px, botones y diálogos
+  apilados, avisos centrados abajo y respeto de las zonas seguras
+  (muesca y barra de gestos) en `css/styles.css`.
+
 ## [1.14.0] — 2026-09-25
 
 ### Agregado

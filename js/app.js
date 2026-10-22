@@ -113,12 +113,43 @@ btnOffline.addEventListener("click", () => actualizarCacheOffline(true));
 pintarEstadoOffline(fechaUltimaPrecarga());
 actualizarCacheOffline(false);
 
+/* ---------- Menú deslizable (móvil) ---------- */
+const sidebar = document.getElementById("sidebar");
+const fondoMenu = document.getElementById("sidebar-fondo");
+const btnMenu = document.getElementById("btn-menu");
+
+function abrirMenu() {
+  sidebar.classList.add("abierta");
+  fondoMenu.hidden = false;
+  document.body.classList.add("menu-abierto");
+  btnMenu.setAttribute("aria-expanded", "true");
+}
+
+function cerrarMenu() {
+  sidebar.classList.remove("abierta");
+  fondoMenu.hidden = true;
+  document.body.classList.remove("menu-abierto");
+  btnMenu.setAttribute("aria-expanded", "false");
+}
+
+btnMenu.addEventListener("click", () =>
+  sidebar.classList.contains("abierta") ? cerrarMenu() : abrirMenu());
+fondoMenu.addEventListener("click", cerrarMenu);
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") cerrarMenu(); });
+// Al pasar a escritorio no debe quedar el fondo ni el scroll bloqueados.
+window.matchMedia("(min-width: 821px)").addEventListener("change", (e) => {
+  if (e.matches) cerrarMenu();
+});
+
 // `params` permite abrir un módulo ya situado: el dashboard lo usa para
 // llevar al registro de un grado concreto o a la ficha de un estudiante.
 // Se entrega al módulo en `ctx.params` (null cuando se entra por el menú).
 async function mostrarModulo(nombre, params = null) {
   if (MODULOS[nombre].soloAdmin && !ctx.esAdmin) return;
   ctx.params = params;
+  cerrarMenu();
+  document.getElementById("titulo-movil").textContent = MODULOS[nombre].titulo;
+  window.scrollTo(0, 0);
   document.querySelectorAll(".nav-item").forEach(b =>
     b.classList.toggle("activo", b.dataset.modulo === nombre));
   for (const key of Object.keys(MODULOS)) {

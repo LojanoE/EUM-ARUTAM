@@ -2,13 +2,26 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Plataforma de Asistencia — UE "Arutam"</title>
+  <meta name="theme-color" content="#1a3a6b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+  <header class="barra-movil">
+    <button id="btn-menu" class="btn-menu" aria-label="Abrir menú" aria-expanded="false" aria-controls="sidebar">☰</button>
+    <span id="titulo-movil" class="titulo-movil">Dashboard</span>
+    <span class="marca-movil">UE Arutam</span>
+  </header>
+  <div class="sidebar-fondo" id="sidebar-fondo" hidden></div>
   <div class="layout">
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebar">
       <div class="sidebar-titulo">
         UE "ARUTAM"
         <small>Registro de Asistencia</small>
