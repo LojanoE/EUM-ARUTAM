@@ -1011,6 +1011,7 @@ button.peligro:hover { background: #8f1d17; }
   body.imprimiendo-credenciales .barra-movil,
   body.imprimiendo-credenciales #toasts,
   body.imprimiendo-credenciales #c-imprimir,
+  body.imprimiendo-credenciales #d-imprimir,
   body.imprimiendo-credenciales .contenido-app .titulo-modulo,
-  body.imprimiendo-credenciales .contenido-app .panel:not(#c-credenciales) { display: none !important; }
+  body.imprimiendo-credenciales .contenido-app .panel:not(#d-credenciales) { display: none !important; }
 }

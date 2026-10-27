@@ -119,10 +119,12 @@ para confirmar que quedó registrado.
 1. Las cargas (grado + asignatura de cada docente) **salen de los horarios**.
    El usuario se vincula con el horario por **nombre** (se ignoran tildes,
    mayúsculas y títulos); si se edita el nombre en Usuarios, debe seguir coincidiendo.
-2. En **Cargas**, el botón **Crear cuentas faltantes** crea un usuario `docente`
-   por cada profesor del horario sin cuenta y muestra una lista imprimible de
-   usuarios y contraseñas (después solo se pueden cambiar en Usuarios).
-3. En la misma pantalla se fijan el período lectivo, el trimestre abierto y los
+2. En **Docentes** está la lista maestra (ambas secciones): editar un nombre lo
+   cambia en todos los horarios, y en Horarios el docente se elige de esa lista.
+   Allí se seleccionan los docentes sin cuenta y **Crear cuentas** genera un
+   usuario `docente` por cada uno con una lista imprimible de usuarios y
+   contraseñas (después solo se pueden cambiar en Usuarios).
+3. En **Cargas** se fijan el período lectivo, el trimestre abierto y los
    porcentajes (verificar contra el instructivo vigente), y se pueden añadir
    **cargas adicionales** para reemplazos o casos fuera del horario.
 4. El docente entra y solo ve **Notas**: elige grado y asignatura, llena y guarda.

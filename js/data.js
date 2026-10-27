@@ -524,31 +524,121 @@ function coincideDocente(claveUsuario, claveDoc) {
   return palabras.every(p => delUsuario.has(p));
 }
 
-// Docentes que aparecen en los horarios, con sus cargas (grado + asignatura).
-// Los nombres que solo difieren en tildes/mayúsculas cuentan como uno solo y
-// se muestra la grafía más frecuente.
+const porGradoYAsignatura = (a, b) =>
+  a.grado.localeCompare(b.grado, "es") || a.asignatura.localeCompare(b.asignatura, "es");
+
+// Lista maestra de docentes: los que están guardados en la colección
+// `docentes` más los que solo aparecen escritos en los horarios, con sus cargas
+// (grado + asignatura) y las secciones en que dan clase. Los nombres que solo
+// difieren en tildes/mayúsculas cuentan como uno solo; si el docente está en la
+// lista se muestra su nombre guardado, si no, la grafía más frecuente del horario.
 export function obtenerDocentesHorario() {
   return conCache("docentesHorario", async () => {
-    const snap = await getDocs(collection(db, "horarios"));
+    const [snapH, snapD, snapT] = await Promise.all([
+      getDocs(collection(db, "horarios")),
+      getDocs(collection(db, "docentes")),
+      getDocs(collection(db, "tutores"))
+    ]);
+    const seccionDe = new Map(snapT.docs.map(t => [t.id, t.data().seccion]));
     const porClave = new Map();
-    for (const d of snap.docs) {
+    const grupo = (clave) => {
+      if (!porClave.has(clave)) {
+        porClave.set(clave, { clave, id: null, guardado: "", grafias: new Map(), cargas: new Map(), secciones: new Set() });
+      }
+      return porClave.get(clave);
+    };
+    for (const d of snapD.docs) {
+      const nombre = String(d.data().nombre || "").trim();
+      const clave = claveDocente(nombre);
+      if (!clave) continue;
+      Object.assign(grupo(clave), { id: d.id, guardado: nombre });
+    }
+    for (const d of snapH.docs) {
       const b = d.data();
       const nombre = String(b.docente || "").trim();
       const clave = claveDocente(nombre);
       const asignatura = String(b.asignatura || "").trim();
       if (!clave || !asignatura || !b.grado) continue;
-      if (!porClave.has(clave)) porClave.set(clave, { clave, grafias: new Map(), cargas: new Map() });
-      const doc_ = porClave.get(clave);
-      doc_.grafias.set(nombre, (doc_.grafias.get(nombre) || 0) + 1);
-      doc_.cargas.set(`${b.grado}|${asignatura}`, { grado: b.grado, asignatura });
+      const g = grupo(clave);
+      g.grafias.set(nombre, (g.grafias.get(nombre) || 0) + 1);
+      g.cargas.set(`${b.grado}|${asignatura}`, { grado: b.grado, asignatura });
+      if (seccionDe.get(b.grado)) g.secciones.add(seccionDe.get(b.grado));
     }
-    return [...porClave.values()].map(d => ({
-      clave: d.clave,
-      nombre: [...d.grafias.entries()].sort((a, b) => b[1] - a[1])[0][0],
-      cargas: [...d.cargas.values()].sort((a, b) =>
-        a.grado.localeCompare(b.grado, "es") || a.asignatura.localeCompare(b.asignatura, "es"))
+    return [...porClave.values()].map(g => ({
+      clave: g.clave,
+      id: g.id,
+      enLista: !!g.id,
+      nombre: g.guardado || [...g.grafias.entries()].sort((a, b) => b[1] - a[1])[0][0],
+      secciones: [...g.secciones].sort(),
+      cargas: [...g.cargas.values()].sort(porGradoYAsignatura)
     })).sort((a, b) => a.nombre.localeCompare(b.nombre, "es"));
   });
+}
+
+// Agrega un docente a la lista maestra.
+export async function agregarDocente(nombre) {
+  nombre = String(nombre || "").trim();
+  const clave = claveDocente(nombre);
+  if (!clave) throw new Error("Escriba el nombre del docente.");
+  const existente = (await obtenerDocentesHorario()).find(d => d.clave === clave);
+  if (existente?.enLista) throw new Error(`"${existente.nombre}" ya está en la lista.`);
+  invalidarCache();
+  await addDoc(collection(db, "docentes"), { nombre });
+}
+
+// Guarda en la lista a los docentes que solo aparecen en los horarios.
+// Devuelve cuántos agregó.
+export async function importarDocentesFaltantes() {
+  const faltan = (await obtenerDocentesHorario()).filter(d => !d.enLista);
+  invalidarCache();
+  await ejecutarEnLotes(faltan.map(d => (batch) =>
+    batch.set(doc(collection(db, "docentes")), { nombre: d.nombre })));
+  return faltan.length;
+}
+
+// Cambia el nombre de un docente en la lista y en todos sus bloques de
+// horario. Si la cuenta de usuario tenía exactamente ese nombre, también se
+// actualiza (el vínculo usuario ↔ docente es por nombre).
+export async function renombrarDocente(clave, nuevoNombre) {
+  nuevoNombre = String(nuevoNombre || "").trim();
+  const nuevaClave = claveDocente(nuevoNombre);
+  if (!nuevaClave) throw new Error("El nombre no puede estar vacío.");
+  const docentes = await obtenerDocentesHorario();
+  const actual = docentes.find(d => d.clave === clave);
+  if (!actual) throw new Error("No se encontró el docente.");
+  if (nuevaClave !== clave && docentes.some(d => d.clave === nuevaClave)) {
+    throw new Error("Ya existe otro docente con ese nombre.");
+  }
+  const [snapH, usuarios] = await Promise.all([
+    getDocs(collection(db, "horarios")), obtenerUsuarios()
+  ]);
+  const ops = [];
+  for (const d of snapH.docs) {
+    if (claveDocente(d.data().docente) === clave) {
+      ops.push((batch) => batch.update(d.ref, { docente: nuevoNombre }));
+    }
+  }
+  for (const u of usuarios) {
+    if (claveDocente(u.nombre) === clave) {
+      ops.push((batch) => batch.update(doc(db, "usuarios", u.id), { nombre: nuevoNombre }));
+    }
+  }
+  const ref = actual.id ? doc(db, "docentes", actual.id) : doc(collection(db, "docentes"));
+  ops.push((batch) => batch.set(ref, { nombre: nuevoNombre }));
+  invalidarCache();
+  await ejecutarEnLotes(ops);
+  return ops.length - 1;
+}
+
+// Quita un docente de la lista maestra; solo si ya no tiene materias en los
+// horarios (si no, volvería a aparecer).
+export async function eliminarDocente(id) {
+  const d = (await obtenerDocentesHorario()).find(x => x.id === id);
+  if (d?.cargas.length) {
+    throw new Error(`"${d.nombre}" aún tiene ${d.cargas.length} materia(s) en los horarios.`);
+  }
+  invalidarCache();
+  await deleteDoc(doc(db, "docentes", id));
 }
 
 // Docentes del horario con el usuario vinculado por nombre (o null si aún
@@ -561,9 +651,6 @@ export async function obtenerDocentesConCuenta() {
     usuario: claves.find(u => coincideDocente(u.clave, d.clave))?.usuario || null
   }));
 }
-
-const porGradoYAsignatura = (a, b) =>
-  a.grado.localeCompare(b.grado, "es") || a.asignatura.localeCompare(b.asignatura, "es");
 
 // Cargas asignadas a mano (colección `cargas`).
 export async function obtenerCargasManuales() {
@@ -625,8 +712,9 @@ export async function eliminarCarga(id) {
 // Crea una cuenta con rol docente por cada docente del horario que aún no
 // tiene usuario. Usuario = inicial + último apellido (lmijas); contraseña
 // aleatoria sin caracteres ambiguos. Devuelve las credenciales para entregarlas.
-export async function crearCuentasDocentes() {
-  const docentes = (await obtenerDocentesConCuenta()).filter(d => !d.usuario);
+export async function crearCuentasDocentes(claves = null) {
+  const docentes = (await obtenerDocentesConCuenta())
+    .filter(d => !d.usuario && (!claves || claves.includes(d.clave)));
   const existentes = new Set((await obtenerUsuarios()).map(u => u.usuario));
   const alfabeto = "abcdefghjkmnpqrstuvwxyz23456789";
   const creadas = [];

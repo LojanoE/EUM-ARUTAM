@@ -12,6 +12,7 @@ import { initGrados } from "./mod-grados.js";
 import { initUsuarios } from "./mod-usuarios.js";
 import { initNotas } from "./mod-notas.js";
 import { initCargas } from "./mod-cargas.js";
+import { initDocentes } from "./mod-docentes.js";
 
 const sesion = exigirSesion();
 if (!sesion) throw new Error("Sin sesión");
@@ -43,6 +44,7 @@ const MODULOS = {
   horarios:    { titulo: "Horarios",    init: initHorarios },
   himnos:      { titulo: "Himnos",      init: initHimnos },
   notas:       { titulo: "Notas",       init: initNotas, roles: ["admin", "docente"] },
+  docentes:    { titulo: "Docentes",    init: initDocentes, soloAdmin: true },
   cargas:      { titulo: "Cargas",      init: initCargas, soloAdmin: true },
   grados:      { titulo: "Grados",      init: initGrados, soloAdmin: true },
   usuarios:    { titulo: "Usuarios",    init: initUsuarios, soloAdmin: true },

@@ -51,7 +51,7 @@ export async function initUsuarios(contenedor, ctx) {
       </div>
       <p class="info">
         Rol <strong>registro</strong>: consulta y registra asistencia.
-        Rol <strong>docente</strong>: solo registra las notas de sus cargas (se asignan en Cargas).
+        Rol <strong>docente</strong>: solo registra las notas de sus cargas (salen de los horarios por su nombre; las cuentas se crean en Docentes).
         Rol <strong>admin</strong>: además gestiona estudiantes, horarios, grados, cargas y usuarios.<br>
         Los reportes impresos se firman con el <strong>nombre y cargo del usuario
         que genera el documento</strong>.

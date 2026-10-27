@@ -1,11 +1,10 @@
 // Módulo: cargas docentes y configuración de calificaciones (solo admin).
 // Las cargas (grado + asignatura de cada docente) salen de los horarios y se
-// vinculan con el usuario por nombre; aquí también se pueden crear de una vez
-// las cuentas faltantes y añadir cargas extra (reemplazos).
+// vinculan con el usuario por nombre; aquí se añaden cargas extra (reemplazos)
+// y se configuran los pesos de las calificaciones.
 import {
   obtenerCargasManuales, agregarCarga, eliminarCarga, obtenerUsuarios, obtenerGrados,
-  obtenerAsignaturas, obtenerConfig, guardarConfig, obtenerDocentesConCuenta,
-  crearCuentasDocentes, esc
+  obtenerAsignaturas, obtenerConfig, guardarConfig, esc
 } from "./data.js";
 import { notificarOk, notificarError, confirmarAccion } from "./notificaciones.js";
 
@@ -62,21 +61,10 @@ export async function initCargas(contenedor, ctx) {
     </div>
 
     <div class="panel">
-      <h2 style="font-size:1rem; margin-top:0;">Docentes según el horario</h2>
-      <p class="info">Cada docente ve en Notas las materias que el horario le asigna. Se vincula
-        su usuario por el <strong>nombre</strong> (sin importar tildes, mayúsculas ni título).</p>
-      <div class="fila-acciones">
-        <button class="primario" id="c-crear-cuentas">Crear cuentas faltantes</button>
-      </div>
-      <div style="overflow-x:auto;">
-        <table class="tabla-gestion">
-          <thead><tr><th>Docente</th><th>Materias</th><th>Usuario</th></tr></thead>
-          <tbody id="tbody-horario"></tbody>
-        </table>
-      </div>
+      <p class="info">Las materias de cada docente salen de los <strong>horarios</strong> y se vinculan con su
+        usuario por el nombre. La lista de docentes y la creación de cuentas están en el módulo
+        <strong>Docentes</strong>.</p>
     </div>
-
-    <div class="panel" id="c-credenciales" hidden></div>
 
     <div class="panel">
       <h2 style="font-size:1rem; margin-top:0;">Cargas adicionales (reemplazos)</h2>
@@ -117,23 +105,6 @@ export async function initCargas(contenedor, ctx) {
   const tbody = contenedor.querySelector("#tbody-cargas");
   const nombreDe = Object.fromEntries(usuarios.map(u => [u.usuario, u.nombre || u.usuario]));
 
-  const tbodyHorario = contenedor.querySelector("#tbody-horario");
-  const btnCuentas = contenedor.querySelector("#c-crear-cuentas");
-
-  async function pintarHorario() {
-    const docentes = await obtenerDocentesConCuenta();
-    const sinCuenta = docentes.filter(d => !d.usuario).length;
-    btnCuentas.textContent = `Crear cuentas faltantes (${sinCuenta})`;
-    btnCuentas.disabled = sinCuenta === 0;
-    tbodyHorario.innerHTML = docentes.length ? docentes.map(d => `
-      <tr>
-        <td>${esc(d.nombre)}</td>
-        <td><small>${d.cargas.map(c => `${esc(c.grado)} — ${esc(c.asignatura)}`).join("<br>")}</small></td>
-        <td class="centro">${d.usuario ? esc(d.usuario) : "<em>sin cuenta</em>"}</td>
-      </tr>`).join("")
-      : `<tr><td colspan="3" class="centro">No hay horarios registrados.</td></tr>`;
-  }
-
   async function pintar() {
     const cargas = await obtenerCargasManuales();
     tbody.innerHTML = cargas.length ? cargas.map(c => `
@@ -147,37 +118,6 @@ export async function initCargas(contenedor, ctx) {
       </tr>`).join("")
       : `<tr><td colspan="4" class="centro">Sin cargas adicionales.</td></tr>`;
   }
-
-  btnCuentas.addEventListener("click", async () => {
-    const ok = await confirmarAccion(
-      "Se creará una cuenta con rol docente por cada docente del horario que aún no tiene usuario, " +
-      "con una contraseña generada. ¿Continuar?", { textoConfirmar: "Crear cuentas" });
-    if (!ok) return;
-    const panel = contenedor.querySelector("#c-credenciales");
-    try {
-      const creadas = await crearCuentasDocentes();
-      notificarOk(`${creadas.length} cuenta(s) creada(s).`);
-      panel.hidden = !creadas.length;
-      panel.innerHTML = `
-        <h2 style="font-size:1rem; margin-top:0;">Credenciales generadas</h2>
-        <p class="aviso">Guárdelas o imprímalas ahora: la contraseña solo se puede cambiar después desde Usuarios.</p>
-        <table class="tabla-gestion">
-          <thead><tr><th>Docente</th><th>Usuario</th><th>Contraseña</th></tr></thead>
-          <tbody>${creadas.map(c => `
-            <tr><td>${esc(c.nombre)}</td><td>${esc(c.usuario)}</td>
-                <td style="font-family:monospace;">${esc(c.password)}</td></tr>`).join("")}</tbody>
-        </table>
-        <div class="fila-acciones"><button class="secundario" id="c-imprimir">Imprimir</button></div>`;
-      panel.querySelector("#c-imprimir").addEventListener("click", () => {
-        document.body.classList.add("imprimiendo-credenciales");
-        window.print();
-        document.body.classList.remove("imprimiendo-credenciales");
-      });
-    } catch (err) {
-      notificarError("No se pudieron crear todas las cuentas", err);
-    }
-    await pintarHorario();
-  });
 
   tbody.addEventListener("click", async (e) => {
     const btn = e.target.closest("[data-eliminar-carga]");
@@ -240,5 +180,5 @@ export async function initCargas(contenedor, ctx) {
     }
   });
 
-  await Promise.all([pintar(), pintarHorario()]);
+  await pintar();
 }

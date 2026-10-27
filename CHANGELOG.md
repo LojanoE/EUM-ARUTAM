@@ -4,6 +4,19 @@ Historial de versiones de la app de Registro de Asistencia — UE "Arutam".
 Versionado semántico: MAYOR.MENOR.PARCHE. La versión vigente está en
 `js/version.js` y cada versión tiene su tag de git (`vX.Y.Z`).
 
+## [1.19.0] — 2026-10-27
+
+### Añadido
+- Módulo **Docentes** (admin): lista maestra de docentes de ambas secciones, con
+  sus materias, sección y usuario. Al editar un nombre se actualiza en todos los
+  horarios (y en la cuenta si tenía exactamente ese nombre). Permite agregar,
+  eliminar, importar los que solo están en horarios y crear cuentas de los
+  seleccionados (con lista de credenciales imprimible).
+- En **Horarios** el docente se elige de la lista en vez de escribirse.
+
+### Cambiado
+- Cargas ya no tiene el panel de docentes ni de credenciales (pasó a Docentes).
+
 ## [1.18.1] — 2026-10-27
 
 ### Corregido

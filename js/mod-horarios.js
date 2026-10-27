@@ -1,13 +1,25 @@
 // Módulo: consulta y gestión de horarios por grado.
 import {
-  obtenerGrados, obtenerHorariosDeGrado, obtenerAsistencia,
+  obtenerGrados, obtenerDocentesHorario, obtenerHorariosDeGrado, obtenerAsistencia,
   agregarBloqueHorario, actualizarBloqueHorario, eliminarBloqueHorario,
   DIAS_SEMANA, fechaHoy, diaDeFecha, esc
 } from "./data.js";
 import { notificarOk, notificarError, confirmarAccion } from "./notificaciones.js";
 
 export async function initHorarios(contenedor, ctx) {
-  const grados = await obtenerGrados();
+  const [grados, docentesLista] = await Promise.all([obtenerGrados(), obtenerDocentesHorario()]);
+  const nombresDocentes = docentesLista.map(d => d.nombre);
+
+  // Selector de docente tomado de la lista maestra. Si el valor actual no
+  // está en la lista (dato antiguo) se conserva como opción.
+  const selectorDocente = (atributos, actual = "") => {
+    const nombres = actual && !nombresDocentes.includes(actual)
+      ? [actual, ...nombresDocentes] : nombresDocentes;
+    return `<select ${atributos} style="width:100%;">
+      <option value="">— Docente —</option>
+      ${nombres.map(n => `<option value="${esc(n)}" ${n === actual ? "selected" : ""}>${esc(n)}</option>`).join("")}
+    </select>`;
+  };
 
   contenedor.innerHTML = `
     <h2 class="titulo-modulo">Horarios</h2>
@@ -83,8 +95,7 @@ export async function initHorarios(contenedor, ctx) {
                      style="width:9.5rem; padding:0.35rem; border:1px solid var(--borde); border-radius:4px;">
             </div>
             <div style="flex:1; min-width:150px;">
-              <input type="text" placeholder="Docente" data-nuevo-docente="${esc(dia)}"
-                     style="width:100%; padding:0.35rem; border:1px solid var(--borde); border-radius:4px;">
+              ${selectorDocente(`data-nuevo-docente="${esc(dia)}"`)}
             </div>
             <div>
               <button class="btn-mini" data-agregar-dia="${esc(dia)}">+ Agregar bloque</button>
@@ -109,7 +120,7 @@ export async function initHorarios(contenedor, ctx) {
         <td class="centro">${fila.cells[0].textContent}</td>
         <td><input type="text" id="b-asignatura" value="${esc(asignatura)}"></td>
         <td><input type="text" id="b-tiempo" value="${esc(tiempo)}"></td>
-        <td><input type="text" id="b-docente" value="${esc(docente)}"></td>
+        <td>${selectorDocente('id="b-docente"', docente)}</td>
         <td class="centro">
           <button class="btn-mini" data-guardar-bloque="${esc(id)}">Guardar</button>
           <button class="btn-mini peligro" data-cancelar>Cancelar</button>
