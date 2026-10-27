@@ -22,10 +22,11 @@ body {
 /* ---------- Login ---------- */
 .pagina-login {
   display: flex;
-  align-items: center;
+  align-items: safe center;
   justify-content: center;
   min-height: 100vh;
   min-height: 100dvh;
+  padding: 1rem;
 }
 
 .tarjeta-login {
@@ -34,12 +35,13 @@ body {
   border-radius: 10px;
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
   width: 100%;
-  max-width: 400px;
+  max-width: 420px;
+  margin: auto 0;
   text-align: center;
 }
 
 .tarjeta-login h1 {
-  font-size: 1.05rem;
+  font-size: 1.15rem;
   color: var(--azul);
   margin: 0 0 0.25rem;
 }
@@ -47,45 +49,100 @@ body {
 .tarjeta-login .subtitulo {
   margin: 0 0 1.5rem;
   color: #5a6675;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
 }
 
 .tarjeta-login form { text-align: left; }
 
 .tarjeta-login label {
   display: block;
-  font-size: 0.85rem;
+  font-size: 1rem;
   font-weight: 600;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.3rem;
 }
 
 .tarjeta-login input {
+  display: block;
   width: 100%;
-  padding: 0.55rem 0.7rem;
+  max-width: 100%;
+  min-height: 48px;
+  padding: 0.6rem 0.8rem;
   margin-bottom: 1rem;
   border: 1px solid var(--borde);
   border-radius: 6px;
-  font-size: 1rem;
+  font-size: 1.05rem;
+}
+
+.tarjeta-login input:focus-visible,
+.tarjeta-login button:focus-visible,
+.tarjeta-login a:focus-visible {
+  outline: 3px solid var(--azul-claro);
+  outline-offset: 2px;
 }
 
 .tarjeta-login button {
   width: 100%;
+  min-height: 48px;
   padding: 0.65rem;
   background: var(--azul);
   color: #fff;
   border: none;
   border-radius: 6px;
-  font-size: 1rem;
+  font-size: 1.05rem;
   cursor: pointer;
 }
 
 .tarjeta-login button:hover { background: var(--azul-claro); }
 .tarjeta-login button:disabled { opacity: 0.6; cursor: wait; }
 
+/* Contraseña con botón "Mostrar" al lado: el campo toma el espacio sobrante. */
+.campo-clave {
+  display: flex;
+  gap: 0.5rem;
+  align-items: stretch;
+  margin-bottom: 1rem;
+}
+.campo-clave input {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin-bottom: 0;
+}
+.tarjeta-login button.ver-clave {
+  flex: 0 0 auto;
+  width: auto;
+  padding: 0 0.9rem;
+  background: #fff;
+  color: var(--azul);
+  border: 1px solid var(--azul);
+  font-size: 0.95rem;
+}
+.tarjeta-login button.ver-clave:hover { background: #eef3fb; }
+
+.ayuda-campo {
+  margin: -0.5rem 0 1rem;
+  font-size: 0.9rem;
+  color: var(--texto-suave);
+}
+.ayuda-campo.ok { color: var(--verde); }
+.ayuda-campo.mal { color: var(--rojo); }
+
+.tarjeta-login .enlace-grande {
+  display: block;
+  margin-top: 1rem;
+  padding: 0.7rem;
+  text-align: center;
+  font-size: 1rem;
+  color: var(--azul);
+}
+
 .error {
   color: var(--rojo);
-  font-size: 0.85rem;
-  margin: -0.4rem 0 0.8rem;
+  font-size: 0.95rem;
+  margin: 0 0 0.9rem;
+}
+
+@media (max-width: 480px) {
+  .tarjeta-login { padding: 1.5rem 1.25rem; }
 }
 
 /* ---------- App ---------- */
@@ -133,24 +190,38 @@ body {
   align-items: flex-end;
 }
 
+.selectores > div { min-width: 0; }
+.selectores .sel-ancho { flex: 1 1 260px; }
+.selectores .sel-ancho select { width: 100%; }
+.selectores .botones-fila { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
 .selectores label {
   display: block;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   font-weight: 600;
   margin-bottom: 0.2rem;
 }
 
 .selectores select,
 .selectores input[type="date"] {
-  padding: 0.45rem 0.6rem;
+  padding: 0.5rem 0.6rem;
+  min-height: 44px;
   border: 1px solid var(--borde);
   border-radius: 6px;
-  font-size: 0.95rem;
-  min-width: 180px;
+  font-size: 1rem;
+  min-width: 0;
+  max-width: 100%;
+}
+.selectores select { min-width: min(180px, 100%); }
+
+input, select, textarea { max-width: 100%; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 3px solid var(--azul-claro);
+  outline-offset: 2px;
 }
 
 .aviso { color: var(--rojo); font-weight: 600; }
-.info { color: #5a6675; font-size: 0.9rem; }
+.info { color: #5a6675; font-size: 0.95rem; }
 
 /* Casilla en línea junto a un botón (p. ej. "Imprimir en blanco"), distinta
    de las etiquetas de .selectores (que van en bloque, arriba del campo). */
@@ -230,7 +301,8 @@ button.primario {
   border: none;
   border-radius: 6px;
   padding: 0.6rem 1.2rem;
-  font-size: 0.95rem;
+  min-height: 44px;
+  font-size: 1rem;
   cursor: pointer;
 }
 button.primario:hover { background: var(--azul-claro); }
@@ -241,7 +313,8 @@ button.secundario {
   border: 1px solid var(--azul);
   border-radius: 6px;
   padding: 0.6rem 1.2rem;
-  font-size: 0.95rem;
+  min-height: 44px;
+  font-size: 1rem;
   cursor: pointer;
 }
 
@@ -639,7 +712,8 @@ button.kpi:hover { background: #e7ecf4; }
 .btn-mini.destacado:hover { background: var(--azul-claro); border-color: var(--azul-claro); }
 
 /* ---------- Tablas de gestión (estudiantes / horarios / ranking) ---------- */
-.tabla-gestion { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+.tabla-gestion { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+.tabla-scroll { overflow-x: auto; max-width: 100%; }
 
 .tabla-gestion th, .tabla-gestion td {
   border: 1px solid var(--borde);
@@ -1000,8 +1074,73 @@ button.peligro:hover { background: #8f1d17; }
 }
 
 /* ---------- Notas ---------- */
-.nota-in { width: 4rem; text-align: center; padding: 0.3rem; border: 1px solid var(--borde); border-radius: 5px; }
-.nota-in.invalido { border-color: var(--rojo); background: #fdecea; }
+.pasos {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0 0 1rem;
+  padding: 0;
+}
+.pasos li {
+  flex: 1 1 200px;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 0.8rem;
+  background: #fff;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: var(--texto-suave);
+}
+.pasos li span {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 50%;
+  background: #e8edf5;
+  color: var(--azul);
+  font-weight: 700;
+}
+.pasos li.actual { border-color: var(--azul); color: inherit; font-weight: 600; }
+.pasos li.actual span { background: var(--azul); color: #fff; }
+
+.tabla-gestion input.nota-in {
+  width: 4.5rem;
+  min-height: 44px;
+  text-align: center;
+  padding: 0.3rem;
+  font-size: 1.05rem;
+  border: 1px solid var(--borde);
+  border-radius: 5px;
+}
+.tabla-gestion input.nombre-insumo { width: 7rem; min-height: 40px; font-size: 0.95rem; }
+.tabla-gestion input.nota-in.invalido { border-color: var(--rojo); background: #fdecea; }
+.tabla-captura tbody tr:nth-child(even) { background: #f6f8fb; }
+.tabla-captura .col-nombre {
+  position: sticky;
+  left: 0;
+  background: #fff;
+  min-width: 9rem;
+  z-index: 1;
+}
+.tabla-captura th.col-nombre { background: #e8edf5; }
+.tabla-captura tbody tr:nth-child(even) .col-nombre { background: #f6f8fb; }
+
+.acciones-notas {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-top: 0.9rem;
+}
+.estado-guardado { font-weight: 600; font-size: 0.95rem; }
+.estado-guardado.pendiente { color: var(--ambar); }
+.estado-guardado.ok { color: var(--verde); }
 .nota-in:disabled, .nombre-insumo:disabled { background: #f3f4f6; color: inherit; }
 .tabla-gestion td.bajo { color: var(--rojo); font-weight: 600; }
 

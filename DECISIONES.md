@@ -6,6 +6,15 @@ los pendientes. Las entradas más recientes van arriba.
 
 ---
 
+## 2026-10-27 · v1.22.0 — Interfaz más amigable y sin desbordes
+- Pedido: los campos se salían del recuadro (sobre todo al cambiar contraseña) y
+  los usuarios serán personas de unos 48 años, en PC y celular.
+- Causas: el login centraba sin permitir desplazar, los botones heredaban
+  `width:100%` y los campos de nota estaban limitados por una regla más específica.
+- Decisiones: botón «Mostrar» en contraseñas; guía de 3 pasos y aviso de cambios sin
+  guardar en Notas (mismo patrón que Asistencia); libreta adaptable solo en pantalla.
+- Pendiente: revisar a mano los demás módulos en un celular real.
+
 ## 2026-10-27 · v1.21.0 — Libreta de calificaciones para el representante
 - Pedido: ver las notas por estudiante y poder entregarlas al padre de familia en PDF.
 - Acceso: admin y cualquier docente que da clases en el grado; ve todas las materias.

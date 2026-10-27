@@ -4,6 +4,19 @@ Historial de versiones de la app de Registro de Asistencia — UE "Arutam".
 Versionado semántico: MAYOR.MENOR.PARCHE. La versión vigente está en
 `js/version.js` y cada versión tiene su tag de git (`vX.Y.Z`).
 
+## [1.22.0] — 2026-10-27
+
+### Mejorado
+- **Interfaz más cómoda** para personas de mayor edad: letra y campos más grandes,
+  botones de 44 px y foco visible en toda la app.
+- **Cambiar contraseña / Ingresar**: ya no se cortan ni se salen del recuadro en el
+  celular; botón «Mostrar», requisitos escritos y aviso en vivo si las contraseñas coinciden.
+- **Notas**: guía de 3 pasos, campos de nota más grandes y del mismo tamaño, columna
+  del estudiante fija al desplazar, filas alternadas, indicador «Cambios sin guardar» /
+  «Todo guardado ✓» y aviso antes de cambiar de materia, trimestre o salir sin guardar.
+- **Libreta**: se adapta al ancho del celular, barra de botones en varias filas y
+  mensaje de ayuda. La impresión y el PDF no cambian.
+
 ## [1.21.0] — 2026-10-27
 
 ### Añadido

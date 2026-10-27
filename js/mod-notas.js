@@ -6,7 +6,7 @@ import {
   obtenerNotas, obtenerNotasAnuales, guardarNotas, promedioTrimestre,
   promedioFinal, esc
 } from "./data.js";
-import { notificarOk, notificarError } from "./notificaciones.js";
+import { notificarOk, notificarError, confirmarAccion } from "./notificaciones.js";
 
 const fmt = (n) => (n === null || n === undefined ? "—" : n.toFixed(2));
 
@@ -40,14 +40,28 @@ export async function initNotas(contenedor, ctx) {
   let nombresInsumos = [];
   let notas = {};           // { [estudianteId]: { formativas, proyecto, examen } }
   let vista = "trimestre";  // "trimestre" | "anual"
+  let sucio = false;        // hay notas editadas sin guardar
+  let cargaPrev = "0";      // valores previos de los selectores, para revertir si se cancela
+  let trimPrev = String(cfg.trimestreAbierto);
+
+  // Avisa si se cierra la página con notas sin guardar. Se reemplaza el aviso
+  // de una visita anterior al módulo para no acumular manejadores.
+  if (window.__notasAntesDeSalir) window.removeEventListener("beforeunload", window.__notasAntesDeSalir);
+  window.__notasAntesDeSalir = (e) => { if (sucio) e.preventDefault(); };
+  window.addEventListener("beforeunload", window.__notasAntesDeSalir);
 
   contenedor.innerHTML = `
     <h2 class="titulo-modulo">Notas</h2>
+    <ol class="pasos" id="n-pasos">
+      <li data-paso="1"><span>1</span> Elija grado y materia</li>
+      <li data-paso="2"><span>2</span> Elija el trimestre</li>
+      <li data-paso="3"><span>3</span> Escriba las notas y pulse «Guardar notas»</li>
+    </ol>
     <div class="panel">
       <div class="selectores">
-        <div style="flex:1; min-width:200px;">
+        <div class="sel-ancho">
           <label for="n-carga">Grado y asignatura</label>
-          <select id="n-carga" style="width:100%;">
+          <select id="n-carga">
             ${cargas.map((c, i) => `
               <option value="${i}">${esc(c.grado)} — ${esc(c.asignatura)}${
                 ctx.esAdmin ? ` (${esc(c.docente)})` : ""}</option>`).join("")}
@@ -60,7 +74,7 @@ export async function initNotas(contenedor, ctx) {
               Trimestre ${t}${t === cfg.trimestreAbierto ? " (abierto)" : ""}</option>`).join("")}
           </select>
         </div>
-        <div>
+        <div class="botones-fila">
           <button class="secundario" id="n-vista">Ver resumen anual</button>
           <button class="secundario" id="n-libretas">Libretas del grado</button>
         </div>
@@ -73,6 +87,19 @@ export async function initNotas(contenedor, ctx) {
   const selTrim = contenedor.querySelector("#n-trimestre");
   const btnVista = contenedor.querySelector("#n-vista");
   const panel = contenedor.querySelector("#n-panel");
+
+  // Resalta el paso en que está la persona (1 y 2 al elegir, 3 al capturar).
+  function marcarPaso(n) {
+    contenedor.querySelectorAll("#n-pasos li").forEach(li =>
+      li.classList.toggle("actual", Number(li.dataset.paso) === n));
+  }
+
+  function estadoGuardado(texto, clase) {
+    const el = panel.querySelector("#n-estado");
+    if (!el) return;
+    el.textContent = texto;
+    el.className = "estado-guardado " + clase;
+  }
 
   const cargaActual = () => cargas[Number(selCarga.value)];
   // Libretas (PDF para el representante) de todo el grado de la carga elegida.
@@ -107,15 +134,15 @@ export async function initNotas(contenedor, ctx) {
     panel.innerHTML = `
       ${ed ? "" : `<p class="aviso">Este trimestre está cerrado: solo lectura.</p>`}
       ${estudiantes.length ? "" : `<p class="aviso">Este grado no tiene estudiantes activos.</p>`}
-      <div style="overflow-x:auto;">
-        <table class="tabla-gestion">
+      <div class="tabla-scroll">
+        <table class="tabla-gestion tabla-captura">
           <thead>
             <tr>
-              <th>Nº</th><th>Estudiante</th>
+              <th>Nº</th><th class="col-nombre">Estudiante</th>
               ${nombresInsumos.map((n, i) => `
                 <th>
                   <input type="text" class="nombre-insumo" data-insumo="${i}" ${dis}
-                         value="${esc(n)}" style="width:6.5rem;">
+                         value="${esc(n)}">
                 </th>`).join("")}
               <th>Proyecto</th><th>Examen</th><th>Promedio</th>
             </tr>
@@ -126,7 +153,7 @@ export async function initNotas(contenedor, ctx) {
               return `
                 <tr data-est="${esc(e.id)}">
                   <td class="centro">${idx + 1}</td>
-                  <td>${esc(e.nombre)}</td>
+                  <td class="col-nombre">${esc(e.nombre)}</td>
                   ${nombresInsumos.map((_, i) =>
                     `<td class="centro">${celda(n.formativas?.[i], `data-formativa="${i}"`)}</td>`).join("")}
                   <td class="centro">${celda(n.proyecto, `data-campo="proyecto"`)}</td>
@@ -137,13 +164,17 @@ export async function initNotas(contenedor, ctx) {
           </tbody>
         </table>
       </div>
+      <p class="aviso" id="n-error" hidden>Use números de 0 a 10 (los campos en rojo no son válidos).</p>
       ${ed ? `
-        <div class="acciones" style="margin-top:0.8rem; display:flex; gap:0.5rem; flex-wrap:wrap;">
+        <div class="acciones-notas">
           <button class="secundario" id="n-mas">+ Insumo</button>
           <button class="secundario" id="n-menos" ${nombresInsumos.length <= 1 ? "disabled" : ""}>− Insumo</button>
           <button class="primario" id="n-guardar">Guardar notas</button>
+          <span id="n-estado" class="estado-guardado"></span>
         </div>` : ""}`;
     estudiantes.forEach(e => recalcular(e.id));
+    marcarPaso(ed ? 3 : 2);
+    if (ed && sucio) estadoGuardado("Cambios sin guardar", "pendiente");
   }
 
   // Lee la fila del DOM al modelo `notas`. Devuelve false si hay un valor inválido.
@@ -170,6 +201,8 @@ export async function initNotas(contenedor, ctx) {
     const td = fila.querySelector(".celda-prom");
     td.textContent = fmt(p);
     td.classList.toggle("bajo", p !== null && p < cfg.notaMinima);
+    const aviso = panel.querySelector("#n-error");
+    if (aviso) aviso.hidden = !panel.querySelector(".nota-in.invalido");
     return ok;
   }
 
@@ -183,6 +216,10 @@ export async function initNotas(contenedor, ctx) {
   panel.addEventListener("input", (e) => {
     const fila = e.target.closest("tr[data-est]");
     if (fila && e.target.classList.contains("nota-in")) recalcular(fila.dataset.est);
+    if (e.target.classList.contains("nota-in") || e.target.classList.contains("nombre-insumo")) {
+      sucio = true;
+      estadoGuardado("Cambios sin guardar", "pendiente");
+    }
   });
 
   panel.addEventListener("click", async (e) => {
@@ -190,6 +227,7 @@ export async function initNotas(contenedor, ctx) {
       estudiantes.forEach(s => recalcular(s.id));
       leerNombres();
       nombresInsumos.push(`Insumo ${nombresInsumos.length + 1}`);
+      sucio = true;
       pintarTrimestre();
       return;
     }
@@ -198,6 +236,7 @@ export async function initNotas(contenedor, ctx) {
       leerNombres();
       nombresInsumos.pop();
       Object.values(notas).forEach(n => { if (n.formativas) n.formativas.length = nombresInsumos.length; });
+      sucio = true;
       pintarTrimestre();
       return;
     }
@@ -222,18 +261,28 @@ export async function initNotas(contenedor, ctx) {
         }
       }
       const c = cargaActual();
+      const btn = panel.querySelector("#n-guardar");
+      btn.disabled = true;
+      btn.textContent = "Guardando…";
       try {
         await guardarNotas(c.grado, c.asignatura, periodo, trimestre(),
           { nombresInsumos, notas: aGuardar }, ctx.sesion.usuario);
+        sucio = false;
+        const hora = new Date().toLocaleTimeString("es-EC", { hour: "2-digit", minute: "2-digit" });
+        estadoGuardado(`Todo guardado ✓ ${hora}`, "ok");
         notificarOk(`Notas guardadas (${Object.keys(aGuardar).length} estudiante(s)).`);
       } catch (err) {
         notificarError("No se pudieron guardar las notas", err);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Guardar notas";
       }
     }
   });
 
   async function pintarAnual() {
     const c = cargaActual();
+    marcarPaso(1);
     panel.innerHTML = `<p class="info">Cargando...</p>`;
     const [ests, docs] = await Promise.all([
       obtenerEstudiantes(c.grado),
@@ -252,7 +301,7 @@ export async function initNotas(contenedor, ctx) {
         </tr>`;
     });
     panel.innerHTML = `
-      <div style="overflow-x:auto;">
+      <div class="tabla-scroll">
         <table class="tabla-gestion">
           <thead>
             <tr><th>Nº</th><th>Estudiante</th><th>T1</th><th>T2</th><th>T3</th>
@@ -268,10 +317,31 @@ export async function initNotas(contenedor, ctx) {
     (vista === "anual" ? pintarAnual() : cargarTrimestre()).catch(errorUI);
   }
 
-  selCarga.addEventListener("change", actualizar);
-  selTrim.addEventListener("change", () => { if (vista === "trimestre") actualizar(); });
-  btnVista.addEventListener("click", () => {
-    vista = vista === "trimestre" ? "anual" : "trimestre";
+  // Con notas sin guardar, pide confirmar antes de cambiar de carga, trimestre
+  // o vista; si se cancela, el selector vuelve a su valor anterior.
+  async function confirmarDescarte() {
+    if (!sucio) return true;
+    return confirmarAccion("Tiene notas sin guardar. ¿Descartarlas y continuar?",
+      { textoConfirmar: "Descartar cambios", peligro: true });
+  }
+
+  selCarga.addEventListener("change", async () => {
+    if (!(await confirmarDescarte())) { selCarga.value = cargaPrev; return; }
+    sucio = false;
+    cargaPrev = selCarga.value;
+    actualizar();
+  });
+  selTrim.addEventListener("change", async () => {
+    if (vista !== "trimestre") return;
+    if (!(await confirmarDescarte())) { selTrim.value = trimPrev; return; }
+    sucio = false;
+    trimPrev = selTrim.value;
+    actualizar();
+  });
+  btnVista.addEventListener("click", async () => {
+    if (!(await confirmarDescarte())) return;
+    sucio = false;
+    vista =vista === "trimestre" ? "anual" : "trimestre";
     btnVista.textContent = vista === "anual" ? "Volver a captura" : "Ver resumen anual";
     selTrim.disabled = vista === "anual";
     actualizar();

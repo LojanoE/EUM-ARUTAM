@@ -176,3 +176,20 @@ body {
   #libretas { max-width: none; }
   .libreta { padding: 0.9cm 1cm; }
 }
+
+/* Solo en pantalla: la libreta se adapta al ancho del celular. Imprimir y el
+   PDF no cambian (el PDF usa .generando-pdf). */
+.ayuda-libreta { display: none; }
+@media screen {
+  #libretas { max-width: min(190mm, 100%); }
+  body:not(.generando-pdf) .libreta { overflow-x: auto; }
+  .barra-libreta { gap: 0.6rem; }
+  .barra-libreta button { min-height: 44px; font-size: 1rem; padding: 0.4rem 1.1rem; }
+  .barra-libreta select { min-height: 44px; font-size: 1rem; }
+  .barra-libreta .ayuda-libreta { display: block; flex: 1 1 100%; font-size: 0.95rem; }
+  .barra-libreta span { font-size: 0.95rem; }
+}
+@media screen and (max-width: 600px) {
+  .barra-libreta #sel-estudiante { flex: 1 1 100%; max-width: 100%; }
+  .barra-libreta button { flex: 1 1 calc(50% - 0.6rem); }
+}
