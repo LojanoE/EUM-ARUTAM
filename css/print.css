@@ -126,10 +126,53 @@ body {
   margin-bottom: 2px !important;
 }
 
+/* Libreta de calificaciones (libreta.html): una por hoja A4. */
+.barra-libreta { flex-wrap: wrap; }
+.barra-libreta select {
+  padding: 0.35rem 0.5rem;
+  border-radius: 5px;
+  border: none;
+  max-width: 18rem;
+}
+.barra-libreta button:disabled { opacity: 0.6; cursor: wait; }
+
+#libretas { max-width: 190mm; margin: 0 auto; }
+
+.libreta { zoom: 1; padding: 0 0.5rem; }
+#libretas .libreta:not(:last-child) { page-break-after: always; }
+.libreta .linea-info { font-size: 9.5pt; flex-wrap: wrap; }
+.libreta .tabla th,
+.libreta .tabla td { font-size: 8.5pt; padding: 2px 4px; }
+.libreta .tabla td.docente,
+.libreta .tabla td.insumos { font-size: 7.5pt; }
+.libreta .tabla td.derecha { text-align: right; }
+.libreta .tabla tfoot td { background: #f3f3f3; }
+.libreta .nota-baja { background: #fbe3e3; color: #a11; font-weight: 700; }
+.subtitulo-libreta {
+  margin: 0.6rem 0 0.25rem;
+  font-size: 9.5pt;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.nota-pie { margin: 0 0 0.3rem; font-size: 7.5pt; color: #333; }
+.tabla-notas { page-break-inside: avoid; }
+.tabla-notas tr { page-break-inside: avoid; }
+
+.recuadro-obs { margin: 0.7rem 0; font-size: 8.5pt; page-break-inside: avoid; }
+.recuadro-obs p { margin: 0 0 0.2rem; }
+.linea-obs { display: block; height: 1.1rem; border-bottom: 1px dotted #000; }
+
+.firmas-libreta { justify-content: space-around; margin-top: 1.6rem; page-break-inside: avoid; }
+
+/* Al generar el PDF desde la pantalla, sin márgenes de ventana. */
+.generando-pdf #libretas { max-width: 190mm; }
+
 /* Al imprimir: ocultar la barra de herramientas y las notificaciones */
 @media print {
   .no-imprimir { display: none !important; }
   #toasts { display: none !important; }
   body { background: #fff; }
   .hoja-asistencia { padding: 0.9cm 1cm; }
+  #libretas { max-width: none; }
+  .libreta { padding: 0.9cm 1cm; }
 }

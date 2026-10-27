@@ -3,7 +3,7 @@
 // del CDN de Firebase; el tráfico de Firestore (firestore.googleapis.com) no
 // pasa por aquí: lo maneja la caché persistente del propio SDK.
 // Cambiar CACHE al modificar archivos estáticos, para forzar la renovación.
-const CACHE = "uem-arutam-v11";
+const CACHE = "uem-arutam-v12";
 
 // Cuánto se espera a la red antes de servir la copia guardada. Con internet
 // lento igual se abre la app (desde caché); sin internet falla enseguida.
@@ -16,6 +16,7 @@ const ESTATICOS = [
   "imprimir.html",
   "imprimir-lote.html",
   "reporte.html",
+  "libreta.html",
   "manifest.webmanifest",
   "icons/icon.svg",
   "icons/icon-192.png",
@@ -32,6 +33,7 @@ const ESTATICOS = [
   "js/imprimir-lote.js",
   "js/hoja-asistencia.js",
   "js/reporte.js",
+  "js/libreta.js",
   "js/offline.js",
   "js/version.js",
   "js/notificaciones.js",
@@ -66,13 +68,14 @@ self.addEventListener("activate", (e) => {
 // con revalidación", que respondía con la copia vieja y guardaba la nueva
 // para la próxima carga: tras cada despliegue la app quedaba una recarga
 // atrasada y seguía mostrando la versión anterior.
-// Los scripts del CDN de Firebase sí van "caché primero": su URL lleva el
-// número de versión, así que nunca cambian de contenido.
+// Los scripts del CDN de Firebase (gstatic) y el generador de PDF (cdnjs) sí
+// van "caché primero": su URL lleva el número de versión, así que nunca
+// cambian de contenido.
 self.addEventListener("fetch", (e) => {
   if (e.request.method !== "GET") return;
   const url = new URL(e.request.url);
 
-  if (url.origin === "https://www.gstatic.com") {
+  if (url.origin === "https://www.gstatic.com" || url.origin === "https://cdnjs.cloudflare.com") {
     e.respondWith(cachePrimero(e.request));
     return;
   }

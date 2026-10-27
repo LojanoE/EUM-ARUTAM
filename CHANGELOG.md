@@ -4,6 +4,16 @@ Historial de versiones de la app de Registro de Asistencia — UE "Arutam".
 Versionado semántico: MAYOR.MENOR.PARCHE. La versión vigente está en
 `js/version.js` y cada versión tiene su tag de git (`vX.Y.Z`).
 
+## [1.21.0] — 2026-10-27
+
+### Añadido
+- **Libreta de calificaciones** (`libreta.html`): notas por materia (T1, T2, T3,
+  promedio final y estado), detalle de insumos/proyecto/examen, resumen de
+  asistencia, observaciones y firmas. Una por estudiante o todo el grado.
+- Se imprime, se descarga como PDF o se comparte (WhatsApp u otra app) para el
+  representante. Acceso desde Notas con «Libretas del grado»; la ve el admin y
+  el docente que da clases en ese grado.
+
 ## [1.20.0] — 2026-10-27
 
 ### Añadido

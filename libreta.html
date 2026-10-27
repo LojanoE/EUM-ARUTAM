@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1a3a6b">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <title>Libreta de Calificaciones — UE "Arutam"</title>
+  <link rel="stylesheet" href="css/print.css">
+</head>
+<body>
+  <div class="no-imprimir barra-herramientas barra-libreta">
+    <select id="sel-estudiante" aria-label="Estudiante" hidden></select>
+    <button id="btn-imprimir">Imprimir</button>
+    <button id="btn-pdf">Descargar PDF</button>
+    <button id="btn-compartir" hidden>Compartir</button>
+    <button onclick="window.close()">Cerrar</button>
+    <span id="estado">Cargando datos...</span>
+  </div>
+
+  <div id="libretas" hidden></div>
+
+  <script>
+    // Service worker: permite abrir esta hoja sin internet.
+    if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+  </script>
+  <script type="module" src="js/libreta.js"></script>
+</body>
+</html>

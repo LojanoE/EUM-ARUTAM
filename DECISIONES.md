@@ -6,6 +6,17 @@ los pendientes. Las entradas más recientes van arriba.
 
 ---
 
+## 2026-10-27 · v1.21.0 — Libreta de calificaciones para el representante
+- Pedido: ver las notas por estudiante y poder entregarlas al padre de familia en PDF.
+- Acceso: admin y cualquier docente que da clases en el grado; ve todas las materias.
+  La restricción es solo de interfaz (reglas de Firestore abiertas, igual que Notas).
+- PDF con `html2pdf.js` 0.10.1 desde cdnjs (se carga al pulsar el botón); el service
+  worker lo trata «caché primero». «Compartir» usa la hoja de compartir del sistema,
+  solo donde el navegador la soporta.
+- No hay contacto del representante: se elige el destinatario al compartir.
+- La asistencia es el total registrado (no hay fechas de trimestre en la config).
+- Posible mejora: precargar los datos de la libreta en `offline.js` para generarla sin internet.
+
 ## 2026-10-27 · v1.20.0 — Contraseña inicial = usuario y cambio al ingresar
 - Pedido: en vez de contraseñas aleatorias, usuario y contraseña iguales para las
   cuentas nuevas, y que cada persona pueda cambiarla al ingresar y después.
@@ -84,5 +95,4 @@ los pendientes. Las entradas más recientes van arriba.
 - Renombrar el usuario `djima` (de Paúl Loarte) si se quiere ordenar.
 - Confirmar que `admin` corresponde a Narcisa Sozoranga.
 - Crear las cuentas reales de los docentes desde el módulo Docentes.
-- Reporte imprimible de notas.
 - Publicar: `git push origin main` y `git push --tags`, luego el deploy de Hosting.

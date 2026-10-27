@@ -62,6 +62,7 @@ export async function initNotas(contenedor, ctx) {
         </div>
         <div>
           <button class="secundario" id="n-vista">Ver resumen anual</button>
+          <button class="secundario" id="n-libretas">Libretas del grado</button>
         </div>
       </div>
       <p class="info">Período lectivo ${esc(periodo)} · escala de 0 a 10 · nota mínima para aprobar: ${cfg.notaMinima}.</p>
@@ -74,6 +75,9 @@ export async function initNotas(contenedor, ctx) {
   const panel = contenedor.querySelector("#n-panel");
 
   const cargaActual = () => cargas[Number(selCarga.value)];
+  // Libretas (PDF para el representante) de todo el grado de la carga elegida.
+  contenedor.querySelector("#n-libretas").addEventListener("click", () =>
+    window.open(`libreta.html?grado=${encodeURIComponent(cargaActual().grado)}`, "_blank"));
   const trimestre = () => Number(selTrim.value);
   // El docente solo edita el trimestre abierto; el admin cualquiera.
   const editable = () => ctx.esAdmin || trimestre() === cfg.trimestreAbierto;

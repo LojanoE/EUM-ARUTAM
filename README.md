@@ -17,6 +17,7 @@ index.html            Login
 app.html              Plataforma (shell con menú lateral y módulos)
 imprimir.html         Reporte diario imprimible (formato de la hoja IMPRIMIR)
 reporte.html          Reporte consolidado por rango de fechas (imprimible/CSV)
+libreta.html          Libreta de calificaciones por estudiante o grado (imprimir/PDF/compartir)
 js/                   firebase-config, auth, data, version, notificaciones, app (shell)
 js/mod-dashboard.js   Resumen por grado, alertas y ranking de inasistencias
 js/mod-asistencia.js  Registro diario (marcas por hora) + reporte por rango
@@ -128,6 +129,10 @@ para confirmar que quedó registrado.
    porcentajes (verificar contra el instructivo vigente), y se pueden añadir
    **cargas adicionales** para reemplazos o casos fuera del horario.
 4. El docente entra y solo ve **Notas**: elige grado y asignatura, llena y guarda.
+5. **Libretas del grado** (botón en Notas, admin y docentes del grado): abre
+   `libreta.html` con la libreta de cada estudiante (notas por trimestre, detalle
+   de insumos, asistencia, observaciones y firmas). Se imprime, se descarga como
+   PDF o se comparte con «Compartir» (WhatsApp u otra app) para el representante.
 
 Seguridad: el login sigue siendo el propio (sin Firebase Auth) y las reglas de
 Firestore están abiertas, así que el filtrado por docente se hace en la
