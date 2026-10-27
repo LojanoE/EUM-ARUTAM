@@ -108,6 +108,12 @@ para confirmar que quedó registrado.
 2. En GitHub: Settings → Pages → Source: rama principal, carpeta `/ (root)`.
 3. La app quedará en `https://<usuario>.github.io/EUM-ARUTAM/`.
 
+## Despliegue en Firebase Hosting
+
+`firebase deploy --only hosting --project uem-arutam` publica la raíz en
+`https://uem-arutam.web.app` (config en `firebase.json`; no se suben `DOC/`,
+`scripts/`, `seed/` ni los `.md`).
+
 ## Versionado
 
 Se usa versionado semántico (`MAYOR.MENOR.PARCHE`):

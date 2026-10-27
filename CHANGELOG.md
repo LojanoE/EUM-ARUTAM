@@ -4,6 +4,13 @@ Historial de versiones de la app de Registro de Asistencia — UE "Arutam".
 Versionado semántico: MAYOR.MENOR.PARCHE. La versión vigente está en
 `js/version.js` y cada versión tiene su tag de git (`vX.Y.Z`).
 
+## [1.16.0] — 2026-10-27
+
+### Agregado
+- **Firebase Hosting**: la app también se publica en
+  https://uem-arutam.web.app (`firebase deploy --only hosting`). Se excluyen
+  `DOC/`, `scripts/`, `seed/`, `*.md` y reglas del despliegue.
+
 ## [1.15.0] — 2026-10-22
 
 ### Agregado
