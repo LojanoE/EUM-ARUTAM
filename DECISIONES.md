@@ -6,6 +6,18 @@ los pendientes. Las entradas más recientes van arriba.
 
 ---
 
+## 2026-10-27 · v1.20.0 — Contraseña inicial = usuario y cambio al ingresar
+- Pedido: en vez de contraseñas aleatorias, usuario y contraseña iguales para las
+  cuentas nuevas, y que cada persona pueda cambiarla al ingresar y después.
+- Las cuentas creadas desde Docentes llevan `debeCambiarPassword: true`; mientras
+  esté activo, `exigirSesion` manda a `index.html?cambiar=1` y no deja entrar a la app.
+- La nueva contraseña: mínimo 4 caracteres, distinta de la actual y del usuario.
+- «Cambiar contraseña» en el menú sirve para todos los roles (cambio voluntario).
+- Una contraseña puesta por el admin en Usuarios también activa el cambio
+  obligatorio: sirve para restablecer cuentas olvidadas (`usuario`/`usuario`).
+- Las cuentas ya existentes (ej. `afernandez`) no se tocaron.
+- Sigue en texto plano (ver pendientes).
+
 ## 2026-10-27 · Insumos de notas por docente (aclaración, sin cambio de código)
 - Cada docente decide cuántos insumos usa con los botones **+ Insumo / − Insumo**
   de Notas, y puede renombrar cada columna. Por defecto empieza con 2.

@@ -53,6 +53,9 @@ export async function initUsuarios(contenedor, ctx) {
         Rol <strong>registro</strong>: consulta y registra asistencia.
         Rol <strong>docente</strong>: solo registra las notas de sus cargas (salen de los horarios por su nombre; las cuentas se crean en Docentes).
         Rol <strong>admin</strong>: además gestiona estudiantes, horarios, grados, cargas y usuarios.<br>
+        Si pone una contraseña nueva a una cuenta existente (por ejemplo, igual al usuario),
+        el sistema pedirá cambiarla en el próximo ingreso; cada persona también puede
+        cambiarla desde «Cambiar contraseña» en el menú.<br>
         Los reportes impresos se firman con el <strong>nombre y cargo del usuario
         que genera el documento</strong>.
       </p>
@@ -153,7 +156,8 @@ export async function initUsuarios(contenedor, ctx) {
       }
       try {
         const datos = { nombre, cargo, rol };
-        if (password) datos.password = password;
+        // Una contraseña puesta por el admin es provisional: el usuario debe cambiarla al entrar.
+        if (password) { datos.password = password; datos.debeCambiarPassword = true; }
         await actualizarUsuario(id, datos);
         mensaje.textContent = `Usuario "${id}" actualizado.`;
       } catch (err) {

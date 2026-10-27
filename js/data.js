@@ -429,12 +429,13 @@ export async function obtenerUsuarios() {
     .sort((a, b) => a.usuario.localeCompare(b.usuario, "es"));
 }
 
-export async function agregarUsuario(usuario, password, nombre, rol, cargo = "") {
+// `extra` se mezcla en el documento (p. ej. { debeCambiarPassword: true }).
+export async function agregarUsuario(usuario, password, nombre, rol, cargo = "", extra = {}) {
   const ref = doc(db, "usuarios", usuario);
   if ((await getDoc(ref)).exists()) {
     throw new Error(`El usuario "${usuario}" ya existe.`);
   }
-  await setDoc(ref, { usuario, password, nombre, rol, cargo });
+  await setDoc(ref, { usuario, password, nombre, rol, cargo, ...extra });
 }
 
 export async function actualizarUsuario(usuario, datos) {
@@ -710,13 +711,13 @@ export async function eliminarCarga(id) {
 }
 
 // Crea una cuenta con rol docente por cada docente del horario que aún no
-// tiene usuario. Usuario = inicial + último apellido (lmijas); contraseña
-// aleatoria sin caracteres ambiguos. Devuelve las credenciales para entregarlas.
+// tiene usuario. Usuario = inicial + último apellido (lmijas); la contraseña
+// inicial es igual al usuario y se obliga a cambiarla en el primer ingreso
+// (`debeCambiarPassword`). Devuelve las credenciales para entregarlas.
 export async function crearCuentasDocentes(claves = null) {
   const docentes = (await obtenerDocentesConCuenta())
     .filter(d => !d.usuario && (!claves || claves.includes(d.clave)));
   const existentes = new Set((await obtenerUsuarios()).map(u => u.usuario));
-  const alfabeto = "abcdefghjkmnpqrstuvwxyz23456789";
   const creadas = [];
   for (const d of docentes) {
     const partes = d.clave.split(" ");
@@ -724,9 +725,9 @@ export async function crearCuentasDocentes(claves = null) {
       ? partes[0][0] + partes[partes.length - 1] : partes[0];
     let usuario = base, n = 2;
     while (existentes.has(usuario)) usuario = base + n++;
-    const bytes = crypto.getRandomValues(new Uint8Array(6));
-    const password = [...bytes].map(b => alfabeto[b % alfabeto.length]).join("");
-    await agregarUsuario(usuario, password, d.nombre, "docente", "DOCENTE");
+    const password = usuario;
+    await agregarUsuario(usuario, password, d.nombre, "docente", "DOCENTE",
+      { debeCambiarPassword: true });
     existentes.add(usuario);
     creadas.push({ nombre: d.nombre, usuario, password });
   }

@@ -25,11 +25,23 @@
       <p id="error" class="error" hidden></p>
       <button type="submit" id="btn-login">Ingresar</button>
     </form>
+    <form id="form-cambiar" hidden>
+      <p id="aviso-cambiar" class="info">Por seguridad, cambie la contraseña inicial antes de continuar.</p>
+      <label for="pw-actual">Contraseña actual</label>
+      <input type="password" id="pw-actual" autocomplete="current-password" required>
+      <label for="pw-nueva">Nueva contraseña</label>
+      <input type="password" id="pw-nueva" autocomplete="new-password" minlength="4" required>
+      <label for="pw-repetir">Repetir nueva contraseña</label>
+      <input type="password" id="pw-repetir" autocomplete="new-password" minlength="4" required>
+      <p id="error-cambiar" class="error" hidden></p>
+      <button type="submit" id="btn-cambiar">Guardar contraseña</button>
+      <p><a href="app.html" id="enlace-volver" hidden>Volver</a></p>
+    </form>
     <p class="version" id="lbl-version"></p>
   </main>
 
   <script type="module">
-    import { login, sesionActual } from "./js/auth.js";
+    import { login, sesionActual, cambiarPassword } from "./js/auth.js";
     import { APP_VERSION } from "./js/version.js";
 
     // Service worker: cachea los archivos estáticos para uso sin internet.
@@ -37,12 +49,53 @@
 
     document.getElementById("lbl-version").textContent = "v" + APP_VERSION;
 
-    // Si ya hay sesión activa, ir directo a la app.
-    if (sesionActual()) location.href = "app.html";
-
     const form = document.getElementById("form-login");
     const error = document.getElementById("error");
     const boton = document.getElementById("btn-login");
+    const formCambiar = document.getElementById("form-cambiar");
+    const errorCambiar = document.getElementById("error-cambiar");
+    const botonCambiar = document.getElementById("btn-cambiar");
+
+    // Muestra el formulario de cambio. Si es voluntario (la sesión no lo exige)
+    // se quita el aviso de obligatorio y se ofrece volver a la app.
+    function mostrarCambio() {
+      form.hidden = true;
+      formCambiar.hidden = false;
+      const obligatorio = sesionActual()?.debeCambiarPassword === true;
+      document.getElementById("aviso-cambiar").hidden = !obligatorio;
+      document.getElementById("enlace-volver").hidden = obligatorio;
+    }
+
+    // Con sesión activa: cambio voluntario (?cambiar=1) o directo a la app.
+    const sesionInicial = sesionActual();
+    if (sesionInicial) {
+      if (sesionInicial.debeCambiarPassword || location.search.includes("cambiar=1")) {
+        mostrarCambio();
+      } else {
+        location.href = "app.html";
+      }
+    }
+
+    formCambiar.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      errorCambiar.hidden = true;
+      const nueva = document.getElementById("pw-nueva").value;
+      if (nueva !== document.getElementById("pw-repetir").value) {
+        errorCambiar.textContent = "Las dos contraseñas nuevas no coinciden.";
+        errorCambiar.hidden = false;
+        return;
+      }
+      botonCambiar.disabled = true;
+      try {
+        await cambiarPassword(document.getElementById("pw-actual").value, nueva);
+        location.href = "app.html";
+      } catch (err) {
+        errorCambiar.textContent = err.message || "No se pudo cambiar la contraseña.";
+        errorCambiar.hidden = false;
+      } finally {
+        botonCambiar.disabled = false;
+      }
+    });
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -52,7 +105,13 @@
       try {
         const sesion = await login(form.usuario.value, form.password.value);
         if (sesion) {
-          location.href = "app.html";
+          if (sesion.debeCambiarPassword) {
+            mostrarCambio();
+            document.getElementById("pw-actual").value = form.password.value;
+            document.getElementById("pw-nueva").focus();
+          } else {
+            location.href = "app.html";
+          }
         } else {
           error.textContent = "Usuario o contraseña incorrectos.";
           error.hidden = false;

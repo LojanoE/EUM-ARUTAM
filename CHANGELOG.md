@@ -4,6 +4,15 @@ Historial de versiones de la app de Registro de Asistencia — UE "Arutam".
 Versionado semántico: MAYOR.MENOR.PARCHE. La versión vigente está en
 `js/version.js` y cada versión tiene su tag de git (`vX.Y.Z`).
 
+## [1.20.0] — 2026-10-27
+
+### Añadido
+- Las cuentas de docentes nuevas se crean con contraseña igual al usuario y
+  el sistema obliga a cambiarla en el primer ingreso.
+- Botón «Cambiar contraseña» en el menú, disponible para todos los roles.
+- Si el admin pone una contraseña nueva desde Usuarios, la persona también
+  debe cambiarla al entrar.
+
 ## [1.19.1] — 2026-10-27
 
 ### Corregido

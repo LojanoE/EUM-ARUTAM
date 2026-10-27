@@ -166,7 +166,7 @@ export async function initDocentes(contenedor, ctx) {
     const claves = [...tbody.querySelectorAll("[data-sel]:checked")].map(c => c.dataset.sel);
     const ok = await confirmarAccion(
       `Se creará una cuenta con rol docente para ${claves.length} docente(s), ` +
-      "con una contraseña generada. ¿Continuar?", { textoConfirmar: "Crear cuentas" });
+      "con contraseña igual al usuario (deberán cambiarla al ingresar). ¿Continuar?", { textoConfirmar: "Crear cuentas" });
     if (!ok) return;
     const panel = contenedor.querySelector("#d-credenciales");
     try {
@@ -175,7 +175,7 @@ export async function initDocentes(contenedor, ctx) {
       panel.hidden = !creadas.length;
       panel.innerHTML = `
         <h2 style="font-size:1rem; margin-top:0;">Credenciales generadas</h2>
-        <p class="aviso">Guárdelas o imprímalas ahora: la contraseña solo se puede cambiar después desde Usuarios.</p>
+        <p class="aviso">La contraseña inicial es igual al usuario; el sistema pedirá cambiarla en el primer ingreso. Si la olvidan, se restablece desde Usuarios.</p>
         <table class="tabla-gestion">
           <thead><tr><th>Docente</th><th>Usuario</th><th>Contraseña</th></tr></thead>
           <tbody>${creadas.map(c => `

@@ -70,6 +70,10 @@ document.getElementById("nombre-usuario").textContent =
   `${sesion.nombre} (${sesion.rol})`;
 document.getElementById("lbl-version").textContent = "v" + APP_VERSION;
 
+document.getElementById("btn-password").addEventListener("click", () => {
+  location.href = "index.html?cambiar=1";
+});
+
 document.getElementById("btn-salir").addEventListener("click", () => {
   cerrarSesion();
   location.href = "index.html";
