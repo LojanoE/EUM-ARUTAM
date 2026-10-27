@@ -1004,3 +1004,13 @@ button.peligro:hover { background: #8f1d17; }
 .nota-in.invalido { border-color: var(--rojo); background: #fdecea; }
 .nota-in:disabled, .nombre-insumo:disabled { background: #f3f4f6; color: inherit; }
 .tabla-gestion td.bajo { color: var(--rojo); font-weight: 600; }
+
+/* Impresión de credenciales de docentes (módulo Cargas) */
+@media print {
+  body.imprimiendo-credenciales .sidebar,
+  body.imprimiendo-credenciales .barra-movil,
+  body.imprimiendo-credenciales #toasts,
+  body.imprimiendo-credenciales #c-imprimir,
+  body.imprimiendo-credenciales .contenido-app .titulo-modulo,
+  body.imprimiendo-credenciales .contenido-app .panel:not(#c-credenciales) { display: none !important; }
+}

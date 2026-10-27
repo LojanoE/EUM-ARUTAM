@@ -29,8 +29,8 @@ export async function initNotas(contenedor, ctx) {
     contenedor.innerHTML = `
       <h2 class="titulo-modulo">Notas</h2>
       <p class="aviso">${ctx.esAdmin
-        ? "Aún no hay cargas docentes. Créelas en el módulo Cargas."
-        : "No tiene grados ni asignaturas asignados. Consulte con administración."}</p>`;
+        ? "Aún no hay cargas: registre los horarios o añada cargas en el módulo Cargas."
+        : "Su nombre no coincide con ningún docente del horario y no tiene cargas adicionales. Consulte con administración."}</p>`;
     return;
   }
 

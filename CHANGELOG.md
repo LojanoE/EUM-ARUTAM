@@ -4,6 +4,18 @@ Historial de versiones de la app de Registro de Asistencia — UE "Arutam".
 Versionado semántico: MAYOR.MENOR.PARCHE. La versión vigente está en
 `js/version.js` y cada versión tiene su tag de git (`vX.Y.Z`).
 
+## [1.18.0] — 2026-10-27
+
+### Cambiado
+- Las **cargas docentes salen de los horarios**: cada docente ve en Notas las
+  materias que el horario le asigna, vinculado por nombre (sin importar tildes,
+  mayúsculas ni títulos como Lic./Mgtr.). Un cambio de horario se refleja solo.
+
+### Agregado
+- Cargas: panel «Docentes según el horario» y botón **Crear cuentas faltantes**,
+  que genera usuario y contraseña de cada docente y muestra una lista imprimible.
+- Las cargas manuales se conservan como «Cargas adicionales (reemplazos)».
+
 ## [1.17.0] — 2026-10-27
 
 ### Agregado

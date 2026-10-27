@@ -116,11 +116,16 @@ para confirmar que quedó registrado.
 
 ## Notas y acceso de docentes
 
-1. En **Usuarios**, crear un usuario con rol `docente` por profesor.
-2. En **Cargas**, asignarle sus pares grado + asignatura y fijar el período
-   lectivo, el trimestre abierto y los porcentajes (formativa/sumativa y
-   proyecto/examen; verificar contra el instructivo vigente).
-3. El docente entra y solo ve **Notas**: elige grado y asignatura, llena y guarda.
+1. Las cargas (grado + asignatura de cada docente) **salen de los horarios**.
+   El usuario se vincula con el horario por **nombre** (se ignoran tildes,
+   mayúsculas y títulos); si se edita el nombre en Usuarios, debe seguir coincidiendo.
+2. En **Cargas**, el botón **Crear cuentas faltantes** crea un usuario `docente`
+   por cada profesor del horario sin cuenta y muestra una lista imprimible de
+   usuarios y contraseñas (después solo se pueden cambiar en Usuarios).
+3. En la misma pantalla se fijan el período lectivo, el trimestre abierto y los
+   porcentajes (verificar contra el instructivo vigente), y se pueden añadir
+   **cargas adicionales** para reemplazos o casos fuera del horario.
+4. El docente entra y solo ve **Notas**: elige grado y asignatura, llena y guarda.
 
 Seguridad: el login sigue siendo el propio (sin Firebase Auth) y las reglas de
 Firestore están abiertas, así que el filtrado por docente se hace en la

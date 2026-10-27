@@ -494,25 +494,108 @@ export async function firmaDelUsuario(usuario) {
 
 /* ---------- Cargas docentes y calificaciones ---------- */
 
-// Carga = un docente (usuario) dando una asignatura en un grado.
-export async function obtenerCargas() {
-  const snap = await getDocs(collection(db, "cargas"));
-  return snap.docs
-    .map(d => ({ id: d.id, ...d.data() }))
-    .sort((a, b) =>
-      a.docente.localeCompare(b.docente, "es") ||
-      a.grado.localeCompare(b.grado, "es") ||
-      a.asignatura.localeCompare(b.asignatura, "es"));
+// Una carga es un docente dando una asignatura en un grado. Salen de dos
+// fuentes: los horarios (automáticas, se vinculan por nombre) y la colección
+// `cargas` (manuales: reemplazos y casos fuera del horario).
+
+const TITULOS_DOCENTE = new Set([
+  "lic", "licda", "mgtr", "mgs", "msc", "mag", "ing", "dr", "dra", "prof",
+  "tlgo", "tnlgo", "abg", "arq", "psic"
+]);
+
+// Clave para comparar nombres de docentes que en los horarios vienen escritos
+// de varias formas: sin tildes, sin mayúsculas y sin título (Lic., Mgtr.…).
+export function claveDocente(nombre) {
+  return String(nombre ?? "")
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase().replace(/[^a-z\s]/g, " ")
+    .split(/\s+/).filter(p => p && !TITULOS_DOCENTE.has(p)).join(" ");
 }
 
-export async function obtenerCargasDeDocente(usuario) {
-  const snap = await getDocs(
-    query(collection(db, "cargas"), where("docente", "==", usuario)));
+// Docentes que aparecen en los horarios, con sus cargas (grado + asignatura).
+// Los nombres que solo difieren en tildes/mayúsculas cuentan como uno solo y
+// se muestra la grafía más frecuente.
+export function obtenerDocentesHorario() {
+  return conCache("docentesHorario", async () => {
+    const snap = await getDocs(collection(db, "horarios"));
+    const porClave = new Map();
+    for (const d of snap.docs) {
+      const b = d.data();
+      const nombre = String(b.docente || "").trim();
+      const clave = claveDocente(nombre);
+      const asignatura = String(b.asignatura || "").trim();
+      if (!clave || !asignatura || !b.grado) continue;
+      if (!porClave.has(clave)) porClave.set(clave, { clave, grafias: new Map(), cargas: new Map() });
+      const doc_ = porClave.get(clave);
+      doc_.grafias.set(nombre, (doc_.grafias.get(nombre) || 0) + 1);
+      doc_.cargas.set(`${b.grado}|${asignatura}`, { grado: b.grado, asignatura });
+    }
+    return [...porClave.values()].map(d => ({
+      clave: d.clave,
+      nombre: [...d.grafias.entries()].sort((a, b) => b[1] - a[1])[0][0],
+      cargas: [...d.cargas.values()].sort((a, b) =>
+        a.grado.localeCompare(b.grado, "es") || a.asignatura.localeCompare(b.asignatura, "es"))
+    })).sort((a, b) => a.nombre.localeCompare(b.nombre, "es"));
+  });
+}
+
+// Docentes del horario con el usuario vinculado por nombre (o null si aún
+// no tienen cuenta).
+export async function obtenerDocentesConCuenta() {
+  const [docentes, usuarios] = await Promise.all([obtenerDocentesHorario(), obtenerUsuarios()]);
+  const usuarioPorClave = new Map();
+  for (const u of usuarios) {
+    const k = claveDocente(u.nombre);
+    if (k && !usuarioPorClave.has(k)) usuarioPorClave.set(k, u.usuario);
+  }
+  return docentes.map(d => ({ ...d, usuario: usuarioPorClave.get(d.clave) || null }));
+}
+
+const porGradoYAsignatura = (a, b) =>
+  a.grado.localeCompare(b.grado, "es") || a.asignatura.localeCompare(b.asignatura, "es");
+
+// Cargas asignadas a mano (colección `cargas`).
+export async function obtenerCargasManuales() {
+  const snap = await getDocs(collection(db, "cargas"));
   return snap.docs
-    .map(d => ({ id: d.id, ...d.data() }))
-    .sort((a, b) =>
-      a.grado.localeCompare(b.grado, "es") ||
-      a.asignatura.localeCompare(b.asignatura, "es"));
+    .map(d => ({ id: d.id, origen: "manual", ...d.data() }))
+    .sort((a, b) => a.docente.localeCompare(b.docente, "es") || porGradoYAsignatura(a, b));
+}
+
+// Todas las cargas (vista del admin): las del horario más las manuales que no
+// repiten una del horario.
+export async function obtenerCargas() {
+  const [docentes, manuales] = await Promise.all([obtenerDocentesConCuenta(), obtenerCargasManuales()]);
+  const clavePorUsuario = new Map(docentes.filter(d => d.usuario).map(d => [d.usuario, d]));
+  const delHorario = docentes.flatMap(d => d.cargas.map(c => ({
+    origen: "horario", docente: d.nombre, usuario: d.usuario, ...c
+  })));
+  const extras = manuales.filter(m => {
+    const d = clavePorUsuario.get(m.docente);
+    return !d?.cargas.some(c => c.grado === m.grado && c.asignatura === m.asignatura);
+  });
+  return [...delHorario, ...extras].sort((a, b) =>
+    a.docente.localeCompare(b.docente, "es") || porGradoYAsignatura(a, b));
+}
+
+// Cargas de un docente: las del horario cuyo docente coincide por nombre con
+// el de su usuario, más las manuales.
+export async function obtenerCargasDeDocente(usuario) {
+  const [u, horario, snap] = await Promise.all([
+    getDoc(doc(db, "usuarios", usuario)),
+    obtenerDocentesHorario(),
+    getDocs(query(collection(db, "cargas"), where("docente", "==", usuario)))
+  ]);
+  const clave = claveDocente(u.exists() ? u.data().nombre : "");
+  const propias = clave ? horario.find(d => d.clave === clave)?.cargas || [] : [];
+  const cargas = propias.map(c => ({ origen: "horario", docente: usuario, ...c }));
+  for (const d of snap.docs) {
+    const m = d.data();
+    if (!cargas.some(c => c.grado === m.grado && c.asignatura === m.asignatura)) {
+      cargas.push({ id: d.id, origen: "manual", ...m });
+    }
+  }
+  return cargas.sort(porGradoYAsignatura);
 }
 
 export async function agregarCarga(docente, grado, asignatura) {
@@ -526,6 +609,30 @@ export async function agregarCarga(docente, grado, asignatura) {
 
 export async function eliminarCarga(id) {
   await deleteDoc(doc(db, "cargas", id));
+}
+
+// Crea una cuenta con rol docente por cada docente del horario que aún no
+// tiene usuario. Usuario = inicial + último apellido (lmijas); contraseña
+// aleatoria sin caracteres ambiguos. Devuelve las credenciales para entregarlas.
+export async function crearCuentasDocentes() {
+  const docentes = (await obtenerDocentesConCuenta()).filter(d => !d.usuario);
+  const existentes = new Set((await obtenerUsuarios()).map(u => u.usuario));
+  const alfabeto = "abcdefghjkmnpqrstuvwxyz23456789";
+  const creadas = [];
+  for (const d of docentes) {
+    const partes = d.clave.split(" ");
+    const base = partes.length > 1
+      ? partes[0][0] + partes[partes.length - 1] : partes[0];
+    let usuario = base, n = 2;
+    while (existentes.has(usuario)) usuario = base + n++;
+    const bytes = crypto.getRandomValues(new Uint8Array(6));
+    const password = [...bytes].map(b => alfabeto[b % alfabeto.length]).join("");
+    await agregarUsuario(usuario, password, d.nombre, "docente", "DOCENTE");
+    existentes.add(usuario);
+    creadas.push({ nombre: d.nombre, usuario, password });
+  }
+  invalidarCache();
+  return creadas;
 }
 
 // Asignaturas distintas que aparecen en los horarios (sugerencias para el
