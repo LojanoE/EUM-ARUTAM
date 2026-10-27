@@ -60,12 +60,12 @@ export async function initNotas(contenedor, ctx) {
     <div class="panel">
       <div class="selectores">
         <div class="sel-ancho">
-          <label for="n-carga">Grado y asignatura</label>
-          <select id="n-carga">
-            ${cargas.map((c, i) => `
-              <option value="${i}">${esc(c.grado)} — ${esc(c.asignatura)}${
-                ctx.esAdmin ? ` (${esc(c.docente)})` : ""}</option>`).join("")}
-          </select>
+          ${cargas.length > 5 ? `
+          <label for="n-buscar">Buscar${ctx.esAdmin ? " grado, materia o docente" : " grado o materia"}</label>
+          <input type="search" id="n-buscar" class="buscador-cargas" autocomplete="off"
+                 placeholder="Escriba para filtrar la lista…">` : ""}
+          <label for="n-carga">Grado y asignatura <span id="n-conteo" class="conteo-cargas"></span></label>
+          <select id="n-carga"></select>
         </div>
         <div>
           <label for="n-trimestre">Trimestre</label>
@@ -325,11 +325,41 @@ export async function initNotas(contenedor, ctx) {
       { textoConfirmar: "Descartar cambios", peligro: true });
   }
 
-  selCarga.addEventListener("change", async () => {
-    if (!(await confirmarDescarte())) { selCarga.value = cargaPrev; return; }
+  async function cambiarCarga() {
+    if (!(await confirmarDescarte())) { llenarCargas(cargaPrev); return; }
     sucio = false;
     cargaPrev = selCarga.value;
     actualizar();
+  }
+  selCarga.addEventListener("change", cambiarCarga);
+
+  // Buscador: filtra la lista por grado, materia y docente (sin tildes ni
+  // mayúsculas; cada palabra debe aparecer). Si la carga abierta ya no coincide
+  // y no hay notas sin guardar, pasa a la primera coincidencia; si las hay, la
+  // carga abierta se conserva en la lista para no perder lo escrito.
+  const sinTildes = (t) => String(t || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  const textos = cargas.map(c => sinTildes(`${c.grado} ${c.asignatura} ${c.docente}`));
+  const inBuscar = contenedor.querySelector("#n-buscar");
+  const conteo = contenedor.querySelector("#n-conteo");
+
+  function llenarCargas(seleccion) {
+    const palabras = sinTildes(inBuscar?.value).split(/\s+/).filter(Boolean);
+    const idx = [];
+    cargas.forEach((c, i) => {
+      if (palabras.every(p => textos[i].includes(p)) || (sucio && String(i) === cargaPrev)) idx.push(i);
+    });
+    selCarga.innerHTML = idx.length
+      ? idx.map(i => `<option value="${i}">${esc(cargas[i].grado)} — ${esc(cargas[i].asignatura)}${
+          ctx.esAdmin ? ` (${esc(cargas[i].docente)})` : ""}</option>`).join("")
+      : `<option value="">Sin resultados</option>`;
+    if (idx.some(i => String(i) === String(seleccion))) selCarga.value = seleccion;
+    conteo.textContent = palabras.length ? `· ${idx.length} de ${cargas.length}` : "";
+    return idx.length > 0;
+  }
+  llenarCargas("0");
+  if (inBuscar) inBuscar.addEventListener("input", () => {
+    if (!llenarCargas(cargaPrev)) return;
+    if (selCarga.value !== cargaPrev) cambiarCarga();
   });
   selTrim.addEventListener("change", async () => {
     if (vista !== "trimestre") return;

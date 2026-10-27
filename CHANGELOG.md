@@ -4,6 +4,13 @@ Historial de versiones de la app de Registro de Asistencia — UE "Arutam".
 Versionado semántico: MAYOR.MENOR.PARCHE. La versión vigente está en
 `js/version.js` y cada versión tiene su tag de git (`vX.Y.Z`).
 
+## [1.23.0] — 2026-10-27
+
+### Añadido
+- **Notas**: buscador sobre la lista de grado y asignatura (por grado, materia o docente,
+  sin importar tildes ni mayúsculas). Muestra cuántas coincidencias hay y, si hay notas
+  sin guardar, conserva la carga abierta para no perder lo escrito.
+
 ## [1.22.0] — 2026-10-27
 
 ### Mejorado

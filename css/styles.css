@@ -193,6 +193,9 @@ body {
 .selectores > div { min-width: 0; }
 .selectores .sel-ancho { flex: 1 1 260px; }
 .selectores .sel-ancho select { width: 100%; }
+.buscador-cargas { width: 100%; min-height: 44px; margin-bottom: 0.6rem; padding: 0.5rem 0.7rem;
+  font-size: 1rem; border: 1px solid var(--borde); border-radius: 6px; }
+.conteo-cargas { font-weight: 400; color: var(--texto-suave); }
 .selectores .botones-fila { display: flex; gap: 0.5rem; flex-wrap: wrap; }
 
 .selectores label {
