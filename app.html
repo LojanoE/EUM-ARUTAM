@@ -12,6 +12,7 @@
   <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
   <link rel="stylesheet" href="css/styles.css">
+  <script>try{var p=JSON.parse(localStorage.getItem("arutam-pref")||"{}"),h=document.documentElement;if(p.letra==="grande"||p.letra==="enorme")h.dataset.letra=p.letra;if(p.contraste==="alto")h.dataset.contraste="alto"}catch(e){}</script>
 </head>
 <body>
   <header class="barra-movil">
@@ -47,6 +48,15 @@
             title="Volver a descargar los datos de todos los grados para poder imprimir sin internet">
             Actualizar datos
           </button>
+        </div>
+        <div class="pref-pantalla" role="group" aria-label="Tamaño de letra y contraste">
+          <span>Tamaño de letra</span>
+          <div class="pref-letra">
+            <button type="button" data-letra="normal" aria-label="Letra normal" aria-pressed="true">A</button>
+            <button type="button" data-letra="grande" aria-label="Letra grande" aria-pressed="false">A+</button>
+            <button type="button" data-letra="enorme" aria-label="Letra muy grande" aria-pressed="false">A++</button>
+          </div>
+          <button type="button" id="btn-contraste" class="pref-contraste" aria-pressed="false">Alto contraste</button>
         </div>
         <button id="btn-password">Cambiar contraseña</button>
         <button id="btn-salir">Cerrar sesión</button>

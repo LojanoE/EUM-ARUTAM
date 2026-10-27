@@ -6,6 +6,18 @@ los pendientes. Las entradas más recientes van arriba.
 
 ---
 
+## 2026-10-27 · v1.24.0 — Tamaño de letra y alto contraste
+- Pedido: más opciones de usabilidad para usuarios de unos 48 años, en PC y celular.
+- Decisión: la preferencia se guarda por **dispositivo** (`localStorage`, clave
+  `arutam-pref`), no por usuario ni en Firestore; el zoom del navegador desarma el diseño
+  en el celular, en cambio `html{font-size}` escala todo porque el CSS usa `rem`.
+- Las páginas de impresión (`imprimir*.html`, `reporte.html`, `libreta.html`) no leen
+  la preferencia: la salida impresa y el PDF no cambian.
+
+## 2026-10-27 · v1.23.0 — Buscador en Notas
+- Pedido: con muchas cargas, poder filtrar la lista por grado, materia o docente.
+- Aparece solo con más de 5 cargas; no cambia de carga si hay notas sin guardar.
+
 ## 2026-10-27 · v1.22.0 — Interfaz más amigable y sin desbordes
 - Pedido: los campos se salían del recuadro (sobre todo al cambiar contraseña) y
   los usuarios serán personas de unos 48 años, en PC y celular.

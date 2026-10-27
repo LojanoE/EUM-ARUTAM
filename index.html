@@ -12,6 +12,7 @@
   <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
   <link rel="stylesheet" href="css/styles.css">
+  <script>try{var p=JSON.parse(localStorage.getItem("arutam-pref")||"{}"),h=document.documentElement;if(p.letra==="grande"||p.letra==="enorme")h.dataset.letra=p.letra;if(p.contraste==="alto")h.dataset.contraste="alto"}catch(e){}</script>
 </head>
 <body class="pagina-login">
   <main class="tarjeta-login">
@@ -52,11 +53,28 @@
       <a href="app.html" id="enlace-volver" class="enlace-grande" hidden>Volver a la plataforma</a>
     </form>
     <p class="version" id="lbl-version"></p>
+    <button type="button" id="btn-letra" class="enlace-letra" aria-pressed="false">Letra más grande</button>
   </main>
 
   <script type="module">
     import { login, sesionActual, cambiarPassword } from "./js/auth.js";
     import { APP_VERSION } from "./js/version.js";
+    import { leerPreferencias, guardarPreferencias, aplicarPreferencias } from "./js/preferencias.js";
+
+    // Alterna la letra normal / grande (la preferencia se comparte con la app).
+    const btnLetra = document.getElementById("btn-letra");
+    function pintarLetra() {
+      const grande = leerPreferencias().letra !== "normal";
+      aplicarPreferencias(leerPreferencias());
+      btnLetra.textContent = grande ? "Letra normal" : "Letra más grande";
+      btnLetra.setAttribute("aria-pressed", String(grande));
+    }
+    btnLetra.addEventListener("click", () => {
+      const p = leerPreferencias();
+      guardarPreferencias({ ...p, letra: p.letra === "normal" ? "grande" : "normal" });
+      pintarLetra();
+    });
+    pintarLetra();
 
     // Service worker: cachea los archivos estáticos para uso sin internet.
     if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});

@@ -4,6 +4,13 @@ Historial de versiones de la app de Registro de Asistencia — UE "Arutam".
 Versionado semántico: MAYOR.MENOR.PARCHE. La versión vigente está en
 `js/version.js` y cada versión tiene su tag de git (`vX.Y.Z`).
 
+## [1.24.0] — 2026-10-27
+
+### Añadido
+- **Tamaño de letra** (A · A+ · A++) y **Alto contraste** en el menú lateral; en el login,
+  el enlace «Letra más grande». Se guarda en cada dispositivo y se aplica antes de pintar
+  la página. La impresión, el PDF y la libreta no cambian.
+
 ## [1.23.0] — 2026-10-27
 
 ### Añadido

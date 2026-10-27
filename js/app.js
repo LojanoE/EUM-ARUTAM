@@ -1,6 +1,7 @@
 // Shell de la plataforma: sesión, navegación entre módulos y permisos por rol.
 import { exigirSesion, cerrarSesion } from "./auth.js";
 import { APP_VERSION } from "./version.js";
+import { leerPreferencias, guardarPreferencias, aplicarPreferencias } from "./preferencias.js";
 import { notificarAccion, notificarError, notificarOk } from "./notificaciones.js";
 import { prepararCacheOffline, fechaUltimaPrecarga } from "./offline.js";
 import { initDashboard } from "./mod-dashboard.js";
@@ -69,6 +70,28 @@ document.querySelectorAll(".nav-item").forEach(b => {
 document.getElementById("nombre-usuario").textContent =
   `${sesion.nombre} (${sesion.rol})`;
 document.getElementById("lbl-version").textContent = "v" + APP_VERSION;
+
+/* ---------- Tamaño de letra y alto contraste ---------- */
+let pref = leerPreferencias();
+const btnsLetra = document.querySelectorAll(".pref-letra button");
+const btnContraste = document.getElementById("btn-contraste");
+
+function pintarPreferencias() {
+  aplicarPreferencias(pref);
+  btnsLetra.forEach(b => b.setAttribute("aria-pressed", String(b.dataset.letra === pref.letra)));
+  btnContraste.setAttribute("aria-pressed", String(pref.contraste === "alto"));
+}
+btnsLetra.forEach(b => b.addEventListener("click", () => {
+  pref = { ...pref, letra: b.dataset.letra };
+  guardarPreferencias(pref);
+  pintarPreferencias();
+}));
+btnContraste.addEventListener("click", () => {
+  pref = { ...pref, contraste: pref.contraste === "alto" ? "normal" : "alto" };
+  guardarPreferencias(pref);
+  pintarPreferencias();
+});
+pintarPreferencias();
 
 document.getElementById("btn-password").addEventListener("click", () => {
   location.href = "index.html?cambiar=1";
