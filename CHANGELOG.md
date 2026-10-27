@@ -4,6 +4,12 @@ Historial de versiones de la app de Registro de Asistencia — UE "Arutam".
 Versionado semántico: MAYOR.MENOR.PARCHE. La versión vigente está en
 `js/version.js` y cada versión tiene su tag de git (`vX.Y.Z`).
 
+## [1.19.1] — 2026-10-27
+
+### Corregido
+- La app no cargaba tras la 1.19.0: faltaba la sección del módulo Docentes en
+  `app.html`. Además, una sección ausente ya no detiene la carga de los módulos.
+
 ## [1.19.0] — 2026-10-27
 
 ### Añadido

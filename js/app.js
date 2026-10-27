@@ -174,7 +174,8 @@ async function mostrarModulo(nombre, params = null) {
   document.querySelectorAll(".nav-item").forEach(b =>
     b.classList.toggle("activo", b.dataset.modulo === nombre));
   for (const key of Object.keys(MODULOS)) {
-    document.getElementById("seccion-" + key).hidden = key !== nombre;
+    const s = document.getElementById("seccion-" + key);
+    if (s) s.hidden = key !== nombre;
   }
   const seccion = document.getElementById("seccion-" + nombre);
   seccion.innerHTML = `<p class="info">Cargando...</p>`;
