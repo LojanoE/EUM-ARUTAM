@@ -512,6 +512,18 @@ export function claveDocente(nombre) {
     .split(/\s+/).filter(p => p && !TITULOS_DOCENTE.has(p)).join(" ");
 }
 
+// ¿El nombre del usuario corresponde al docente del horario? Coinciden si las
+// claves son iguales o si el usuario tiene todas las palabras del docente (al
+// menos dos): "Albita Narcisa Sozoranga Morocho" ↔ "Narcisa Sozoranga".
+function coincideDocente(claveUsuario, claveDoc) {
+  if (!claveUsuario || !claveDoc) return false;
+  if (claveUsuario === claveDoc) return true;
+  const palabras = claveDoc.split(" ");
+  if (palabras.length < 2) return false;
+  const delUsuario = new Set(claveUsuario.split(" "));
+  return palabras.every(p => delUsuario.has(p));
+}
+
 // Docentes que aparecen en los horarios, con sus cargas (grado + asignatura).
 // Los nombres que solo difieren en tildes/mayúsculas cuentan como uno solo y
 // se muestra la grafía más frecuente.
@@ -543,12 +555,11 @@ export function obtenerDocentesHorario() {
 // no tienen cuenta).
 export async function obtenerDocentesConCuenta() {
   const [docentes, usuarios] = await Promise.all([obtenerDocentesHorario(), obtenerUsuarios()]);
-  const usuarioPorClave = new Map();
-  for (const u of usuarios) {
-    const k = claveDocente(u.nombre);
-    if (k && !usuarioPorClave.has(k)) usuarioPorClave.set(k, u.usuario);
-  }
-  return docentes.map(d => ({ ...d, usuario: usuarioPorClave.get(d.clave) || null }));
+  const claves = usuarios.map(u => ({ usuario: u.usuario, clave: claveDocente(u.nombre) }));
+  return docentes.map(d => ({
+    ...d,
+    usuario: claves.find(u => coincideDocente(u.clave, d.clave))?.usuario || null
+  }));
 }
 
 const porGradoYAsignatura = (a, b) =>
@@ -587,7 +598,7 @@ export async function obtenerCargasDeDocente(usuario) {
     getDocs(query(collection(db, "cargas"), where("docente", "==", usuario)))
   ]);
   const clave = claveDocente(u.exists() ? u.data().nombre : "");
-  const propias = clave ? horario.find(d => d.clave === clave)?.cargas || [] : [];
+  const propias = horario.filter(d => coincideDocente(clave, d.clave)).flatMap(d => d.cargas);
   const cargas = propias.map(c => ({ origen: "horario", docente: usuario, ...c }));
   for (const d of snap.docs) {
     const m = d.data();

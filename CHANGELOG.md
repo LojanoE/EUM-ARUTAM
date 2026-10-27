@@ -4,6 +4,13 @@ Historial de versiones de la app de Registro de Asistencia — UE "Arutam".
 Versionado semántico: MAYOR.MENOR.PARCHE. La versión vigente está en
 `js/version.js` y cada versión tiene su tag de git (`vX.Y.Z`).
 
+## [1.18.1] — 2026-10-27
+
+### Corregido
+- El vínculo usuario ↔ docente del horario también funciona cuando el nombre
+  del usuario es más largo que el del horario (ej. «Albita Narcisa Sozoranga
+  Morocho» ↔ «Narcisa Sozoranga»), para no crear cuentas duplicadas.
+
 ## [1.18.0] — 2026-10-27
 
 ### Cambiado
