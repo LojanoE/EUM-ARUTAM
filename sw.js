@@ -3,7 +3,7 @@
 // del CDN de Firebase; el tráfico de Firestore (firestore.googleapis.com) no
 // pasa por aquí: lo maneja la caché persistente del propio SDK.
 // Cambiar CACHE al modificar archivos estáticos, para forzar la renovación.
-const CACHE = "uem-arutam-v7";
+const CACHE = "uem-arutam-v8";
 
 // Cuánto se espera a la red antes de servir la copia guardada. Con internet
 // lento igual se abre la app (desde caché); sin internet falla enseguida.
@@ -36,6 +36,8 @@ const ESTATICOS = [
   "js/version.js",
   "js/notificaciones.js",
   "js/mod-asistencia.js",
+  "js/mod-cargas.js",
+  "js/mod-notas.js",
   "js/mod-dashboard.js",
   "js/mod-estudiantes.js",
   "js/mod-grados.js",

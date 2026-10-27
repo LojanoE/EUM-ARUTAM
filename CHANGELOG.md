@@ -4,6 +4,19 @@ Historial de versiones de la app de Registro de Asistencia — UE "Arutam".
 Versionado semántico: MAYOR.MENOR.PARCHE. La versión vigente está en
 `js/version.js` y cada versión tiene su tag de git (`vX.Y.Z`).
 
+## [1.17.0] — 2026-10-27
+
+### Agregado
+- **Rol `docente`**: los profesores entran con su usuario y solo ven los
+  módulos Notas y Himnos.
+- **Módulo Notas**: calificaciones por trimestre (insumos formativos
+  editables, proyecto y examen), promedio automático 0–10 y resumen anual
+  con estado Aprueba/Supletorio. El trimestre cerrado queda de solo lectura.
+- **Módulo Cargas (admin)**: asigna a cada docente sus grados y asignaturas, y
+  configura período lectivo, trimestre abierto, nota mínima y porcentajes.
+- Colecciones nuevas en Firestore: `cargas` y `notas`. `CACHE` del service
+  worker sube a `uem-arutam-v8`.
+
 ## [1.16.0] — 2026-10-27
 
 ### Agregado

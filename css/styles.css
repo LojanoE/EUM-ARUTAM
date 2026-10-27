@@ -998,3 +998,9 @@ button.peligro:hover { background: #8f1d17; }
     overscroll-behavior-y: none;
   }
 }
+
+/* ---------- Notas ---------- */
+.nota-in { width: 4rem; text-align: center; padding: 0.3rem; border: 1px solid var(--borde); border-radius: 5px; }
+.nota-in.invalido { border-color: var(--rojo); background: #fdecea; }
+.nota-in:disabled, .nombre-insumo:disabled { background: #f3f4f6; color: inherit; }
+.tabla-gestion td.bajo { color: var(--rojo); font-weight: 600; }

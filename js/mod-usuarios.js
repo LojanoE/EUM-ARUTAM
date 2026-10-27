@@ -43,6 +43,7 @@ export async function initUsuarios(contenedor, ctx) {
           <label for="u-rol">Rol</label>
           <select id="u-rol">
             <option value="registro">registro</option>
+            <option value="docente">docente</option>
             <option value="admin">admin</option>
           </select>
         </div>
@@ -50,7 +51,8 @@ export async function initUsuarios(contenedor, ctx) {
       </div>
       <p class="info">
         Rol <strong>registro</strong>: consulta y registra asistencia.
-        Rol <strong>admin</strong>: además gestiona estudiantes, horarios, grados y usuarios.<br>
+        Rol <strong>docente</strong>: solo registra las notas de sus cargas (se asignan en Cargas).
+        Rol <strong>admin</strong>: además gestiona estudiantes, horarios, grados, cargas y usuarios.<br>
         Los reportes impresos se firman con el <strong>nombre y cargo del usuario
         que genera el documento</strong>.
       </p>
@@ -115,6 +117,7 @@ export async function initUsuarios(contenedor, ctx) {
         <td class="centro">
           <select id="ue-rol" style="width:7rem;">
             <option value="registro" ${rol === "registro" ? "selected" : ""}>registro</option>
+            <option value="docente" ${rol === "docente" ? "selected" : ""}>docente</option>
             <option value="admin" ${rol === "admin" ? "selected" : ""}>admin</option>
           </select>
         </td>

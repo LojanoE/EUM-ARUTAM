@@ -114,6 +114,19 @@ para confirmar que quedó registrado.
 `https://uem-arutam.web.app` (config en `firebase.json`; no se suben `DOC/`,
 `scripts/`, `seed/` ni los `.md`).
 
+## Notas y acceso de docentes
+
+1. En **Usuarios**, crear un usuario con rol `docente` por profesor.
+2. En **Cargas**, asignarle sus pares grado + asignatura y fijar el período
+   lectivo, el trimestre abierto y los porcentajes (formativa/sumativa y
+   proyecto/examen; verificar contra el instructivo vigente).
+3. El docente entra y solo ve **Notas**: elige grado y asignatura, llena y guarda.
+
+Seguridad: el login sigue siendo el propio (sin Firebase Auth) y las reglas de
+Firestore están abiertas, así que el filtrado por docente se hace en la
+interfaz, no en la base de datos. Migrar a Firebase Auth con reglas por
+usuario queda pendiente para una fase posterior.
+
 ## Versionado
 
 Se usa versionado semántico (`MAYOR.MENOR.PARCHE`):

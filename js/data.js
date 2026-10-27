@@ -451,7 +451,13 @@ const CONFIG_DOC = "institucion";
 export const CONFIG_DEFECTO = {
   subinspector: "SHARUP GAONA BRINNY KIMBERLY",
   cargoSubinspector: "SUB-INSPECTOR V (e)",
-  feriados: []
+  feriados: [],
+  // Calificaciones: periodo y trimestre que los docentes pueden editar.
+  // Los pesos son configurables; confirmar contra el instructivo vigente.
+  periodoLectivo: "2026-2027",
+  trimestreAbierto: 1,
+  notaMinima: 7,
+  pesosNotas: { formativa: 0.7, sumativa: 0.3, proyecto: 0.5, examen: 0.5 }
 };
 
 export async function obtenerConfig() {
@@ -484,4 +490,113 @@ export async function firmaDelUsuario(usuario) {
     nombre: u?.nombre || usuario,
     cargo: u?.cargo || cfg.cargoSubinspector
   };
+}
+
+/* ---------- Cargas docentes y calificaciones ---------- */
+
+// Carga = un docente (usuario) dando una asignatura en un grado.
+export async function obtenerCargas() {
+  const snap = await getDocs(collection(db, "cargas"));
+  return snap.docs
+    .map(d => ({ id: d.id, ...d.data() }))
+    .sort((a, b) =>
+      a.docente.localeCompare(b.docente, "es") ||
+      a.grado.localeCompare(b.grado, "es") ||
+      a.asignatura.localeCompare(b.asignatura, "es"));
+}
+
+export async function obtenerCargasDeDocente(usuario) {
+  const snap = await getDocs(
+    query(collection(db, "cargas"), where("docente", "==", usuario)));
+  return snap.docs
+    .map(d => ({ id: d.id, ...d.data() }))
+    .sort((a, b) =>
+      a.grado.localeCompare(b.grado, "es") ||
+      a.asignatura.localeCompare(b.asignatura, "es"));
+}
+
+export async function agregarCarga(docente, grado, asignatura) {
+  const snap = await getDocs(
+    query(collection(db, "cargas"), where("docente", "==", docente)));
+  if (snap.docs.some(d => d.data().grado === grado && d.data().asignatura === asignatura)) {
+    throw new Error("Esa carga ya está asignada a este docente.");
+  }
+  await addDoc(collection(db, "cargas"), { docente, grado, asignatura });
+}
+
+export async function eliminarCarga(id) {
+  await deleteDoc(doc(db, "cargas", id));
+}
+
+// Asignaturas distintas que aparecen en los horarios (sugerencias para el
+// formulario de cargas; se normaliza solo el espaciado).
+export async function obtenerAsignaturas() {
+  const snap = await getDocs(collection(db, "horarios"));
+  const set = new Set(snap.docs.map(d => String(d.data().asignatura || "").trim()).filter(Boolean));
+  return [...set].sort((a, b) => a.localeCompare(b, "es"));
+}
+
+export function idNotas(grado, asignatura, periodo, trimestre) {
+  return `${grado}_${asignatura}_${periodo}_T${trimestre}`.replace(/\//g, "-");
+}
+
+export async function obtenerNotas(grado, asignatura, periodo, trimestre) {
+  const snap = await getDoc(
+    doc(db, "notas", idNotas(grado, asignatura, periodo, trimestre)));
+  return snap.exists() ? snap.data() : null;
+}
+
+// Todas las notas de un grado + asignatura + periodo (los 3 trimestres).
+export async function obtenerNotasAnuales(grado, asignatura, periodo) {
+  const docs = await Promise.all([1, 2, 3].map(t =>
+    obtenerNotas(grado, asignatura, periodo, t)));
+  return docs;
+}
+
+export async function guardarNotas(grado, asignatura, periodo, trimestre, datos, docente) {
+  const ref = doc(db, "notas", idNotas(grado, asignatura, periodo, trimestre));
+  await setDoc(ref, {
+    grado, asignatura, periodo, trimestre,
+    nombresInsumos: datos.nombresInsumos,
+    notas: datos.notas,
+    docente,
+    actualizadoEn: serverTimestamp()
+  });
+  // Read-back: "guardado" significa que quedó en la base, no solo enviado.
+  const verif = await getDoc(ref);
+  const n = verif.exists() ? Object.keys(verif.data().notas || {}).length : -1;
+  if (n !== Object.keys(datos.notas).length) {
+    throw new Error(
+      "No se pudo confirmar el guardado en la base de datos. " +
+      "Revise su conexión e inténtelo de nuevo.");
+  }
+}
+
+// Promedio ponderado ignorando los componentes sin nota (se renormaliza).
+function ponderar(partes) {
+  const validas = partes.filter(([v]) => v !== null && Number.isFinite(v));
+  const peso = validas.reduce((a, [, p]) => a + p, 0);
+  if (!peso) return null;
+  return validas.reduce((a, [v, p]) => a + v * p, 0) / peso;
+}
+
+function media(valores) {
+  const v = (valores || []).filter(x => x !== null && Number.isFinite(x));
+  return v.length ? v.reduce((a, b) => a + b, 0) / v.length : null;
+}
+
+// Promedio del trimestre de un estudiante: { formativas: [...], proyecto, examen }.
+export function promedioTrimestre(entrada, pesos) {
+  if (!entrada) return null;
+  const formativa = media(entrada.formativas);
+  const sumativa = ponderar([
+    [entrada.proyecto ?? null, pesos.proyecto],
+    [entrada.examen ?? null, pesos.examen]
+  ]);
+  return ponderar([[formativa, pesos.formativa], [sumativa, pesos.sumativa]]);
+}
+
+// Promedio final: media de los trimestres que ya tienen promedio.
+export function promedioFinal(trimestres) {
+  return media(trimestres);
 }

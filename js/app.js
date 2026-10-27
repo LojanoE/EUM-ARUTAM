@@ -10,6 +10,8 @@ import { initHorarios } from "./mod-horarios.js";
 import { initHimnos } from "./mod-himnos.js";
 import { initGrados } from "./mod-grados.js";
 import { initUsuarios } from "./mod-usuarios.js";
+import { initNotas } from "./mod-notas.js";
+import { initCargas } from "./mod-cargas.js";
 
 const sesion = exigirSesion();
 if (!sesion) throw new Error("Sin sesión");
@@ -29,6 +31,7 @@ window.addEventListener("error", (e) => {
 const ctx = {
   sesion,
   esAdmin: sesion.rol === "admin",
+  esDocente: sesion.rol === "docente",
   params: null,
   irA: (nombre, params) => mostrarModulo(nombre, params),
 };
@@ -39,16 +42,27 @@ const MODULOS = {
   estudiantes: { titulo: "Estudiantes", init: initEstudiantes },
   horarios:    { titulo: "Horarios",    init: initHorarios },
   himnos:      { titulo: "Himnos",      init: initHimnos },
+  notas:       { titulo: "Notas",       init: initNotas, roles: ["admin", "docente"] },
+  cargas:      { titulo: "Cargas",      init: initCargas, soloAdmin: true },
   grados:      { titulo: "Grados",      init: initGrados, soloAdmin: true },
   usuarios:    { titulo: "Usuarios",    init: initUsuarios, soloAdmin: true },
 };
 
-// Oculta las entradas de menú exclusivas de administradores.
-if (!ctx.esAdmin) {
-  document.querySelectorAll(".nav-item").forEach(b => {
-    if (MODULOS[b.dataset.modulo]?.soloAdmin) b.hidden = true;
-  });
+// El docente solo ve Notas y Himnos; el resto de roles no ve Notas
+// (`roles` restringe un módulo a ciertos roles).
+const MODULOS_DOCENTE = ["notas", "himnos"];
+function moduloPermitido(nombre) {
+  const m = MODULOS[nombre];
+  if (m.soloAdmin && !ctx.esAdmin) return false;
+  if (m.roles && !m.roles.includes(sesion.rol)) return false;
+  if (ctx.esDocente && !MODULOS_DOCENTE.includes(nombre)) return false;
+  return true;
 }
+
+// Oculta las entradas de menú que el rol no puede usar.
+document.querySelectorAll(".nav-item").forEach(b => {
+  if (!moduloPermitido(b.dataset.modulo)) b.hidden = true;
+});
 
 document.getElementById("nombre-usuario").textContent =
   `${sesion.nombre} (${sesion.rol})`;
@@ -111,7 +125,12 @@ async function actualizarCacheOffline(manual) {
 
 btnOffline.addEventListener("click", () => actualizarCacheOffline(true));
 pintarEstadoOffline(fechaUltimaPrecarga());
-actualizarCacheOffline(false);
+// Los docentes no imprimen asistencia: no se descarga la caché offline.
+if (ctx.esDocente) {
+  document.querySelector(".offline-estado").hidden = true;
+} else {
+  actualizarCacheOffline(false);
+}
 
 /* ---------- Menú deslizable (móvil) ---------- */
 const sidebar = document.getElementById("sidebar");
@@ -145,7 +164,7 @@ window.matchMedia("(min-width: 821px)").addEventListener("change", (e) => {
 // llevar al registro de un grado concreto o a la ficha de un estudiante.
 // Se entrega al módulo en `ctx.params` (null cuando se entra por el menú).
 async function mostrarModulo(nombre, params = null) {
-  if (MODULOS[nombre].soloAdmin && !ctx.esAdmin) return;
+  if (!moduloPermitido(nombre)) return;
   ctx.params = params;
   cerrarMenu();
   document.getElementById("titulo-movil").textContent = MODULOS[nombre].titulo;
@@ -171,4 +190,4 @@ document.getElementById("menu").addEventListener("click", (e) => {
   if (boton) mostrarModulo(boton.dataset.modulo);
 });
 
-mostrarModulo("dashboard");
+mostrarModulo(ctx.esDocente ? "notas" : "dashboard");
