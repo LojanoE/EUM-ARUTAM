@@ -4,6 +4,12 @@ Historial de versiones de la app de Registro de Asistencia — UE "Arutam".
 Versionado semántico: MAYOR.MENOR.PARCHE. La versión vigente está en
 `js/version.js` y cada versión tiene su tag de git (`vX.Y.Z`).
 
+## [1.25.1] — 2026-11-16
+
+### Corregido
+- **Notas** fallaba con «toSorted is not a function» en navegadores antiguos: se usa `[...].sort()`,
+  compatible con todos.
+
 ## [1.25.0] — 2026-11-16
 
 ### Mejorado
