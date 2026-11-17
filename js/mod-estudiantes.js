@@ -56,7 +56,7 @@ export async function initEstudiantes(contenedor, ctx) {
     </div>` : ""}
     <div class="panel">
       <p class="info" id="lbl-conteo"></p>
-      <div style="overflow-x:auto;">
+      <div class="tabla-scroll" tabindex="0" role="region" aria-label="Tabla de estudiantes">
         <table class="tabla-gestion">
           <thead>
             <tr>
@@ -155,7 +155,7 @@ export async function initEstudiantes(contenedor, ctx) {
         </div>
       </div>`;
     fichaContenedor.querySelector("#ficha-cerrar")
-      .addEventListener("click", () => { fichaContenedor.innerHTML = ""; });
+      .addEventListener("click", () => { fichaContenedor.replaceChildren(); });
     fichaContenedor.scrollIntoView({ behavior: "smooth" });
   }
 

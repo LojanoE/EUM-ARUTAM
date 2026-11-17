@@ -4,6 +4,20 @@ Historial de versiones de la app de Registro de Asistencia — UE "Arutam".
 Versionado semántico: MAYOR.MENOR.PARCHE. La versión vigente está en
 `js/version.js` y cada versión tiene su tag de git (`vX.Y.Z`).
 
+## [1.25.0] — 2026-11-16
+
+### Mejorado
+- **Ventanas de confirmación** con `<dialog>` nativo: el foco queda dentro, Esc y clic fuera
+  cierran, y el foco vuelve al botón que la abrió (antes se podía llegar a la página de atrás con Tab).
+- **Avisos (toasts)** accesibles: se anuncian a lectores de pantalla, tienen botón «×», no se cierran
+  mientras el foco está en ellos y se ven por encima de las ventanas abiertas.
+- **Menú en el móvil**: al abrirlo el foco entra al menú, la página queda inerte y al cerrarlo el foco
+  vuelve al botón ☰.
+- **Tablas**: todas se pueden desplazar con el teclado y tienen nombre para lectores de pantalla.
+- **Contraste alto de Windows** (colores forzados): bordes y contornos en avisos, ventanas y menú.
+- **Carga más rápida**: cada módulo se descarga al abrirlo (un docente solo baja Notas y Himnos).
+- Pequeños ajustes internos (`toSorted`, `replaceChildren`).
+
 ## [1.24.0] — 2026-10-27
 
 ### Añadido

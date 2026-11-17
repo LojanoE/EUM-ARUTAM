@@ -134,7 +134,7 @@ export async function initNotas(contenedor, ctx) {
     panel.innerHTML = `
       ${ed ? "" : `<p class="aviso">Este trimestre está cerrado: solo lectura.</p>`}
       ${estudiantes.length ? "" : `<p class="aviso">Este grado no tiene estudiantes activos.</p>`}
-      <div class="tabla-scroll">
+      <div class="tabla-scroll" tabindex="0" role="region" aria-label="Captura de notas">
         <table class="tabla-gestion tabla-captura">
           <thead>
             <tr>
@@ -301,7 +301,7 @@ export async function initNotas(contenedor, ctx) {
         </tr>`;
     });
     panel.innerHTML = `
-      <div class="tabla-scroll">
+      <div class="tabla-scroll" tabindex="0" role="region" aria-label="Tabla de notas">
         <table class="tabla-gestion">
           <thead>
             <tr><th>Nº</th><th>Estudiante</th><th>T1</th><th>T2</th><th>T3</th>

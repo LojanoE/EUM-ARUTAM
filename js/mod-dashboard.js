@@ -325,7 +325,7 @@ export async function initDashboard(contenedor, ctx = {}) {
       cuerpo = `<p class="vacio">Aún no hay inasistencias registradas en este período.</p>`;
     } else {
       cuerpo = `
-        <div style="overflow-x:auto;">
+        <div class="tabla-scroll" tabindex="0" role="region" aria-label="Ranking de inasistencias">
           <table class="tabla-gestion">
             <thead>
               <tr>

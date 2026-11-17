@@ -36,7 +36,7 @@ export async function initGrados(contenedor, ctx) {
       </div>
     </div>
     <div class="panel">
-      <div style="overflow-x:auto;">
+      <div class="tabla-scroll" tabindex="0" role="region" aria-label="Tabla de grados">
         <table class="tabla-gestion">
           <thead>
             <tr>

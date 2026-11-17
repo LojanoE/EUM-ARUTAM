@@ -3,7 +3,7 @@ import {
   obtenerGrados, obtenerEstudiantes, obtenerHorario, obtenerAsistencia,
   guardarAsistencia, obtenerFeriados, diaDeFecha, fechaHoy, CODIGOS, esc
 } from "./data.js";
-import { notificarOk, notificarError, confirmarAccion } from "./notificaciones.js";
+import { notificarOk, notificarError, confirmarAccion, mostrarDialogo } from "./notificaciones.js";
 
 export async function initAsistencia(contenedor, ctx) {
   contenedor.innerHTML = `
@@ -65,7 +65,7 @@ export async function initAsistencia(contenedor, ctx) {
         Nómina de estudiantes
         <span class="info" id="lbl-resumen"></span>
       </h2>
-      <div style="overflow-x:auto;">
+      <div class="tabla-scroll" tabindex="0" role="region" aria-label="Nómina de asistencia">
         <table class="tabla-asistencia">
           <thead id="thead-asistencia"></thead>
           <tbody id="tbody-asistencia"></tbody>
@@ -455,12 +455,14 @@ export async function initAsistencia(contenedor, ctx) {
 // Mismo patrón visual que confirmarAccion() de notificaciones.js. Devuelve
 // { fecha, gradosElegidos, vacio } o null si el usuario cancela.
 function seleccionarLote(grados, fechaSugerida) {
-  return new Promise((resolve) => {
-    const overlay = document.createElement("div");
-    overlay.className = "modal-overlay";
+  {
+    const overlay = document.createElement("dialog");
+    overlay.className = "modal-confirmar modal-lote";
+    overlay.setAttribute("closedby", "any");
+    overlay.setAttribute("aria-labelledby", "lote-titulo");
     overlay.innerHTML = `
-      <div class="modal-confirmar modal-lote" role="dialog" aria-modal="true">
-        <h3 style="margin-top:0;">Imprimir asistencia por lote</h3>
+      <form method="dialog">
+        <h3 id="lote-titulo" style="margin-top:0;">Imprimir asistencia por lote</h3>
         <div>
           <label for="lote-fecha">Fecha</label>
           <input type="date" id="lote-fecha">
@@ -482,11 +484,10 @@ function seleccionarLote(grados, fechaSugerida) {
           </label>
         </p>
         <div class="modal-acciones">
-          <button type="button" class="secundario" data-modal-cancelar>Cancelar</button>
+          <button type="submit" value="cancelar" class="secundario">Cancelar</button>
           <button type="button" class="primario" data-modal-confirmar>Imprimir</button>
         </div>
-      </div>`;
-    document.body.appendChild(overlay);
+      </form>`;
 
     const inpLoteFecha = overlay.querySelector("#lote-fecha");
     inpLoteFecha.value = fechaSugerida || fechaHoy();
@@ -498,25 +499,18 @@ function seleccionarLote(grados, fechaSugerida) {
       chksGrado.forEach(c => { c.checked = chkTodos.checked; });
     });
 
-    function cerrar(resultado) {
-      document.removeEventListener("keydown", alTeclado);
-      overlay.remove();
-      resolve(resultado);
-    }
-    function alTeclado(e) {
-      if (e.key === "Escape") cerrar(null);
-    }
-
+    // El resultado se calcula al pulsar "Imprimir" (con validación); cancelar,
+    // Esc o clic fuera cierran sin valor y devuelven null.
+    let resultado = null;
     overlay.querySelector("[data-modal-confirmar]").addEventListener("click", () => {
       const fecha = inpLoteFecha.value;
       const gradosElegidos = chksGrado.filter(c => c.checked).map(c => c.value);
       if (!fecha) return notificarError("Elija la fecha a imprimir.");
       if (gradosElegidos.length === 0) return notificarError("Elija al menos un grado.");
-      cerrar({ fecha, gradosElegidos, vacio: chkVacio.checked });
+      resultado = { fecha, gradosElegidos, vacio: chkVacio.checked };
+      overlay.close("ok");
     });
-    overlay.querySelector("[data-modal-cancelar]").addEventListener("click", () => cerrar(null));
-    overlay.addEventListener("click", (e) => { if (e.target === overlay) cerrar(null); });
-    document.addEventListener("keydown", alTeclado);
-    inpLoteFecha.focus();
-  });
+    inpLoteFecha.setAttribute("autofocus", "");
+    return mostrarDialogo(overlay).then((valor) => (valor === "ok" ? resultado : null));
+  }
 }

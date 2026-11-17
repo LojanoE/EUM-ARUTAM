@@ -570,7 +570,7 @@ export function obtenerDocentesHorario() {
       id: g.id,
       enLista: !!g.id,
       nombre: g.guardado || [...g.grafias.entries()].sort((a, b) => b[1] - a[1])[0][0],
-      secciones: [...g.secciones].sort(),
+      secciones: g.secciones.toSorted(),
       cargas: [...g.cargas.values()].sort(porGradoYAsignatura)
     })).sort((a, b) => a.nombre.localeCompare(b.nombre, "es"));
   });

@@ -62,7 +62,7 @@ export async function initUsuarios(contenedor, ctx) {
     </div>
 
     <div class="panel">
-      <div style="overflow-x:auto;">
+      <div class="tabla-scroll" tabindex="0" role="region" aria-label="Tabla de usuarios">
         <table class="tabla-gestion">
           <thead>
             <tr><th>Usuario</th><th>Nombre</th><th>Cargo</th><th>Rol</th><th>Acciones</th></tr>

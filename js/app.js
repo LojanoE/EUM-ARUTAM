@@ -4,16 +4,6 @@ import { APP_VERSION } from "./version.js";
 import { leerPreferencias, guardarPreferencias, aplicarPreferencias } from "./preferencias.js";
 import { notificarAccion, notificarError, notificarOk } from "./notificaciones.js";
 import { prepararCacheOffline, fechaUltimaPrecarga } from "./offline.js";
-import { initDashboard } from "./mod-dashboard.js";
-import { initAsistencia } from "./mod-asistencia.js";
-import { initEstudiantes } from "./mod-estudiantes.js";
-import { initHorarios } from "./mod-horarios.js";
-import { initHimnos } from "./mod-himnos.js";
-import { initGrados } from "./mod-grados.js";
-import { initUsuarios } from "./mod-usuarios.js";
-import { initNotas } from "./mod-notas.js";
-import { initCargas } from "./mod-cargas.js";
-import { initDocentes } from "./mod-docentes.js";
 
 const sesion = exigirSesion();
 if (!sesion) throw new Error("Sin sesión");
@@ -39,16 +29,16 @@ const ctx = {
 };
 
 const MODULOS = {
-  dashboard:   { titulo: "Dashboard",   init: initDashboard },
-  asistencia:  { titulo: "Asistencia",  init: initAsistencia },
-  estudiantes: { titulo: "Estudiantes", init: initEstudiantes },
-  horarios:    { titulo: "Horarios",    init: initHorarios },
-  himnos:      { titulo: "Himnos",      init: initHimnos },
-  notas:       { titulo: "Notas",       init: initNotas, roles: ["admin", "docente"] },
-  docentes:    { titulo: "Docentes",    init: initDocentes, soloAdmin: true },
-  cargas:      { titulo: "Cargas",      init: initCargas, soloAdmin: true },
-  grados:      { titulo: "Grados",      init: initGrados, soloAdmin: true },
-  usuarios:    { titulo: "Usuarios",    init: initUsuarios, soloAdmin: true },
+  dashboard:   { titulo: "Dashboard",   cargar: () => import("./mod-dashboard.js").then(m => m.initDashboard) },
+  asistencia:  { titulo: "Asistencia",  cargar: () => import("./mod-asistencia.js").then(m => m.initAsistencia) },
+  estudiantes: { titulo: "Estudiantes", cargar: () => import("./mod-estudiantes.js").then(m => m.initEstudiantes) },
+  horarios:    { titulo: "Horarios",    cargar: () => import("./mod-horarios.js").then(m => m.initHorarios) },
+  himnos:      { titulo: "Himnos",      cargar: () => import("./mod-himnos.js").then(m => m.initHimnos) },
+  notas:       { titulo: "Notas",       cargar: () => import("./mod-notas.js").then(m => m.initNotas), roles: ["admin", "docente"] },
+  docentes:    { titulo: "Docentes",    cargar: () => import("./mod-docentes.js").then(m => m.initDocentes), soloAdmin: true },
+  cargas:      { titulo: "Cargas",      cargar: () => import("./mod-cargas.js").then(m => m.initCargas), soloAdmin: true },
+  grados:      { titulo: "Grados",      cargar: () => import("./mod-grados.js").then(m => m.initGrados), soloAdmin: true },
+  usuarios:    { titulo: "Usuarios",    cargar: () => import("./mod-usuarios.js").then(m => m.initUsuarios), soloAdmin: true },
 };
 
 // El docente solo ve Notas y Himnos; el resto de roles no ve Notas
@@ -166,18 +156,35 @@ const sidebar = document.getElementById("sidebar");
 const fondoMenu = document.getElementById("sidebar-fondo");
 const btnMenu = document.getElementById("btn-menu");
 
+// En móvil la barra lateral funciona como un diálogo: mientras está abierta
+// el resto de la página queda inerte, el foco entra al menú y, al cerrar,
+// vuelve al botón ☰. En escritorio es una barra fija normal (sin rol).
+const zonasInertes = () => document.querySelectorAll(".contenido-app, .barra-movil");
+
 function abrirMenu() {
   sidebar.classList.add("abierta");
   fondoMenu.hidden = false;
   document.body.classList.add("menu-abierto");
   btnMenu.setAttribute("aria-expanded", "true");
+  sidebar.setAttribute("role", "dialog");
+  sidebar.setAttribute("aria-modal", "true");
+  sidebar.setAttribute("aria-label", "Menú principal");
+  zonasInertes().forEach(z => { z.inert = true; });
+  sidebar.querySelector(".nav-item:not([hidden])")?.focus();
 }
 
 function cerrarMenu() {
+  const estabaAbierto = sidebar.classList.contains("abierta");
   sidebar.classList.remove("abierta");
   fondoMenu.hidden = true;
   document.body.classList.remove("menu-abierto");
   btnMenu.setAttribute("aria-expanded", "false");
+  sidebar.removeAttribute("role");
+  sidebar.removeAttribute("aria-modal");
+  sidebar.removeAttribute("aria-label");
+  zonasInertes().forEach(z => { z.inert = false; });
+  // Solo se devuelve el foco si el menú estaba abierto y se ve el botón ☰.
+  if (estabaAbierto && btnMenu.offsetParent) btnMenu.focus();
 }
 
 btnMenu.addEventListener("click", () =>
@@ -207,7 +214,10 @@ async function mostrarModulo(nombre, params = null) {
   const seccion = document.getElementById("seccion-" + nombre);
   seccion.innerHTML = `<p class="info">Cargando...</p>`;
   try {
-    await MODULOS[nombre].init(seccion, ctx);
+    // Cada módulo se descarga al abrirlo por primera vez (un docente solo
+    // usa Notas y Himnos). Quedan en la caché del service worker.
+    const init = await MODULOS[nombre].cargar();
+    await init(seccion, ctx);
   } catch (err) {
     console.error(err);
     seccion.innerHTML =

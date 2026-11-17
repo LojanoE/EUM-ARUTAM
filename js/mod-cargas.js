@@ -94,7 +94,7 @@ export async function initCargas(contenedor, ctx) {
     </div>
 
     <div class="panel">
-      <div style="overflow-x:auto;">
+      <div class="tabla-scroll" tabindex="0" role="region" aria-label="Tabla de cargas horarias">
         <table class="tabla-gestion">
           <thead><tr><th>Usuario</th><th>Grado</th><th>Asignatura</th><th>Acciones</th></tr></thead>
           <tbody id="tbody-cargas"></tbody>

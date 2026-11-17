@@ -36,7 +36,7 @@ export async function initDocentes(contenedor, ctx) {
       </p>
     </div>
     <div class="panel">
-      <div style="overflow-x:auto;">
+      <div class="tabla-scroll" tabindex="0" role="region" aria-label="Tabla de docentes">
         <table class="tabla-gestion">
           <thead>
             <tr><th style="width:2rem;"><input type="checkbox" id="d-todos" title="Seleccionar los que no tienen cuenta"></th>

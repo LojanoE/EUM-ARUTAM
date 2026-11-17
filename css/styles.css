@@ -847,8 +847,30 @@ button.kpi:hover { background: #e7ecf4; }
 }
 
 /* ---------- Notificaciones toast ---------- */
+/* Texto solo para lectores de pantalla (regiones vivas). */
+.solo-lector {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* El contenedor es un popover="manual": se reinician los estilos del
+   navegador para popovers (centrado, borde, fondo). */
 #toasts {
   position: fixed;
+  top: auto;
+  left: auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  overflow: visible;
+  color: inherit;
   right: 1rem;
   bottom: 1rem;
   display: flex;
@@ -859,24 +881,43 @@ button.kpi:hover { background: #e7ecf4; }
 }
 
 .toast {
-  padding: 0.65rem 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 0.6rem 0.65rem 0.9rem;
   border-radius: 6px;
   color: #fff;
   font-size: 0.88rem;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
-  cursor: pointer;
   opacity: 1;
   transform: translateY(0);
   transition: opacity 0.25s, transform 0.25s;
 }
+.toast-texto { flex: 1; overflow-wrap: anywhere; }
+.toast-cerrar {
+  flex: none;
+  min-width: 2rem;
+  min-height: 2rem;
+  background: transparent;
+  color: inherit;
+  border: 0;
+  border-radius: 4px;
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.toast-cerrar:hover { background: rgba(255, 255, 255, 0.2); }
 
 .toast.saliendo { opacity: 0; transform: translateY(6px); }
+@media (prefers-reduced-motion: reduce) {
+  .toast { transition: none; }
+}
 .toast-ok { background: var(--verde); }
 .toast-error { background: var(--rojo); }
 .toast-aviso { background: var(--azul); }
 
 .toast-boton {
-  margin-left: 0.4rem;
+  flex: none;
   background: #fff;
   color: var(--azul);
   border: none;
@@ -888,24 +929,23 @@ button.kpi:hover { background: #e7ecf4; }
 }
 
 /* ---------- Modal de confirmación ---------- */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(15, 23, 35, 0.55);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2000;
-  padding: 1rem;
-}
-
-.modal-confirmar {
-  background: #fff;
+/* <dialog> nativo: el navegador centra, atrapa el foco y deja inerte la página. */
+dialog.modal-confirmar {
+  color: inherit;
+  border: 0;
   border-radius: 8px;
   padding: 1.4rem 1.6rem;
   max-width: 26rem;
-  width: 100%;
+  width: calc(100% - 2rem);
+  background: #fff;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+/* Sin esto, desplazarse sobre el fondo o el diálogo mueve la página de atrás. */
+dialog:modal { overscroll-behavior: contain; }
+dialog::backdrop {
+  background: rgba(15, 23, 35, 0.55);
+  overflow: hidden;
+  overscroll-behavior: contain;
 }
 
 .modal-mensaje {
@@ -1095,8 +1135,6 @@ button.peligro:hover { background: #8f1d17; }
   .tabla-asistencia select.marca,
   .tabla-asistencia select.fila-todo { width: 2.8rem; height: 2.2rem; padding: 0.15rem; font-size: 0.9rem; }
 
-  div[style*="overflow-x"] { -webkit-overflow-scrolling: touch; }
-
   #toasts {
     left: 0.8rem;
     right: 0.8rem;
@@ -1204,4 +1242,18 @@ button.peligro:hover { background: #8f1d17; }
   body.imprimiendo-credenciales #d-imprimir,
   body.imprimiendo-credenciales .contenido-app .titulo-modulo,
   body.imprimiendo-credenciales .contenido-app .panel:not(#d-credenciales) { display: none !important; }
+}
+
+/* ---------- Colores forzados (Contraste alto de Windows) ---------- */
+/* El navegador reemplaza los colores y quita sombras y fondos: los límites
+   que antes daban el color se refuerzan con bordes y contornos del sistema. */
+@media (forced-colors: active) {
+  .toast,
+  dialog.modal-confirmar,
+  .panel,
+  .kpi { border: 1px solid CanvasText; }
+  .toast-cerrar { border: 1px solid ButtonText; }
+  .nav-item.activo { outline: 2px solid Highlight; outline-offset: -2px; }
+  .btn-menu { border: 1px solid ButtonText; }
+  dialog::backdrop { background: transparent; }
 }
